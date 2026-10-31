@@ -1,0 +1,11 @@
+{
+  "Gemini_v3.pdf": {
+    "original_filename": "《渡鴉公會》內容擴寫委託_第一批修訂版v3_R01至R10完整定稿.pdf",
+    "sha256": "2bdaf671818d5b7cc49814d0c1f3c67ea2da405aff530ee52b28a4890d2c2481",
+    "pages": 17,
+    "adoption": "Only conflict-free portions adopted; see HANDOFF_FULL.md."
+  },
+  "RELEASE_NOTES_v250.md": {
+    "status": "Historical at delivery time. Current repository index has since been uploaded; see README.md."
+  }
+}

@@ -1,0 +1,802 @@
+[
+  {
+    "id": "A01",
+    "group": "A",
+    "requirement": "舊內嵌圖片與音樂保留，新素材外讀",
+    "status": "本次交付有驗證",
+    "evidence": "ASSETS/MUS區塊比對；ARTFILES212；MATERIAL_ROOT250",
+    "next_acceptance": "不得執行v1.5.2外置腳本改掉新index"
+  },
+  {
+    "id": "A02",
+    "group": "A",
+    "requirement": "70張狀態／系統／特效PNG接入",
+    "status": "本次交付有驗證",
+    "evidence": "art/effects/v220；圖檔解碼；原圖備援9項",
+    "next_acceptance": "補全部舊圖HTTP與真手機播放覆蓋"
+  },
+  {
+    "id": "A03",
+    "group": "A",
+    "requirement": "九宮格拆分、去背後使用原素材",
+    "status": "本次交付有驗證",
+    "evidence": "現有70PNG含透明度；不是這次重生圖片",
+    "next_acceptance": "不得以舊同名但內容不符WEBP替換"
+  },
+  {
+    "id": "A04",
+    "group": "A",
+    "requirement": "攻擊與首領大招不能只有圓圈",
+    "status": "本次交付有驗證",
+    "evidence": "fx/spawnFx212/assetImage241/sig最後定義",
+    "next_acceptance": "錄影檢視不同速度、目標、技能與素材定位"
+  },
+  {
+    "id": "A05",
+    "group": "A",
+    "requirement": "技能名稱在施放角色頭上，特效不跑右下角",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "castLabel與material-fx241定位",
+    "next_acceptance": "四人／八人、捲動、換階段、手機方向回歸"
+  },
+  {
+    "id": "A06",
+    "group": "A",
+    "requirement": "四套時裝上架",
+    "status": "本次交付有驗證",
+    "evidence": "spear_241/magef_241/baigu_241/luoqingluan_241",
+    "next_acceptance": "真手機購買、裝卸、舊檔切圖"
+  },
+  {
+    "id": "A07",
+    "group": "A",
+    "requirement": "時裝只改外觀與小對話",
+    "status": "本次交付有驗證",
+    "evidence": "costumeMenu240/equipCostume240；屬性前後比對",
+    "next_acceptance": "不得私自接技能／污染加成"
+  },
+  {
+    "id": "A08",
+    "group": "A",
+    "requirement": "角色一二三轉三態圖與影片",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "PORTRAITS200/NEW210與inbox連結",
+    "next_acceptance": "鳶與啄夜不能混；全角色檔案盤點"
+  },
+  {
+    "id": "A09",
+    "group": "A",
+    "requirement": "語嫣新增圖在各區域使用",
+    "status": "第一版／部分完成",
+    "evidence": "YC_ALL/PHASE_POOL154/亂入圖庫",
+    "next_acceptance": "每型態圖片使用率與未用圖清單"
+  },
+  {
+    "id": "A10",
+    "group": "A",
+    "requirement": "背景藍色失真、缺圖與重疊",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "歷史背景／導航修正，第四章借圖",
+    "next_acceptance": "各場景實機對照，不宣稱全部新背景已到齊"
+  },
+  {
+    "id": "B01",
+    "group": "B",
+    "requirement": "對話結束留在原場景",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "導航與detailReturn1601/returnRoom180",
+    "next_acceptance": "村民、訪客、事件、三房完整來回"
+  },
+  {
+    "id": "B02",
+    "group": "B",
+    "requirement": "場景分散點擊按鈕後出立繪",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "scene-pins/scene-nav/town wrappers",
+    "next_acceptance": "不要再集中下方或多疊入口"
+  },
+  {
+    "id": "B03",
+    "group": "B",
+    "requirement": "常規出戰角色排隊伍清單上方",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "team與列表排序",
+    "next_acceptance": "是清單排序，不是戰鬥畫面置頂"
+  },
+  {
+    "id": "B04",
+    "group": "B",
+    "requirement": "三房同一候燈迴廊場景且不分層",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "roomHub156/roomPage156",
+    "next_acceptance": "房間皆不恢復層數選擇"
+  },
+  {
+    "id": "B05",
+    "group": "B",
+    "requirement": "房間對外名稱不揭語嫣真名",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "既有房名與無名遊戲主",
+    "next_acceptance": "掃描公開介面與新公告"
+  },
+  {
+    "id": "B06",
+    "group": "B",
+    "requirement": "三房挑戰開始關閉房間遮罩，結束回正確頁",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "ROOMCTX180與returnRoom180",
+    "next_acceptance": "勝／敗／撤退／例外退出逐一驗收"
+  },
+  {
+    "id": "B07",
+    "group": "B",
+    "requirement": "隊伍招募倉庫關閉鍵與角色返回",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "detail-return1601與modal返回",
+    "next_acceptance": "點擊左下關閉及巢狀詳情不跳錯"
+  },
+  {
+    "id": "B08",
+    "group": "B",
+    "requirement": "工匠買物自動上捲",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "MOD170視圖鍵與scrollTop保留",
+    "next_acceptance": "連續買／強化／洗練／裝備／倉庫保捲動"
+  },
+  {
+    "id": "B09",
+    "group": "B",
+    "requirement": "倉庫直接分配裝備",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "previewEquip170與物品裝備流程",
+    "next_acceptance": "不同角色、雙手武器、副手、伴生主人檢查"
+  },
+  {
+    "id": "B10",
+    "group": "B",
+    "requirement": "取消鍛鍊房與訓練入口，舊郵筒保留",
+    "status": "第一版／部分完成",
+    "evidence": "新版UI隱藏；舊training/raid函式殘留",
+    "next_acceptance": "巡檢漏網入口，不誤刪經驗池"
+  },
+  {
+    "id": "B11",
+    "group": "B",
+    "requirement": "活動集中活動與巡夜，夢途驛不重複遊樂坊／重生點",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "activityMenu200與TOWN212/talkSu",
+    "next_acceptance": "主題入口與NPC內重生位置一致"
+  },
+  {
+    "id": "B12",
+    "group": "B",
+    "requirement": "招集處上方按鈕可點",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "page200/page210與導覽修正",
+    "next_acceptance": "真手機頂部header與影片層級回歸"
+  },
+  {
+    "id": "C01",
+    "group": "C",
+    "requirement": "所有角色技能與天賦要有定位",
+    "status": "第一版／部分完成",
+    "evidence": "KIT200/BASE_SK210/SECOND_SK210",
+    "next_acceptance": "逐角色定位審查，不能只有數值皮膚"
+  },
+  {
+    "id": "C02",
+    "group": "C",
+    "requirement": "組隊連動依機制，不綁固定角色",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "COMBO200/ready200及各狀態流派",
+    "next_acceptance": "替換同流派角色仍有策略空間"
+  },
+  {
+    "id": "C03",
+    "group": "C",
+    "requirement": "流派包含詛咒冰凍暈眩牽絲等",
+    "status": "本次交付有驗證",
+    "evidence": "typed241各類分支與回歸1690檢查",
+    "next_acceptance": "補完整實戰配裝矩陣"
+  },
+  {
+    "id": "C04",
+    "group": "C",
+    "requirement": "技能顯示施放順序並循環",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "skillOrder212/castDone212；技能欄序號",
+    "next_acceptance": "短CD不能永遠餓死後續技能"
+  },
+  {
+    "id": "C05",
+    "group": "C",
+    "requirement": "血爆毒爆燃爆咒爆達門檻才放",
+    "status": "本次交付有驗證",
+    "evidence": "burstReady212/stack212及既有回歸",
+    "next_acceptance": "堆疊技不消耗、終結技消耗、首領抵抗"
+  },
+  {
+    "id": "C06",
+    "group": "C",
+    "requirement": "所有技能分支啟用且多元",
+    "status": "本次交付有驗證",
+    "evidence": "transform241/profile241；回歸1690",
+    "next_acceptance": "稀有一次技、固定代價、控制成功率分開"
+  },
+  {
+    "id": "C07",
+    "group": "C",
+    "requirement": "治療效率、受治療、再生、冷卻機率",
+    "status": "第一版／部分完成",
+    "evidence": "healUnit/passiveHeal170/skill180等",
+    "next_acceptance": "逐屬性行為測試，不能只查有欄位"
+  },
+  {
+    "id": "C08",
+    "group": "C",
+    "requirement": "負面狀態全部有效，緩速與命中",
+    "status": "第一版／部分完成",
+    "evidence": "slowPenalty240、give、狀態行為",
+    "next_acceptance": "敵我雙向、抵抗、續期、疊層、淨化、首領"
+  },
+  {
+    "id": "C09",
+    "group": "C",
+    "requirement": "怪物抗性不能全部零",
+    "status": "本次交付有驗證",
+    "evidence": "RES_BASE155/applyRes155；新怪預設測試",
+    "next_acceptance": "專屬怪與未來自訂戰鬥也走共同路徑"
+  },
+  {
+    "id": "C10",
+    "group": "C",
+    "requirement": "怪物位階影響異變數量與技能",
+    "status": "本次交付有驗證",
+    "evidence": "assignMutations180/monsterPollution240",
+    "next_acceptance": "分一般精英首領主宰世界王對照"
+  },
+  {
+    "id": "C11",
+    "group": "C",
+    "requirement": "首領戰後統計與紀錄同頁分頁",
+    "status": "本次交付有驗證",
+    "evidence": "REPORT212/reportPanel212",
+    "next_acceptance": "補召喚、DOT、過量治療、護盾歸屬"
+  },
+  {
+    "id": "C12",
+    "group": "C",
+    "requirement": "白骨骷髏召喚實效與框外上方圖標",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "puppets210與summon230協擊／分擔",
+    "next_acceptance": "三具上限、換場清空、死亡／重生互動"
+  },
+  {
+    "id": "C13",
+    "group": "C",
+    "requirement": "撤退未開戰卡死、無限擋路訊息",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "TIMER230/queueTick230/abortBattle230",
+    "next_acceptance": "以退件執事真實撤退路徑重現"
+  },
+  {
+    "id": "C14",
+    "group": "C",
+    "requirement": "職業／技能音效差異",
+    "status": "第一版／部分完成",
+    "evidence": "既有FXS/sfx映射",
+    "next_acceptance": "未交付完整各職業專屬新音效素材"
+  },
+  {
+    "id": "C15",
+    "group": "C",
+    "requirement": "亂入對我方隨機正負面，當場永久或半永久",
+    "status": "第一版／部分完成",
+    "evidence": "侵入事件與戰鬥encEffects240",
+    "next_acceptance": "每種效果觸發／期限／結算要明確驗收"
+  },
+  {
+    "id": "D01",
+    "group": "D",
+    "requirement": "80級與重生後選難度",
+    "status": "本次交付有驗證",
+    "evidence": "capLv/rb210/selectedDiff210",
+    "next_acceptance": "保留舊檔轉職，確認較低難度回退"
+  },
+  {
+    "id": "D02",
+    "group": "D",
+    "requirement": "未重生不得混隊或進下階難度",
+    "status": "本次交付有驗證",
+    "evidence": "validGroup210/canDepart210",
+    "next_acceptance": "三預設與八人名單均驗收"
+  },
+  {
+    "id": "D03",
+    "group": "D",
+    "requirement": "轉職放慢為15／40／65",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "AV240/legacySkills240/legacyAw240",
+    "next_acceptance": "舊已取得技能不收回，新角色門檻一致"
+  },
+  {
+    "id": "D04",
+    "group": "D",
+    "requirement": "五階英雄位階與五階公會稱號",
+    "status": "第一版／部分完成",
+    "evidence": "RANK210/TITLE210/rank210/stats",
+    "next_acceptance": "後兩英雄位階目前無角色池，別宣稱全部推出"
+  },
+  {
+    "id": "D05",
+    "group": "D",
+    "requirement": "英雄位階不同基礎、成長與能力",
+    "status": "第一版／部分完成",
+    "evidence": "stats與ATTRS230；角色KIT",
+    "next_acceptance": "裸體同級／跨級對照、天賦獨特性"
+  },
+  {
+    "id": "D06",
+    "group": "D",
+    "requirement": "公會稱號晉升體質是否如文案",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "stats中1+0.06*title",
+    "next_acceptance": "扣片與生命／攻擊／防禦前後實測"
+  },
+  {
+    "id": "D07",
+    "group": "D",
+    "requirement": "高階角色可高價積分購買、有背景與動畫",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "NEW210/recruitScene210",
+    "next_acceptance": "白骨與洛青鸞到訪理由及影片載入"
+  },
+  {
+    "id": "D08",
+    "group": "D",
+    "requirement": "重複角色碎片含一般與外傳",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "summon210/ptlSummon",
+    "next_acceptance": "所有渠道、未擁有、滿稱號分支"
+  },
+  {
+    "id": "D09",
+    "group": "D",
+    "requirement": "滿稱號碎片10：1過往記憶只保留",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "settleMemory230與倉庫",
+    "next_acceptance": "餘數保留，沒有用途前不得扣除"
+  },
+  {
+    "id": "D10",
+    "group": "D",
+    "requirement": "兩個額外四人隊伍預設",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "teams230/activeTeam230",
+    "next_acceptance": "不是單隊加兩人；同角色跨預設可用"
+  },
+  {
+    "id": "D11",
+    "group": "D",
+    "requirement": "公會塔經驗池複製一半收益",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "xpPool230/gainXP/infuse230",
+    "next_acceptance": "不同重生分池，實際每場一次、不按人倍增"
+  },
+  {
+    "id": "D12",
+    "group": "D",
+    "requirement": "世界王獨立最多八人，站位在王下方",
+    "status": "本次交付有驗證",
+    "evidence": "worldHeroes200/worldRoster200；計時測試",
+    "next_acceptance": "真手機八人縮圖、編制數量保存、禁止混隊"
+  },
+  {
+    "id": "E01",
+    "group": "E",
+    "requirement": "裝備等級隨掉落委託兌換打造時等級",
+    "status": "第一版／部分完成",
+    "evidence": "relevel170/newGearScale210與發放渠道",
+    "next_acceptance": "全渠道矩陣待補，避免只驗新配方"
+  },
+  {
+    "id": "E02",
+    "group": "E",
+    "requirement": "裝備十階與附加詞條擴充",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "genItem156/AFFIX156/XR",
+    "next_acceptance": "品質r、階數t、物品等級ilv分開"
+  },
+  {
+    "id": "E03",
+    "group": "E",
+    "requirement": "新增腰帶耳環伴生獨立欄",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "SLOTS與伴生系統",
+    "next_acceptance": "雙手武器、副手及舊裝備遷移"
+  },
+  {
+    "id": "E04",
+    "group": "E",
+    "requirement": "伴生A/B路線二選一、屬性相干",
+    "status": "第一版／部分完成",
+    "evidence": "BOND_ROUTE_FX170/bondPool180",
+    "next_acceptance": "完整42件與非治療職業洗練"
+  },
+  {
+    "id": "E05",
+    "group": "E",
+    "requirement": "伴生升階／洗練清單不見",
+    "status": "已知缺口／待修",
+    "evidence": "使用者回報；allItems170/normalizeBond180",
+    "next_acceptance": "先重現倉庫／已裝備／uid／舊欄位"
+  },
+  {
+    "id": "E06",
+    "group": "E",
+    "requirement": "技能天賦副天賦變異與進化",
+    "status": "第一版／部分完成",
+    "evidence": "GROW180/hg180/skillGrow180/explore",
+    "next_acceptance": "成長門檻、材料、Lv10副欄等逐項回歸"
+  },
+  {
+    "id": "E07",
+    "group": "E",
+    "requirement": "素材記住位置改圖鑑碎片敘事",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "圖鑑／採集觀察相關流程",
+    "next_acceptance": "不得存隨機地圖舊座標當可回訪點"
+  },
+  {
+    "id": "E08",
+    "group": "E",
+    "requirement": "收藏種類、重複升級、展示擴位",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "CURIO/curioLv156/shelf156",
+    "next_acceptance": "3至8位顯示數、實際加成、重複不消失"
+  },
+  {
+    "id": "E09",
+    "group": "E",
+    "requirement": "特色裝備可收藏",
+    "status": "第一版／部分完成",
+    "evidence": "specialBook180/registerSpecial180",
+    "next_acceptance": "新增30件是否全被收藏註冊也要核對"
+  },
+  {
+    "id": "E10",
+    "group": "E",
+    "requirement": "新增特色／傳說／史詩／神秘裝備",
+    "status": "本次交付有驗證",
+    "evidence": "GEAR250：8+8+8+6，建立裝備與穿戴效果",
+    "next_acceptance": "未有全部新專屬圖；長期平衡待回饋"
+  },
+  {
+    "id": "E11",
+    "group": "E",
+    "requirement": "降低低難度掉率，高難度提升機率與品質",
+    "status": "本次交付有驗證",
+    "evidence": "lootOdds250/rollEquipment250；30000抽樣",
+    "next_acceptance": "保證獎勵與專屬亂入例外要公開說明"
+  },
+  {
+    "id": "E12",
+    "group": "E",
+    "requirement": "回憶首次／後續隨機史詩",
+    "status": "本次交付有驗證",
+    "evidence": "主宰首次隨機保證，後續統一池",
+    "next_acceptance": "不要恢復舊額外2%/20%獨立抽取"
+  },
+  {
+    "id": "E13",
+    "group": "E",
+    "requirement": "血脈妖物對應套裝掉落與兌換",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "bloodOf170/SETS/bloodExchange170",
+    "next_acceptance": "所有血脈、最終混亂、取得等級檢查"
+  },
+  {
+    "id": "E14",
+    "group": "E",
+    "requirement": "萬相券夠不能換，移型態遺痕",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "bloodExchange170與v240兌換",
+    "next_acceptance": "選部位、已擁有仍可換、餘額／價格一致"
+  },
+  {
+    "id": "E15",
+    "group": "E",
+    "requirement": "神秘強化、原三套與新散件",
+    "status": "本次交付有驗證",
+    "evidence": "MYST180/MYST_UNIQUE200/GEAR250",
+    "next_acceptance": "世界王與普通首領相對強度長期平衡"
+  },
+  {
+    "id": "E16",
+    "group": "E",
+    "requirement": "裝備歷史碎片敘事與史詩簡史",
+    "status": "第一版／部分完成",
+    "evidence": "六篇v3正文與GEAR250外觀記錄",
+    "next_acceptance": "不是全物品已做全面潤色"
+  },
+  {
+    "id": "E17",
+    "group": "E",
+    "requirement": "套裝與首領過往、材料可做成套",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "bossCraftMenu/SETS/BOSSMAT",
+    "next_acceptance": "材料成本、各部位與2/4/6件能力回歸"
+  },
+  {
+    "id": "E18",
+    "group": "E",
+    "requirement": "一鍵賣出擴充至傳說以下",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "批次出售／物品保護既有流程",
+    "next_acceptance": "確認以下是否含傳說；保護與收藏件不誤賣"
+  },
+  {
+    "id": "E19",
+    "group": "E",
+    "requirement": "食物調香素材圖紙與居民隨機裝備",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "MATERIAL156/料理夢香／居民贈物流程",
+    "next_acceptance": "每類圖、時效、等級、數值是否實效"
+  },
+  {
+    "id": "E20",
+    "group": "E",
+    "requirement": "取消詞條偏好與路線限制",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "qualifyItem190最後覆寫與lootGuide190",
+    "next_acceptance": "不要恢復舊focus selector；伴生相容性另保留"
+  },
+  {
+    "id": "F01",
+    "group": "F",
+    "requirement": "交易館洗練改九玄幣",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "jx212與交換／洗練鎖詞條",
+    "next_acceptance": "逐購買、退費、預覽、材料成本回歸"
+  },
+  {
+    "id": "F02",
+    "group": "F",
+    "requirement": "渡鴉幣價值與兌券成本提高",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "ECON240.ticket=20",
+    "next_acceptance": "不能再用10：1舊說明"
+  },
+  {
+    "id": "F03",
+    "group": "F",
+    "requirement": "渡鴉幣與九玄幣加值",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "單向1：5",
+    "next_acceptance": "不能反向兌換套利"
+  },
+  {
+    "id": "F04",
+    "group": "F",
+    "requirement": "每日約十抽的收入目標",
+    "status": "新舊規格待對齊",
+    "evidence": "100日常上限÷20幣每券=5抽",
+    "next_acceptance": "需使用者對齊後決策，不私改匯率"
+  },
+  {
+    "id": "F05",
+    "group": "F",
+    "requirement": "每日3／6／10勝各20幣",
+    "status": "已知缺口／待修",
+    "evidence": "ROOMS212累計被v250 roomRewards覆寫",
+    "next_acceptance": "一次性、勝負、無獎、上限與重新整理測試"
+  },
+  {
+    "id": "F06",
+    "group": "F",
+    "requirement": "圖鑑／收集／成就額外渡鴉幣",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "collectionReward212/onceReward212",
+    "next_acceptance": "舊檔補計、不重領、是否含新收藏"
+  },
+  {
+    "id": "F07",
+    "group": "F",
+    "requirement": "上線支持20券在舊郵筒",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "claimMail212 support220",
+    "next_acceptance": "每份存檔一次，不是伺服器全服發獎"
+  },
+  {
+    "id": "F08",
+    "group": "F",
+    "requirement": "每章首次通關十連抽",
+    "status": "本次交付有驗證",
+    "evidence": "chapterRewards212/claimMail212",
+    "next_acceptance": "ch4已測門檻；未開章不可提前領"
+  },
+  {
+    "id": "F09",
+    "group": "F",
+    "requirement": "簽到與補領",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "signMenu190/claimSign190",
+    "next_acceptance": "本月累積、日期、次數、真手機時區"
+  },
+  {
+    "id": "F10",
+    "group": "F",
+    "requirement": "混亂券太易得與兌換價值",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "arenaTickets240/arenaLossTickets240/CHAOS_PRICES240",
+    "next_acceptance": "首勝／重複／敗場上限與交易限次"
+  },
+  {
+    "id": "F11",
+    "group": "F",
+    "requirement": "角色首次招募便宜與上場動機",
+    "status": "第一版／部分完成",
+    "evidence": "既有招募／追趕與KIT200",
+    "next_acceptance": "先用隊伍機制創造需求，不恢復訓練房"
+  },
+  {
+    "id": "F12",
+    "group": "F",
+    "requirement": "商店檔位與未來付費貨幣",
+    "status": "第一版／部分完成",
+    "evidence": "遊戲內券頁與檔位，未啟用付款",
+    "next_acceptance": "商店畫面不等於金流功能"
+  },
+  {
+    "id": "G01",
+    "group": "G",
+    "requirement": "第四章六芒門前第一版",
+    "status": "本次交付有驗證",
+    "evidence": "chapter250/CH4_SCENES250/finishChapter250",
+    "next_acceptance": "線上與長存檔實機驗證"
+  },
+  {
+    "id": "G02",
+    "group": "G",
+    "requirement": "五幕、三解、守衛與守關戰",
+    "status": "本次交付有驗證",
+    "evidence": "chapterAdvance250/chapterRoute250/chapterFight250",
+    "next_acceptance": "借圖，非全隨機地圖新增20～21層"
+  },
+  {
+    "id": "G03",
+    "group": "G",
+    "requirement": "第四章三支線",
+    "status": "第一版／部分完成",
+    "evidence": "chapterSide250/side flags",
+    "next_acceptance": "只有觀察與歸檔，材料任務未全實作"
+  },
+  {
+    "id": "G04",
+    "group": "G",
+    "requirement": "三種章末處理與後續反應",
+    "status": "本次交付有驗證",
+    "evidence": "chapterEnding250/END_TALK250",
+    "next_acceptance": "保留未解風險，維護扣款未核定"
+  },
+  {
+    "id": "G05",
+    "group": "G",
+    "requirement": "第四章主線提示一致",
+    "status": "已知缺口／待修",
+    "evidence": "goalTxt與第三章結尾舊文案",
+    "next_acceptance": "不再顯示第四章製作中"
+  },
+  {
+    "id": "G06",
+    "group": "G",
+    "requirement": "白鐵門",
+    "status": "程式存在／本次未完整重驗",
+    "evidence": "第三章既有解鎖與portalStart156",
+    "next_acceptance": "實際門後進度與層數回歸"
+  },
+  {
+    "id": "G07",
+    "group": "G",
+    "requirement": "六芒門外傳",
+    "status": "第一版／部分完成",
+    "evidence": "ch4登記可看入口，旅程尚未開放",
+    "next_acceptance": "原作資料先找既有專案；不能當完整通關"
+  },
+  {
+    "id": "G08",
+    "group": "G",
+    "requirement": "香火門／第五章",
+    "status": "未啟用／後續計畫",
+    "evidence": "ch5條件保留，未完成章節",
+    "next_acceptance": "不提前發十連或虛構原作"
+  },
+  {
+    "id": "G09",
+    "group": "G",
+    "requirement": "Gemini v3 R01～R10審閱",
+    "status": "第一版／部分完成",
+    "evidence": "17頁讀完；採無衝突部分",
+    "next_acceptance": "蘆衡／石扣／標記／封印提案仍有邊界"
+  },
+  {
+    "id": "G10",
+    "group": "G",
+    "requirement": "六件裝備文稿潤飾",
+    "status": "本次交付有驗證",
+    "evidence": "字數56/57/60/53/137/135，保留現行部位效果",
+    "next_acceptance": "不要照舊PDF覆蓋部位o與新轉職"
+  },
+  {
+    "id": "G11",
+    "group": "G",
+    "requirement": "Gemini60事件與角色對話擴寫",
+    "status": "已決策／待實作或核定細節",
+    "evidence": "本次只有第一批v3，非60事件交付",
+    "next_acceptance": "請按10件一批核定，日常不揭新真相"
+  },
+  {
+    "id": "G12",
+    "group": "G",
+    "requirement": "三位新居民專屬背景與完整設定",
+    "status": "第一版／部分完成",
+    "evidence": "NEW_NPC156及第四章有限判讀",
+    "next_acceptance": "蘆衡性別年齡衝突，待核定美術"
+  },
+  {
+    "id": "G13",
+    "group": "G",
+    "requirement": "早期妹妹信3/4/7/8/10待辦",
+    "status": "已決策／待實作或核定細節",
+    "evidence": "本對話無原信全文",
+    "next_acceptance": "先找到原信，不能猜編號內容"
+  },
+  {
+    "id": "H01",
+    "group": "H",
+    "requirement": "時裝改技能與污染",
+    "status": "已決策／待實作或核定細節",
+    "evidence": "使用者明確先保留；目前外觀版",
+    "next_acceptance": "不能偷加付費戰力"
+  },
+  {
+    "id": "H02",
+    "group": "H",
+    "requirement": "跨玩家儲值即時發獎",
+    "status": "未啟用／後續計畫",
+    "evidence": "靜態localStorage，無支付後端",
+    "next_acceptance": "後續帳戶、付款驗證、webhook與冪等"
+  },
+  {
+    "id": "H03",
+    "group": "H",
+    "requirement": "世界王定時排行榜顯示隊伍成員",
+    "status": "未啟用／後續計畫",
+    "evidence": "無正式排行榜資料與排程",
+    "next_acceptance": "只顯角色名，不需裝備細節"
+  },
+  {
+    "id": "H04",
+    "group": "H",
+    "requirement": "雲端存檔與防重領",
+    "status": "未啟用／後續計畫",
+    "evidence": "目前本機匯出入",
+    "next_acceptance": "不要混入另一語嫣專案Supabase"
+  },
+  {
+    "id": "H05",
+    "group": "H",
+    "requirement": "公開Pages與快取驗證",
+    "status": "待線上驗證／非已確認故障",
+    "evidence": "main檔案相同；本次站點工具讀取失敗",
+    "next_acceptance": "手機無痕看版本與素材網路錯誤"
+  },
+  {
+    "id": "H06",
+    "group": "H",
+    "requirement": "原素材修復PR合併",
+    "status": "已決策／待實作或核定細節",
+    "evidence": "PR#1仍draft/open/unmerged",
+    "next_acceptance": "合併前檢查main改動；備援不依賴先合併"
+  }
+]

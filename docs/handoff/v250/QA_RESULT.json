@@ -1,0 +1,26 @@
+{
+  "version": "v2.5.0",
+  "index_bytes": 24336789,
+  "index_sha256": "48affa41e0241ed3bdf536a7fc31ff3d0d126d9aca4022b576f3077aa3c9f029",
+  "feature_checks": {
+    "passed": 5231,
+    "total": 5231,
+    "failed": [],
+    "runtime_errors": []
+  },
+  "typed_skill_regression": {
+    "passed": 1690,
+    "total": 1690,
+    "failed": [],
+    "runtime_errors": []
+  },
+  "external_fallback_checks": {
+    "passed": 9,
+    "total": 9
+  },
+  "drop_samples": 30000,
+  "embedded_image_and_music_unchanged": true,
+  "manual_ui": "390px chapter progression buttons, battle and costume menu inspected",
+  "deployment": "index not published; asset draft PR #1; exact supplied-material commit pinned as fallback",
+  "source_asset_commit": "a3761e78e2c729faea8bf44aeb9652c74f04825a"
+}

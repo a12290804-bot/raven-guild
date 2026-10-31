@@ -1,0 +1,927 @@
+{
+  "review_file": "source/game.readable.js",
+  "warning": "ASSETS and MUS replaced by {}; review only, not a runnable replacement for index.html",
+  "runtime_last_definition_wins": true,
+  "locations": {
+    "init210": [
+      {
+        "line": 3460,
+        "excerpt": "function init210(o){o.difficulty210=integer180(o.difficulty210,99);o.tickets210=integer180(o.tickets210,99999999);o.coinProgress210=integer180(o.coinProgress210,4);o.summon210=o.summon210&&typeof o.summon210==='object'?o"
+      },
+      {
+        "line": 3571,
+        "excerpt": "const INIT211=init210;init210=function(o){const r=INIT211(o);r.ravc=integer180(r.ravc,99999999);return r;};"
+      },
+      {
+        "line": 3587,
+        "excerpt": "const INIT212=init210;init210=function(o){return init212(INIT212(o));};"
+      },
+      {
+        "line": 3693,
+        "excerpt": "const INIT230=init210;init210=function(o){return init230(INIT230(o));};"
+      },
+      {
+        "line": 3774,
+        "excerpt": "const INIT240=init210;init210=function(o){return init240(INIT240(o));};"
+      },
+      {
+        "line": 3970,
+        "excerpt": "const INIT250=init210;init210=function(o){return init250(INIT250(o));};"
+      }
+    ],
+    "sanitize": [
+      {
+        "line": 619,
+        "excerpt": "function sanitize(o){if(!o||![2,3,4].includes(o.ver))return null;const f=fresh();"
+      },
+      {
+        "line": 2315,
+        "excerpt": "sanitize=function(o){const f=sanitize153(o);if(!f)return f;"
+      },
+      {
+        "line": 2451,
+        "excerpt": "sanitize=function(o){const f=san154(o);if(f)f.taint=Math.min(100,Math.max(0,f.taint||0));return f;};"
+      },
+      {
+        "line": 2575,
+        "excerpt": "sanitize=function(o){const f=SAN156(o);if(!f)return f;for(const k of ['growth156','curioLv156','floorRecords156'])f[k]=o[k]&&typeof o[k]==='object'?{...o[k]}:{};for(const k of ['eventHistory156','visHistory156'])f[k]=Arr"
+      },
+      {
+        "line": 2797,
+        "excerpt": "const SAN170=sanitize;sanitize=function(o){const f=SAN170(o);if(!f)return f;for(const k of ['materialNotes170','seenNotes170'])f[k]=o[k]&&typeof o[k]==='object'?{...o[k]}:{};f.beastWins170=Array.isArray(o.beastWins170)?o"
+      },
+      {
+        "line": 2925,
+        "excerpt": "const SAN180=sanitize;sanitize=function(o){const f=SAN180(o);if(!f)return f;for(const k of ['grow180','heroGrowth180','specialBook180','world180'])if(o[k]&&typeof o[k]==='object'&&!Array.isArray(o[k]))f[k]=JSON.parse(JSO"
+      },
+      {
+        "line": 3037,
+        "excerpt": "const SAN190=sanitize;sanitize=function(o){const f=SAN190(o);if(!f)return f;for(const k of ['sign190','raid190','trial190'])if(o[k]&&typeof o[k]==='object'&&!Array.isArray(o[k]))f[k]=JSON.parse(JSON.stringify(o[k]));for("
+      },
+      {
+        "line": 3285,
+        "excerpt": "const SAN_200=sanitize;sanitize=function(o){const r=SAN_200(o);if(!r)return r;r.update200=o.update200?1:0;r.worldRoster230=o.worldRoster230?1:0;r.worldParty200=Array.isArray(o.worldParty200)?o.worldParty200.slice():[];fo"
+      },
+      {
+        "line": 3461,
+        "excerpt": "const SAN210=sanitize;sanitize=function(o){const r=SAN210(o);if(!r)return r;for(const k of ['difficulty210','tickets210','coinProgress210','summon210','shards210'])if(o[k]!=null)r[k]=JSON.parse(JSON.stringify(o[k]));for("
+      },
+      {
+        "line": 3588,
+        "excerpt": "const SAN212=sanitize;sanitize=function(o){const f=SAN212(o);if(!f)return f;for(const k of ['jx212','migrated212','rewards212','economy212'])if(o[k]!=null)f[k]=JSON.parse(JSON.stringify(o[k]));for(const h of f.heroes){h."
+      },
+      {
+        "line": 3694,
+        "excerpt": "const SAN230=sanitize;sanitize=function(o){const r=SAN230(o);if(!r)return r;for(const k of ['teams230','activeTeam230','xpPool230','memory230'])if(o[k]!=null)r[k]=JSON.parse(JSON.stringify(o[k]));return settleMemory230(i"
+      },
+      {
+        "line": 3775,
+        "excerpt": "const SAN240=sanitize;sanitize=function(o){const r=SAN240(o);if(!r)return r;for(const k of ['update240','chaosDay240','costumeOwned240','costumeEquip240','pollutionBook240'])if(o[k]!=null)r[k]=JSON.parse(JSON.stringify(o"
+      },
+      {
+        "line": 3971,
+        "excerpt": "const SAN250=sanitize;sanitize=function(o){const f=SAN250(o);if(f){f.chapter250=o.chapter250;init250(f);}return f;};"
+      }
+    ],
+    "save": [
+      {
+        "line": 639,
+        "excerpt": "function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}"
+      },
+      {
+        "line": 2985,
+        "excerpt": "const SAVE180=save;save=function(){registerSpecial180();return SAVE180();};"
+      },
+      {
+        "line": 3038,
+        "excerpt": "const SAVE190=save;save=function(){init190(S);return SAVE190();};"
+      },
+      {
+        "line": 3286,
+        "excerpt": "save=function(){init200(S);return SAVE_OLD200();};"
+      },
+      {
+        "line": 3463,
+        "excerpt": "const SAVE210=save;save=function(){init210(S);return SAVE210();};"
+      },
+      {
+        "line": 3601,
+        "excerpt": "const SAVE212=save;save=function(){if(S){collectionReward212();init212(S);}return SAVE212();};"
+      },
+      {
+        "line": 3695,
+        "excerpt": "const SAVE230=save;save=function(){settleMemory230(init230(S));return SAVE230();};"
+      },
+      {
+        "line": 3776,
+        "excerpt": "const SAVE240=save;save=function(){init240(S);return SAVE240();};"
+      }
+    ],
+    "load": [
+      {
+        "line": 640,
+        "excerpt": "function load(){try{let raw=localStorage.getItem(KEY)||localStorage.getItem('RAVEN_GUILD_V3')||localStorage.getItem('RAVEN_GUILD_V2');const o=sanitize(JSON.parse(raw||'null'));if(o){S=o;return true}}catch(e){}S=fresh();r"
+      }
+    ],
+    "stats": [
+      {
+        "line": 691,
+        "excerpt": "function stats(h,lv){const c=CLS[cand(h.key).cls];const a=attrs(h,lv);let ga=0,gd=0;for(const s of SLOTS){const it=h.eq[s];if(it){ga+=it.atk;gd+=it.def}}"
+      },
+      {
+        "line": 3465,
+        "excerpt": "const STATS210=stats;stats=function(h,lv){const st=STATS210(h,lv),n=rb210(h),title=h.title210||0,rank=rank210(h.key),m=(1+.08*rank)*(1+.06*title)*Math.pow(1.16,n);for(const k of ['maxhp','atk','def'])st[k]=Math.round(st["
+      }
+    ],
+    "attrs": [
+      {
+        "line": 690,
+        "excerpt": "function attrs(h,lv){lv=lv||h.lv;const c=CLS[cand(h.key).cls];const a={};for(const k of ATR){a[k]=Math.max(1,Math.floor(c.a[k]+c.g[k]*(lv-1))+((BIAS[h.key]||{})[k]||0)+((h.bonus&&h.bonus[k])||0));for(const s of SLOTS){co"
+      },
+      {
+        "line": 3712,
+        "excerpt": "const ATTRS230=attrs;attrs=function(h,lv){const out=ATTRS230(h,lv),rank=rank210(h.key),g=CLS[cand(h.key).cls].g;for(const k of ATR)out[k]+=Math.floor((g[k]||0)*Math.max(0,(lv||h.lv)-1)*rank*.04);return out;};"
+      }
+    ],
+    "mkP": [
+      {
+        "line": 1647,
+        "excerpt": "function mkP(h,BL,INCK){const st=stats(h);if(BL==='dream_atk')st.atk=Math.round(st.atk*1.12);const cls=cand(h.key).cls,tal=talH(h);const FX=fxOf(tal);if(FX.nightDodge&&tod()==='night')st.dodge+=FX.nightDodge;if(tal.inclu"
+      },
+      {
+        "line": 2324,
+        "excerpt": "mkP=function(...args){const p=mkP153(...args);initCurios(S);for(const k of S.cabinet){const b=CURIO_BONUS[k];if(!b)continue;const [,stat,value]=b;if(stat==='hp')p.maxhp=Math.round(p.maxhp*(1+value));else if(stat==='def')"
+      },
+      {
+        "line": 2449,
+        "excerpt": "mkP=function(...a){const p=mkGear154(...a),h=a[0];let reflect=0;for(const sl of SLOTS){const u=h.eq[sl]?.uq;if(NEW_GEAR154[u]?.fx?.thnA)reflect+=NEW_GEAR154[u].fx.thnA;}return p;};"
+      },
+      {
+        "line": 2622,
+        "excerpt": "const PARTY156=mkP;mkP=function(h,...args){const p=PARTY156(h,...args);for(const sl of SLOTS){const it=h.eq[sl];if(!it)continue;const u=null;if(u&&it.growth156>1)for(const [k,v] of Object.entries(u[2]))if(typeof v==='num"
+      },
+      {
+        "line": 2843,
+        "excerpt": "const MP170=mkP;mkP=function(h,...args){const p=MP170(h,...args),counts=setCount(h.eq);for(const k in BLOOD170){const n=counts['blood170_'+k]||0;if(n>=2)applyExtra170(p,{[BLOOD170[k][1]]:BLOOD170[k][2]});if(n>=4){applyEx"
+      },
+      {
+        "line": 2969,
+        "excerpt": "const PARTY180=mkP;mkP=function(h,...args){const p=PARTY180(h,...args),g=hg180(h);if(h.br!=null&&g.tal[h.br])applyExtra170(p,talentBranches180(h)[g.tal[h.br]-1][1]);p.hp=p.mhp0=p.maxhp;return p;};"
+      },
+      {
+        "line": 3012,
+        "excerpt": "const PM180=mkP;mkP=function(h,...a){const p=PM180(h,...a),counts=setCount(h.eq);for(const[k,v]of Object.entries(MYST180)){const n=counts['myst180_'+k]||0;for(let j=0;j<3;j++)if(n>=2+2*j)applyExtra170(p,v.fx[j]);}p.hp=p."
+      },
+      {
+        "line": 3096,
+        "excerpt": "const MP190=mkP;mkP=function(h,...a){const p=MP190(h,...a),n=setCount(h.eq).sort190||0;if(n>=2)p.fx.cdRate=(p.fx.cdRate||0)+.06;if(n>=4)p.fx.statusAcc=(p.fx.statusAcc||0)+.06;if(n>=6)p.fx.firstNoCd=1;return p;};"
+      },
+      {
+        "line": 3324,
+        "excerpt": "const MP_200=mkP;mkP=function(h,...a){const p=MP_200(h,...a),counts=setCount(h.eq);for(const[id,fx]of Object.entries(SET_BONUS200)){const n=counts[id]||0;fx.forEach((v,i)=>{if(v&&n>=2+i*2)applyExtra170(p,v);});}for(const"
+      },
+      {
+        "line": 3524,
+        "excerpt": "const MP210=mkP;mkP=function(h,...a){const p=MP210(h,...a);p.rebirth210=rb210(h);p.puppets210=0;p.souls210=0;p.soulUsed210=0;return p;};"
+      },
+      {
+        "line": 3714,
+        "excerpt": "const MP230=mkP;mkP=function(h,...a){const p=MP230(h,...a),rank=rank210(h.key);for(const k of ['pres','mres','cres','ares','acc'])if(p.fx[k])p[k]=Math.min(k==='acc'?.5:.8,(p[k]||0)+p.fx[k]);const innate=RANK_INNATE230[ra"
+      },
+      {
+        "line": 3856,
+        "excerpt": "const MP240=mkP;mkP=function(h,...a){const p=MP240(h,...a),n=pollutionDepth240();p.pollution240=n;if(h.pollutionMode240&&n>0){p.fx.statusAcc=(p.fx.statusAcc||0)+Math.min(.08,n*.015);p.fx.pollutionTalent240=1;}return p;};"
+      }
+    ],
+    "gainXP": [
+      {
+        "line": 706,
+        "excerpt": "function gainXP(x){x=Math.round(x*activityMultiplier170('qty'));if(RUN&&RUN.inc==='long')x=Math.round(x*1.25);for(const p of RUN.party){const h=S.heroes.find(h=>h.id===p.id);if(!h||p.hp<=0)continue;levelHero(h,x,p)}}"
+      },
+      {
+        "line": 3063,
+        "excerpt": "const XP190=gainXP;gainXP=function(x){const r=RUN;if(!r||r.world180&&!r.world180.paid||r.raid190&&!r.raid190.paid||r.trial190&&!r.trial190.paid)return;let actual=Math.round(x*activityMultiplier170('qty'));if(r.inc==='lon"
+      },
+      {
+        "line": 3288,
+        "excerpt": "gainXP=function(x){if(!RUN||RUN.world180&&!RUN.world180.paid||RUN.trial190&&!RUN.trial190.paid)return;return XP190(x);};"
+      },
+      {
+        "line": 3703,
+        "excerpt": "const XP230=gainXP;gainXP=function(x){if(!RUN)return;const eligible=!(RUN.world180&&!RUN.world180.paid||RUN.trial190&&!RUN.trial190.paid);const alive=RUN.party.filter(p=>p.hp>0&&S.heroes.some(h=>h.id===p.id&&!h.dead));le"
+      }
+    ],
+    "levelHero": [
+      {
+        "line": 700,
+        "excerpt": "function levelHero(h,x,p){if(h.dead)return;h.xp+=x;let ups=0;const before=stats(h);const oldAv=avail(h);while(h.xp>=needXP(h)&&h.lv<capLv()){h.xp-=needXP(h);h.lv++;ups++}"
+      },
+      {
+        "line": 3704,
+        "excerpt": "const LEVEL230=levelHero;levelHero=function(h,x,p){if(!h||h.dead||!Number.isFinite(x)||x<=0||h.lv>=capLv())return;const keep=p?Object.fromEntries(['puppets210','souls210','soulUsed210','cursor212','onceU'].filter(k=>p[k]"
+      }
+    ],
+    "selectedDiff210": [
+      {
+        "line": 3457,
+        "excerpt": "function selectedDiff210(hs=listHeroes210(S?.party)){const cap=maxDiff210(hs);return Math.min(cap,integer180(S?.difficulty210,99));}"
+      }
+    ],
+    "canDepart210": [
+      {
+        "line": 3466,
+        "excerpt": "function canDepart210(ids=S.party){const hs=listHeroes210(ids);if(!validGroup210(hs)){toast(hs.length?'未重生與重生角色不能同隊。':'請先安排出戰角色。');return false;}return true;}"
+      }
+    ],
+    "battle": [
+      {
+        "line": 1949,
+        "excerpt": "function battle(kind,after,elite,mo){const F=FOES[kind];RUN.lastFoe=kind;const rolledDiff=rollDiff();const intr=mo&&mo.intr;const roomLv=(RUN.itemLevel170||playerLevel156())+5;const memUp=RUN.mem?roomLv-monLv(RUN.floor,e"
+      },
+      {
+        "line": 2556,
+        "excerpt": "battle=function(...args){const result=battle155(...args);if(BAT)drawBattle();return result;};"
+      },
+      {
+        "line": 2666,
+        "excerpt": "const BATTLE156=battle;battle=function(kind,after,elite,mo){if(RUN?.mem&&!RUN.prepConsumed156){RUN.prepConsumed156=1;RUN.inc=S.inc;S.inc=null;S.meal=null;}const r=BATTLE156(kind,after,elite,mo);if(BAT?.dom){BAT.domMechan"
+      },
+      {
+        "line": 2803,
+        "excerpt": "const BT170=battle;battle=function(...args){if(!RUN)return;closeModal();if(!RUN.itemLevel170)RUN.itemLevel170=playerLevel156();if(RUN.meal170===undefined)RUN.meal170=S.meal;const r=BT170(...args);if(BAT?.yph)BAT.families"
+      },
+      {
+        "line": 2999,
+        "excerpt": "const BT180=battle;battle=function(...args){if(RUN)RUN.party.forEach(p=>delete p.evoTurn180);const r=BT180(...args);if(!BAT||!RUN)return r;assignMutations180();RUN.fights180=(RUN.fights180||0)+1;const last=RUN.lastIntrus"
+      },
+      {
+        "line": 3051,
+        "excerpt": "const BT190=battle;battle=function(...a){const result=BT190(...a);if(!RUN||!BAT)return result;BAT.synergy190=synergy190(RUN.party);if(BAT.synergy190.length)blog('隊伍協作：'+BAT.synergy190.map(k=>SYNERGY190[k][0]).join('、'));"
+      },
+      {
+        "line": 3546,
+        "excerpt": "const BATTLE210=battle;battle=function(...a){if(!RUN)return;if(!canDepart210(RUN.party.map(p=>p.id)))return;RUN.party.forEach(p=>{p.puppets210=0;p.souls210=0;p.soulUsed210=0;p.soulLimit210=1;for(const k of ['firstPuppetU"
+      },
+      {
+        "line": 3859,
+        "excerpt": "const BATTLE240=battle;battle=function(...a){if(RUN)for(const p of RUN.party){delete p.pollutionCast240;delete p.encEffects240;}const r=BATTLE240(...a);if(BAT&&RUN){monsterPollution240();drawBattle();}return r;};"
+      },
+      {
+        "line": 3996,
+        "excerpt": "const BATTLE250=battle;battle=function(...a){const r=BATTLE250(...a);if(BAT){BAT.foes.forEach(pressureFoe250);blog('難度體質與污染技能已套用。高階敵人會預告壓制攻勢；減速、封印與控制仍按各自效果生效。');drawBattle();}return r;};"
+      }
+    ],
+    "worldStats180": [
+      {
+        "line": 3017,
+        "excerpt": "function worldStats180(f){const w=RUN.world180,lv=w.level;f.maxhp=Math.max(1,Math.round((160+lv*45)*w.hpMult*[.8,1,1.15,1.35][w.tier]));f.hp=f.maxhp;f.atk=Math.max(1,Math.round((5+lv*2.2)*w.atkMult*[.8,1,1.1,1.2][w.tier]"
+      },
+      {
+        "line": 3349,
+        "excerpt": "worldStats180=function(f){const w=RUN.world180,t=WORLD_TIERS200[w.tier],lv=w.level,ph=f.ph||0;f.maxhp=Math.round((120000+lv*6000)*t.hp*(1+ph*.35)*w.hpMult);f.hp=f.maxhp;f.atk=Math.round((180+lv*9)*t.atk*(1+ph*.2)*w.atkMu"
+      },
+      {
+        "line": 3547,
+        "excerpt": "const WORLDST210=worldStats180;worldStats180=function(f){WORLDST210(f);const n=RUN.difficulty210||0;f.maxhp=Math.round(f.maxhp*Math.pow(1.32,n));f.hp=f.maxhp;f.atk=Math.round(f.atk*Math.pow(1.22,n));};"
+      },
+      {
+        "line": 3860,
+        "excerpt": "const WORLD_STATS240=worldStats180;worldStats180=function(f){WORLD_STATS240(f);if(BAT)monsterPollution240();};"
+      },
+      {
+        "line": 3997,
+        "excerpt": "const WORLD250=worldStats180;worldStats180=function(f){WORLD250(f);delete f.pressureApplied250;pressureFoe250(f);if(RUN?.world180){RUN.world180.phaseMax200=f.maxhp;RUN.world180.phaseHP200=f.hp;}};"
+      }
+    ],
+    "pressureFoe250": [
+      {
+        "line": 3992,
+        "excerpt": "function pressureFoe250(f){if(!RUN||!BAT||f.pressureApplied250)return;f.pressureApplied250=true;const n=RUN.difficulty210||0,boss=!!(FOES[BAT.kind]?.boss||BAT.chief||BAT.dom||RUN.world180),m=challengeScale250(n,boss);if("
+      }
+    ],
+    "overridePressure250": [
+      {
+        "line": 4042,
+        "excerpt": "function overridePressure250(f){const n=RUN?.difficulty210||0;f.maxhp=Math.round(f.maxhp*Math.pow(1.32,n));f.hp=f.maxhp;f.atk=Math.round(f.atk*Math.pow(1.22,n));delete f.pressureApplied250;pressureFoe250(f);}"
+      }
+    ],
+    "applyRes155": [
+      {
+        "line": 2468,
+        "excerpt": "function applyRes155(f,k,flags={},phase=false){const F=FOES[k],r=RES_BASE155[k],strong=F.boss||F.yy,add=flags.dom?.12:flags.chief?.08:flags.elite?.04:0;f.pres=Math.min(.65,r.p+(strong?.05:0)+add);f.mres=Math.min(.65,r.m+"
+      },
+      {
+        "line": 4059,
+        "excerpt": "const RES250=applyRes155;applyRes155=function(f,k,flags={},phase=false){if(!RES_BASE155[k]&&FOES[k]){const F=FOES[k],type=F.yy?'yuyan':RES_TYPES155[F.resType155]?F.resType155:/machine|clock|sort|iron|keeper250/.test(k)?'"
+      }
+    ],
+    "monsterPollution240": [
+      {
+        "line": 3858,
+        "excerpt": "function monsterPollution240(){if(!BAT||!RUN)return;const n=pollutionDepth240();if(!n)return;const family=intrusionFamily240(BAT.kind),pool=family==='venom'?['pollRot240','pollCurse240','pollFrost240']:family==='flame'?["
+      },
+      {
+        "line": 3995,
+        "excerpt": "const POLMON250=monsterPollution240;monsterPollution240=function(){POLMON250();if(!BAT||!RUN)return;const n=RUN.difficulty210||0;for(const f of BAT.foes){const extra=n>=5?['pollShear250','pollMire250','pollHollow250']:n>"
+      }
+    ],
+    "skill180": [
+      {
+        "line": 2965,
+        "excerpt": "function skill180(p,k){const original=SK[k];if(!original)return original;const h=S.heroes.find(h=>h.id===p.id);if(!h||signature180(h)!==k)return original;const g=hg180(h).skill,s={...original},boost=1+.04*g.level;if(s.st"
+      },
+      {
+        "line": 3852,
+        "excerpt": "const SKILL240=skill180;skill180=function(p,k){const s=SKILL240(p,k),h=S.heroes.find(h=>h.id===p.id);if(!s||!h?.pollutionMode240||pollutionDepth240()<1||signature180(h)!==k)return s;const plan=POLLUTION_SKILLS240[h.key],"
+      },
+      {
+        "line": 3918,
+        "excerpt": "const SK241=skill180;skill180=function(p,k){const s=SK241(p,k),h=S.heroes.find(h=>h.id===p.id);return s&&h&&Math.max(h.lv,rb210(h)?80:0)>=50?transform241(s,h,h.skillBranches210?.[k]||0):s;};"
+      },
+      {
+        "line": 3923,
+        "excerpt": "const LOOK241=skill180;skill180=function(p,k){const s=LOOK241(p,k);if(CAST_CONTEXT241?.p===p)CAST_CONTEXT241.skill=s;return s;};"
+      },
+      {
+        "line": 4000,
+        "excerpt": "const SKILL250=skill180;skill180=function(p,k){const s=SKILL250(p,k);if(!s?.pollution240)return s;const n=RUN?.difficulty210??selectedDiff210(),o={...s};o.n+='・'+(n>=5?'深染':n>=3?'共鳴':'初染');o.pollutionStage250=n>=5?3:n>=3"
+      }
+    ],
+    "skillExtras155": [
+      {
+        "line": 2521,
+        "excerpt": "function skillExtras155(p,s){if(s.selfShield155)p.sh=Math.max(p.sh,Math.round(p.maxhp*s.selfShield155));if(s.teamShield155)for(const q of RUN.party)if(q.hp>0)q.sh=Math.max(q.sh,Math.round(q.maxhp*s.teamShield155));if(s.t"
+      },
+      {
+        "line": 2626,
+        "excerpt": "const EXTRA156=skillExtras155;skillExtras155=function(p,s){EXTRA156(p,s);if(s.shellInv156)p.shellInv156=1;};"
+      },
+      {
+        "line": 3299,
+        "excerpt": "const EX_200=skillExtras155;skillExtras155=function(p,s){EX_200(p,s);const fs=BAT?.foes.filter(f=>f.hp>0)||[];if(s.extra200==='curseAll')fs.forEach(f=>give(f,'curse',3));if(s.extra200==='litAll')fs.forEach(f=>give(f,'lit"
+      },
+      {
+        "line": 3525,
+        "excerpt": "const EXTRA210=skillExtras155;skillExtras155=function(p,s){EXTRA210(p,s);const allies=RUN.party.filter(q=>q.hp>0),foes=BAT.foes.filter(q=>q.hp>0),ex=s.extra210;"
+      },
+      {
+        "line": 3670,
+        "excerpt": "const EXTRAS212=skillExtras155;skillExtras155=function(p,s){const r=EXTRAS212(p,s),el=$('al'+RUN.party.indexOf(p));if(['field','sacred'].includes(s.extra210))spawnFx212(el,'fx_field');else if(['soul','soul2','twelve'].in"
+      },
+      {
+        "line": 3741,
+        "excerpt": "const EX230=skillExtras155;skillExtras155=function(p,s){const r=EX230(p,s);const guards=(s.threadGuard230||0)+(s.t==='link'?(p.fx.threadGuard230||0):0);if(guards){const n=BAT.foes.filter(f=>f.hp>0&&has(f,'link')).length,"
+      },
+      {
+        "line": 3853,
+        "excerpt": "const EX240=skillExtras155;skillExtras155=function(p,s){const r=EX240(p,s),plan=s.pollution240;if(!plan||p.pollutionCast240===BAT.turn)return r;p.pollutionCast240=BAT.turn;const n=Math.min(5,pollutionDepth240()),f=BAT.fo"
+      },
+      {
+        "line": 3927,
+        "excerpt": "const EXTRA241=skillExtras155;skillExtras155=function(p,s){EXTRA241(p,s);const br=s.branch241;if(!br)return;const {type,b}=br,foes=BAT.foes.filter(q=>q.hp>0),team=RUN.party.filter(q=>q.hp>0),key=type+':'+b;p.branchTurns2"
+      },
+      {
+        "line": 4001,
+        "excerpt": "const EXTRA250=skillExtras155;skillExtras155=function(p,s){const prior=p.pollutionCast240,r=EXTRA250(p,s);if(!s.pollution240||prior===BAT.turn||p.pollutionCast240!==BAT.turn)return r;const n=RUN.difficulty210||0,type=s.p"
+      }
+    ],
+    "transform241": [
+      {
+        "line": 3907,
+        "excerpt": "function transform241(original,h,b){const s={...original};for(const k of ['st','also','also2','selfSt','teamSt','teamBuff155'])if(s[k])s[k]=s[k].slice();if(!b)return s;const type=profile241(s,h),pair=BRANCH241[type][b-1]"
+      }
+    ],
+    "skillOrder212": [
+      {
+        "line": 3627,
+        "excerpt": "function skillOrder212(p){const keys=p.skills||[],n=keys.length,start=(p.cursor212||0)%Math.max(1,n),rot=keys.slice(start).concat(keys.slice(0,start)),h=S.heroes.find(h=>h.id===p.id);if(h?.comboPriority212){const go=rot."
+      }
+    ],
+    "burstReady212": [
+      {
+        "line": 3625,
+        "excerpt": "function burstReady212(f,s,p){const k=burstRule212(s);if(!k)return true;if(k==='doom')return has(f,'doom')&&((f.st.doom.stacks212||1)>=3||f.st.doom.v>=2*f.st.doom.b);return stack212(f,k)>=(s.threshold212||3);}"
+      }
+    ],
+    "give": [
+      {
+        "line": 3640,
+        "excerpt": "function give(u,k,t,v){const prev=u.st?.[k],old=has(u,k)?(prev.stacks212||1):0;giveCore212(u,k,t,v);const now=u.st?.[k];if(!now||now===prev)return;if(['poison','burn','curse'].includes(k)){now.stacks212=Math.min(5,old+1)"
+      },
+      {
+        "line": 3742,
+        "excerpt": "const GIVE230=give;give=function(u,k,t,v){const old=u.st?.[k],r=GIVE230(u,k,t,v);if(k==='seal'&&SK[ACTIVE_SKILL212]?.curseBreak230&&u.st?.seal&&u.st.seal!==old&&has(u,'curse'))GIVE230(u,'weak',2);return r;};"
+      },
+      {
+        "line": 3925,
+        "excerpt": "const GIVE241=give;give=function(u,k,...a){const c=CAST_CONTEXT241,old=window.__statusSource156,src=c?.p;const acc=src?.fx?.statusAcc||0;if(src&&c.skill?.statusAcc241)src.fx.statusAcc=acc+c.skill.statusAcc241;try{return "
+      }
+    ],
+    "foeAct": [
+      {
+        "line": 2210,
+        "excerpt": "function foeAct(f,i){window.__castOwner=null;window.__statusSource156=null;window.__fxi=null;window.__skI=null;BAT.lastFoeFire=false;const F=FOES[BAT.kind];if(F.ev&&!BAT.evA){BAT.evA=1;blog(F.ev.atk)}if(DF().hunger&&!f.h"
+      },
+      {
+        "line": 3305,
+        "excerpt": "const FOE_200=foeAct;foeAct=function(f,i){if(RUN?.world180&&f.hp>0){if(f.windup200&&BAT.turn>=f.windup200){f.windup200=0;const alive=RUN.party.map((p,k)=>({p,k})).filter(o=>o.p.hp>0);BAT.aoe=1;let total=0;for(const o of "
+      },
+      {
+        "line": 3559,
+        "excerpt": "const FOEACT210=foeAct;foeAct=function(f,...a){const hp=f.hp,r=FOEACT210(f,...a);if(f.anti210>BAT.turn&&f.hp>hp){f.hp=hp;blog('反寄生抑制：這次生命吸取／自我修復沒有生效。');}return r;};"
+      },
+      {
+        "line": 3806,
+        "excerpt": "const FOE240=foeAct;foeAct=function(f,...a){if(has(f,'bind')){delete f.st.bind;blog(f.name+' 被束縛截住一次行動。');return;}return FOE240(f,...a);};"
+      },
+      {
+        "line": 3998,
+        "excerpt": "const FOEACT250=foeAct;foeAct=function(f,i){if(!RUN||!BAT)return;const n=RUN.difficulty210||0,isBoss=!!(FOES[BAT.kind]?.boss||BAT.chief||BAT.dom||RUN.world180);if(isBoss&&f.hp>0){if(f.pressureDue250&&f.pressureDue250<BAT"
+      }
+    ],
+    "hitFoe": [
+      {
+        "line": 2026,
+        "excerpt": "function hitFoe(f,p,m=1,o={}){const sniff=BAT&&BAT.turn<=2&&RUN.party.some(q=>q.hp>0&&q.fx&&q.fx.sniff);if(p.nextHit&&!o.crit){p.nextHit=0;o={...o,crit:o.crit}}else if(!o.sureHit240&&Math.random()<(sniff?0:Math.max(0,f.d"
+      },
+      {
+        "line": 3054,
+        "excerpt": "const HIT190=hitFoe;hitFoe=function(f,p,m=1,o={}){const magic=magical190(p,o),rule=RUN?.trial190?.rule;if(rule==='physical'&&!magic||rule==='magic'&&magic){blog((rule==='physical'?'物理':'魔法')+'免疫：這次直接傷害無效。');return {d:0,c"
+      },
+      {
+        "line": 3298,
+        "excerpt": "const HIT_200=hitFoe;hitFoe=function(f,p,m=1,o={}){const frozen=o.combo200==='frost'&&has(f,'freeze'),chilled=o.combo200==='chill'&&has(f,'slow'),phase=f.ph;let bonus=comboMult200(f,o);if(RUN?.world180&&f.stagger200>BAT."
+      },
+      {
+        "line": 3372,
+        "excerpt": "const HIT_WOUND200=hitFoe;hitFoe=function(f,p,m=1,o={}){if(o.skill&&has(f,'bleed'))m*=1+(p.fx.vsBleed200||0);return HIT_WOUND200(f,p,m,o);};"
+      },
+      {
+        "line": 3542,
+        "excerpt": "const HIT210=hitFoe;hitFoe=function(f,p,m=1,o={}){if(has(f,'link'))m*=1+(p.fx.linkP210||0);return HIT210(f,p,m,o);};"
+      },
+      {
+        "line": 3740,
+        "excerpt": "const HIT230=hitFoe;hitFoe=function(f,p,m,o={}){const s=SK[ACTIVE_SKILL212],cold=has(f,'slow')||has(f,'freeze'),controlled=has(f,'stun')||has(f,'bind'),r=HIT230(f,p,m,o);if(r?.d>0&&p.hp>0&&BAT){const coldRate=(s?.coldGua"
+      },
+      {
+        "line": 3924,
+        "excerpt": "const HIT241=hitFoe;hitFoe=function(f,p,...a){if(CAST_CONTEXT241?.p===p)CAST_CONTEXT241.targets.set(f.id||f,{f});return HIT241(f,p,...a);};"
+      }
+    ],
+    "healUnit": [
+      {
+        "line": 2105,
+        "excerpt": "function healUnit(q,h,src){if(BAT&&hcM(q)===0)return 0;if(q.uq&&q.uq.includes('kq_zh'))h*=1.15;if(RUN&&RUN.famHeal)h*=RUN.famHeal;if(hasU(q,'lg_lamp'))h*=1.25;if(BAT&&BAT.fury)h*=Math.max(.3,1-.08*BAT.fury);const SX=(src"
+      },
+      {
+        "line": 3056,
+        "excerpt": "const HEAL190=healUnit;healUnit=function(q,n,src){if(activeSynergy190('toxin')&&BAT.foes.some(f=>f.hp>0&&has(f,'poison')))n*=1.08;return HEAL190(q,n,src);};"
+      },
+      {
+        "line": 3303,
+        "excerpt": "const HEAL_200=healUnit;healUnit=function(q,n,src){const room=q.maxhp-q.hp,r=HEAL_200(q,n,src);if(r>0&&src?.fx.mystWindow4_200)q.sh+=Math.min(Math.round(q.maxhp*.25),Math.max(0,r-room));return r;};"
+      },
+      {
+        "line": 3743,
+        "excerpt": "const HEAL230=healUnit;healUnit=function(q,n,src){const low=q.hp/q.maxhp<.3,before=q.hp,r=HEAL230(q,n,src),extra=SK[ACTIVE_SKILL212]?.triage230||0;if(low&&q.hp>before&&extra)q.sh+=Math.round(q.maxhp*extra);return r;};"
+      }
+    ],
+    "newRound": [
+      {
+        "line": 2122,
+        "excerpt": "function newRound(){BAT.turn++;{const F0=FOES[BAT.kind];const room=RUN.mem||RUN.arena||RUN.train;const lim=BAT.dom?24:room?32:(F0.boss||F0.yy||BAT.elite||BAT.intr)?22:12;const tt=BAT.turn-(BAT.t0||0);if(tt>lim){const fu="
+      },
+      {
+        "line": 2496,
+        "excerpt": "newRound=function(){round155();if(!BAT||!DF().manic||BAT.turn%3)return;for(const [i,f] of BAT.foes.entries()){if(f.hp<=0)continue;const bad=NEG.find(k=>has(f,k));if(bad)delete f.st[bad];BAT.order.push({side:'f',i,spd:f.s"
+      },
+      {
+        "line": 2724,
+        "excerpt": "const ROUND156=newRound;newRound=function(){ROUND156();if(!BAT?.dom||!RUN)return;const f=BAT.foes.find(f=>f.hp>0);if(!f)return;if(BAT.domAtk156){f.atk=Math.round(f.atk/BAT.domAtk156);BAT.domAtk156=0;}if(BAT.turn%4===3){B"
+      },
+      {
+        "line": 3052,
+        "excerpt": "const ROUND190=newRound;newRound=function(){ROUND190();if(BAT?.turn===1&&activeSynergy190('lamps')){for(const p of RUN.party)if(p.hp>0)p.sh+=Math.round(p.maxhp*.04);blog('燈火接力：全隊獲得薄層護盾。');}};"
+      },
+      {
+        "line": 3353,
+        "excerpt": "const ROUND_200=newRound;newRound=function(){ROUND_200();if(!BAT||!RUN)return;if(RUN.world180){const f=BAT.foes[0];recordWorldDamage200(f);const t=BAT.turn;if(t%3===0&&f.hp>0){f.windup200=t+1;f.poise200=100;f.breakHits20"
+      },
+      {
+        "line": 3563,
+        "excerpt": "const ROUND210=newRound;newRound=function(){ROUND210();if(RUN?.world180&&BAT?.turn>=8&&BAT.foes[0])BAT.foes[0].atk=Math.round(BAT.foes[0].atk*Math.pow(1.22,RUN.difficulty210||0));};"
+      },
+      {
+        "line": 3821,
+        "excerpt": "const ROUND240=newRound;newRound=function(){if(RUN&&BAT)for(const u of [...RUN.party,...BAT.foes])restoreEncounter240(u);const r=ROUND240();if(RUN&&BAT)for(const u of [...RUN.party,...BAT.foes])restoreEncounter240(u);ret"
+      }
+    ],
+    "finishBattle": [
+      {
+        "line": 2233,
+        "excerpt": "function finishBattle(win,fled){captureReport212(win,fled);const rewardRules154={...DF()},rewardDiff154=dIdx();if(BAT)LASTLOG={name:FOES[BAT.kind].name,win:!!win,lines:(BAT.full||[]).slice()};BAT_mlv=BAT.mlv||1;LASTSUM=B"
+      },
+      {
+        "line": 2711,
+        "excerpt": "const FIN156=finishBattle;finishBattle=function(win,fled){const external=win&&!fled&&RUN?.portal&&RUN.portal!=='iron'&&RUN.floor===44?RUN.portal:null;const r=FIN156(win,fled);if(external){const p=ptl();p[external+'Done']"
+      },
+      {
+        "line": 2938,
+        "excerpt": "const FIN180=finishBattle;finishBattle=function(win,fled){if(!BAT||!RUN)return;if(RUN.world180)return finishWorld180(!!win,!!fled);if(fled&&RUN.safe){const sf=RUN.safe;RUN.safe=null;BAT=null;$('battle')?.remove();safeRes"
+      },
+      {
+        "line": 3078,
+        "excerpt": "const FIN190=finishBattle;finishBattle=function(win,fled){if(RUN?.raid190)return finishRaid190(!!win,!!fled);if(RUN?.trial190)return finishTrial190(!!win,!!fled);const before=LOOT190;if(win&&RUN&&BAT&&!RUN.world180)LOOT1"
+      },
+      {
+        "line": 3653,
+        "excerpt": "const FIN212=finishBattle;finishBattle=function(win,fled){captureReport212(win,fled);return FIN212(win,fled);};"
+      },
+      {
+        "line": 3822,
+        "excerpt": "const FIN240=finishBattle;finishBattle=function(...a){clearEncounter240();return FIN240(...a);};"
+      },
+      {
+        "line": 3861,
+        "excerpt": "const FINISH240=finishBattle;finishBattle=function(win,...a){if(win&&RUN){const n=pollutionDepth240();if(!S.pollutionBook240.includes(n))S.pollutionBook240.push(n);}return FINISH240(win,...a);};"
+      },
+      {
+        "line": 4036,
+        "excerpt": "const FINISH250=finishBattle;finishBattle=function(win,fled){if(RUN?.chapterFight250)return finishChapter250(!!win,!!fled);return FINISH250(win,fled);};"
+      }
+    ],
+    "roomRewards156": [
+      {
+        "line": 2589,
+        "excerpt": "function roomRewards156(arena,kind,r){if(!RUN)return;init156(S);const coin=arena||FOES[kind]?.boss||BAT?.chief?2:RUN.train||BAT?.elite?1:0;coinCredit210(coin);const group=arena?'arena':RUN.mem?'mem':RUN.train?'train':'ma"
+      },
+      {
+        "line": 2839,
+        "excerpt": "const ROOMRE170=roomRewards156;roomRewards156=function(arena,kind,r){ROOMRE170(arena,kind,r);if(!arena)return;init170(S);const families=[...new Set([...(BAT.families170||[]),bloodOf170(kind)].filter(Boolean))];for(const "
+      },
+      {
+        "line": 3605,
+        "excerpt": "const ROOMS212=roomRewards156;roomRewards156=function(...a){const r=ROOMS212(...a);if(!RUN?.safe){const e=economyDay212();e.wins++;for(const n of [3,6,10])if(e.wins>=n&&!e.milestones.includes(n)){e.milestones.push(n);dai"
+      },
+      {
+        "line": 4029,
+        "excerpt": "roomRewards156=function(arena,kind,r){if(!RUN)return;init156(S);init170(S);coinCredit210(arena||FOES[kind]?.boss||BAT?.chief?2:BAT?.elite?1:0);const group=arena?'arena':RUN.mem?'mem':'main';S.floorRecords156[group]=Math."
+      }
+    ],
+    "dailyCoins212": [
+      {
+        "line": 3590,
+        "excerpt": "function dailyCoins212(n){const e=economyDay212(),g=Math.min(Math.max(0,Math.floor(n)),100-e.earned);S.ravc=(S.ravc||0)+g;e.earned+=g;return g;}"
+      }
+    ],
+    "economyDay212": [
+      {
+        "line": 3589,
+        "excerpt": "function economyDay212(){init212(S);const day=worldDay180();if(S.economy212.date!==day)S.economy212={date:day,earned:0,wins:0,patrol:false,daily:false,milestones:[]};return S.economy212;}"
+      }
+    ],
+    "claimMail212": [
+      {
+        "line": 3611,
+        "excerpt": "function claimMail212(id){if(!idle180())return toast('請先完成這趟探索再領取。');init212(S);const support=id==='support220',chapter=chapterRewards212().find(x=>x[0]===id);if(!support&&!chapter?.[2])return;if(S.rewards212['mail:'+id]"
+      }
+    ],
+    "settleMemory230": [
+      {
+        "line": 3692,
+        "excerpt": "function settleMemory230(o){for(const h of o.heroes||[])if(h.title210>=4){const n=Math.floor((o.shards210?.[h.key]||0)/10);if(n){o.memory230+=n;o.shards210[h.key]-=n*10;}}return o;}"
+      }
+    ],
+    "infuse230": [
+      {
+        "line": 3706,
+        "excerpt": "function infuse230(id,stage,amount){if(!idle180())return;init230(S);const h=S.heroes.find(h=>h.id===Number(id));stage=Number(stage);if(!h||h.dead||h.lv>=capLv()||rb210(h)<stage)return;const n=Math.min(integer180(amount,9"
+      }
+    ],
+    "team": [
+      {
+        "line": 1468,
+        "excerpt": "function team(){const rank=h=>h.dead?100000:S.party.includes(h.id)?S.party.indexOf(h.id):-1;const rows=S.heroes.slice().sort((a,b)=>{const x=rank(a),y=rank(b);return (x===-1?10000:x)-(y===-1?10000:y)}).map(h=>{const c=ca"
+      },
+      {
+        "line": 2750,
+        "excerpt": "team=function(){"
+      },
+      {
+        "line": 3049,
+        "excerpt": "const TEAM190=team;team=function(){TEAM190();$('box').insertAdjacentHTML('afterbegin',synergyPanel190(S.party.map(id=>S.heroes.find(h=>h.id===id)))+'<button class=\"btn\" onclick=\"trainingMenu190()\">後備與追趕訓練</button>');};"
+      },
+      {
+        "line": 3336,
+        "excerpt": "team=function(){TEAM190();$('box').insertAdjacentHTML('afterbegin','<p class=\"muted200\">出戰角色列在最前方；點角色查看技能與裝備。</p><button class=\"btn small\" onclick=\"comboGuide200()\">技能與狀態搭配百科</button>');};"
+      },
+      {
+        "line": 3515,
+        "excerpt": "const TEAM210=team;team=function(){TEAM210();for(const row of $('box').querySelectorAll('.hero')){const id=row.querySelector('[onclick^=\"heroDetail(\"]')?.getAttribute('onclick')?.match(/\\d+/)?.[0],h=S.heroes.find(h=>h.id"
+      },
+      {
+        "line": 3697,
+        "excerpt": "const TEAM230=team;team=function(){if(!idle180())return;init230(S);TEAM230();$('box').insertAdjacentHTML('afterbegin',`<section class=\"q teams230\"><h3>常規隊伍・每組四人</h3><div class=\"tabs230\">${S.teams230.map((ids,i)=>`<button"
+      }
+    ],
+    "worldRoster200": [
+      {
+        "line": 3346,
+        "excerpt": "function worldRoster200(){if(!idle180())return;const ids=S.worldParty200;modal(`<h2>世界王出戰編制 ${ids.length}/8</h2><p>最多八人同場作戰。一般隊伍仍維持四人；不改動主線出戰名單。</p>${S.heroes.slice().sort((a,b)=>Number(ids.includes(b.id))-Number(ids.inc"
+      },
+      {
+        "line": 3565,
+        "excerpt": "const ROSTER210=worldRoster200;worldRoster200=function(){ROSTER210();for(const row of $('box').querySelectorAll('.roster200')){const id=row.querySelector('[onclick^=\"worldAssign200(\"]')?.getAttribute('onclick')?.match(/\\"
+      },
+      {
+        "line": 3701,
+        "excerpt": "worldRoster200=function(){if(!idle180())return;const hs=worldHeroes200(),ids=hs.map(h=>h.id),born=hs[0]?(rb210(hs[0])>0):null;modal(`<h2>世界王獨立編制 ${ids.length}/8</h2><p>勾選即儲存；此處編制與三組常規隊伍分開。</p>${S.heroes.slice().sort((a,b"
+      }
+    ],
+    "normalizeBond180": [
+      {
+        "line": 2942,
+        "excerpt": "function normalizeBond180(it){if(it.s!=='bond'||!it.owner156)return;const pool=bondPool180(it),next={};for(const[k,v]of Object.entries(it.x||{})){let key=pool.includes(k)?k:pool.find(x=>!(x in next));if(!key)key=pool[0];"
+      }
+    ],
+    "bondPool180": [
+      {
+        "line": 2941,
+        "excerpt": "function bondPool180(it){const fx=BOND_ROUTE_FX170[it.owner156]?.[it.route170||0]||{},keys=['crit','acc','cres','ares','statusAcc','eliteP'];if('healP'in fx||'auraRegen'in fx||'smallHeal'in fx)keys.push('healP','healShie"
+      }
+    ],
+    "genItem": [
+      {
+        "line": 318,
+        "excerpt": "function genItem(t,rb=0,slot){if(t>=4&&RUN&&RUN.floor>=10&&!RUN.abyss&&Math.random()<.6)t=5;t=Math.max(1,Math.min(5,t));const s=slot||pick(ITYPES);const roll=Math.random()*100+rb;const r=roll>98?3:roll>88?2:roll>60?1:0;"
+      },
+      {
+        "line": 2579,
+        "excerpt": "genItem=function(t,rb=0,sl){sl=sl||pick(ITYPES.filter(k=>k!=='bond'));const special=['belt','ear','bond'].includes(sl);const it=GEN156(Math.min(5,t),rb,special?'r':sl);if(special){it.s=sl;it.n=pick(sl==='belt'?['驛站繫帶','骨"
+      },
+      {
+        "line": 3074,
+        "excerpt": "const GEN190=genItem;genItem=function(...a){const it=GEN190(...a);return LOOT190?qualifyItem190(it,LOOT190):it;};"
+      },
+      {
+        "line": 3489,
+        "excerpt": "const GEN210=genItem;genItem=function(...a){return newGearScale210(GEN210(...a));};"
+      }
+    ],
+    "mkUQ": [
+      {
+        "line": 420,
+        "excerpt": "function mkUQ(id){const U=UQ[id];const sty=U.story||id.startsWith('kq_')||id==='fox';const it=genItem(sty?storyTier():Math.max(U.t,storyTier()),sty?0:200,U.s);if(sty)it.story=1;it.r=U.ep?4:3;if(U.ep){it.atk=Math.round(it"
+      },
+      {
+        "line": 2723,
+        "excerpt": "const UQMAKE156=mkUQ;mkUQ=function(id){const it=UQMAKE156(id);if(UQ[id]?.owner156){it.owner156=UQ[id].owner156;it.locked=1;}return it;};"
+      },
+      {
+        "line": 3009,
+        "excerpt": "const MKU180=mkUQ;mkUQ=function(id){const it=MKU180(id);if(UQ[id]?.myth180){it.set=id.split('_').slice(0,2).join('_');it.locked=1;it.atk=Math.round(it.atk*1.18);it.def=Math.round(it.def*1.18);for(const k in it.at)if(it.a"
+      },
+      {
+        "line": 3323,
+        "excerpt": "const MKU_200=mkUQ;mkUQ=function(...a){return upgradeMyth200(MKU_200(...a));};"
+      }
+    ],
+    "relevel170": [
+      {
+        "line": 2815,
+        "excerpt": "function relevel170(it,target,allowLower=false){target=Math.max(allowLower?1:it.ilv||1,Math.min(200,target));const old=it.ilv||1;if(target===old)return it;const ratio=(1+.027*(target-1))/(1+.027*(old-1));it.atk=Math.roun"
+      }
+    ],
+    "newGearScale210": [
+      {
+        "line": 3488,
+        "excerpt": "function newGearScale210(it){if(!it||!RUN)return it;const n=RUN.difficulty210??selectedDiff210(),prev=it.rebirthGear210||0;if(n<=prev)return it;const m=(1+.18*n)/(1+.18*prev),xm=(1+.08*n)/(1+.08*prev);for(const k of ['at"
+      }
+    ],
+    "rollEquipment250": [
+      {
+        "line": 4026,
+        "excerpt": "function rollEquipment250(source,kind,n=0,bonus=0){const odds=lootOdds250(source,n,bonus);if(Math.random()>=odds.chance)return null;const r=Math.random(),poolSource=source==='elite'?'field':source;let it;if(r<odds.epic){"
+      }
+    ],
+    "ordinaryLoot250": [
+      {
+        "line": 4027,
+        "excerpt": "function ordinaryLoot250(kind,elite,chief,guaranteed=false){if(!RUN||guaranteed)return '';const source=RUN.mem?'memory':FOES[kind]?.boss||chief?'boss':elite?'elite':'field',bonus=RUN.party.reduce((a,p)=>a+(p.drop||0),0),"
+      }
+    ],
+    "chapterMenu250": [
+      {
+        "line": 3973,
+        "excerpt": "function chapterMenu250(){if(!idle180())return;init250(S);const c=S.chapter250;closeModal();scene154='chapter250';$('loc').textContent='地方站・六芒門前';const step=Math.min(5,c.step),[title,bg,text]=CH4_SCENES250[step];$('stage"
+      }
+    ],
+    "chapterFight250": [
+      {
+        "line": 3978,
+        "excerpt": "function chapterFight250(guard=false){if(!idle180()||!chapterReady250())return;init250(S);if(S.chapter250.step!==(guard?2:4))return;const hs=listHeroes210(S.party);if(!hs.length||!canDepart210(hs.map(h=>h.id)))return;con"
+      }
+    ],
+    "finishChapter250": [
+      {
+        "line": 3979,
+        "excerpt": "function finishChapter250(win,fled){win=win&&!fled;if(!BAT||!RUN?.chapterFight250||BAT.settled250)return;BAT.settled250=true;clearTimeout(TIMER230);captureReport212(!!win,!!fled);const guard=RUN.chapterFight250.guard,lev"
+      }
+    ],
+    "chapterEnding250": [
+      {
+        "line": 3980,
+        "excerpt": "function chapterEnding250(ending){if(!idle180()||!chapterReady250()||!['return','store','watch'].includes(ending))return;init250(S);if(S.chapter250.step!==5)return;S.chapter250.ending=ending;S.chapter250.step=6;S.ch4=tru"
+      }
+    ],
+    "goalTxt": [
+      {
+        "line": 1512,
+        "excerpt": "function goalTxt(){if(S.story<8)return GOAL[S.story];if(!S.gateDone)return '打通第九層的通道（地窖入口）';if(!S.ch2)return S.maxF>=10?`探索逆址郵廊（最深第 ${S.maxF} 層），打倒退件執事・無簽（第 14 層）`:'推開地址之門，進入逆址郵廊（第 10 層）';if(!S.ch3)return S.maxF>=15?`探索地"
+      }
+    ],
+    "spawnFx212": [
+      {
+        "line": 3666,
+        "excerpt": "function spawnFx212(el,key){if(!el||!ARTFILES212[key])return;const host=el.querySelector('.pic')||el;host.querySelectorAll(':scope > .fx-image212').forEach(x=>x.remove());if(getComputedStyle(host).position==='static')hos"
+      },
+      {
+        "line": 3729,
+        "excerpt": "spawnFx212=function(el,key){if(!el||!ARTFILES212[key])return;const target=el.querySelector('.pic')||el;const overlay=document.createElement('span');overlay.className='effect-anchor230';overlay.setAttribute('aria-hidden',"
+      },
+      {
+        "line": 3813,
+        "excerpt": "spawnFx212=function(el,key){if(!el)return;const target=el.querySelector('.pic')||el,b=$('battle');if(!b)return;const r=target.getBoundingClientRect(),br=b.getBoundingClientRect(),host=document.createElement('span');host."
+      },
+      {
+        "line": 3947,
+        "excerpt": "spawnFx212=function(el,raw){if(!el||!$('battle'))return;const key=effectKey241(raw),battle=$('battle'),target=el.querySelector('.pic')||el,r=target.getBoundingClientRect(),br=battle.getBoundingClientRect(),host=document."
+      }
+    ],
+    "assetImage241": [
+      {
+        "line": 3946,
+        "excerpt": "function assetImage241(key){if(EFFECT_IMAGES241.has(key))return EFFECT_IMAGES241.get(key);const promise=new Promise(resolve=>{const path=ARTFILES212[key];if(!path){resolve(null);return;}const im=new Image();im.onload=()="
+      }
+    ],
+    "loadCostumes240": [
+      {
+        "line": 3869,
+        "excerpt": "async function loadCostumes240(){try{const r=await fetch('art/costumes/catalog.json',{cache:'no-cache'});if(!r.ok)throw Error('catalog '+r.status);acceptCostumes240(await r.json());}catch(e){COSTUME_FETCH240='時裝目錄尚未提供；原圖"
+      },
+      {
+        "line": 4054,
+        "excerpt": "loadCostumes240=async function(remoteOnly=false){try{let remote=remoteOnly,response=remoteOnly?null:await fetch('art/costumes/catalog.json',{cache:'no-cache'});if(!response?.ok){remote=true;response=await fetch(MATERIAL_"
+      }
+    ],
+    "sig": [
+      {
+        "line": 1998,
+        "excerpt": "function sig(kind,text){const fa=$('foeArea');if(!fa)return;const w=document.createElement('div');w.className='sig sig-'+kind;"
+      },
+      {
+        "line": 4057,
+        "excerpt": "sig=function(kind,text){const key={waves:'boss_charge',beam:'thrust',shatter:'ice',lanterns:'fire',rain:'arrow',name:'curse'}[kind]||'boss_charge';spawnFx212($('foeBox'),'fx_'+key);if(kind==='shatter')sfx('shatter');if(t"
+      }
+    ]
+  },
+  "heroes": [
+    {
+      "key": "shieldF",
+      "class": "shield",
+      "name": "鴉羽盾衛・霜綾"
+    },
+    {
+      "key": "healerF",
+      "class": "healer",
+      "name": "藥箱治療師・青蒿"
+    },
+    {
+      "key": "mageF",
+      "class": "mage",
+      "name": "提燈術士・夜漣"
+    },
+    {
+      "key": "spear",
+      "class": "lancer",
+      "name": "長槍手・槿"
+    },
+    {
+      "key": "archerH",
+      "class": "assassin",
+      "name": "夜羽刺客・鳶"
+    },
+    {
+      "key": "shieldM",
+      "class": "shield",
+      "name": "鴉羽盾衛・鐵崇"
+    },
+    {
+      "key": "mageM",
+      "class": "mage",
+      "name": "提燈術士・昏燭"
+    },
+    {
+      "key": "shield0",
+      "class": "shield",
+      "name": "流浪劍盾・葛隆"
+    },
+    {
+      "key": "mage0",
+      "class": "curser",
+      "name": "蒙面咒師・無名"
+    },
+    {
+      "key": "healer1",
+      "class": "healer",
+      "name": "流浪藥師・蕁"
+    },
+    {
+      "key": "knightW",
+      "class": "shield",
+      "name": "白羽騎士・伊恪"
+    },
+    {
+      "key": "herb",
+      "class": "healer",
+      "name": "採藥人・芸"
+    },
+    {
+      "key": "foxgirl",
+      "class": "mage",
+      "name": "提燈旅人・緋汐"
+    },
+    {
+      "key": "horn",
+      "class": "warrior",
+      "name": "角盔戰士・瞿山"
+    },
+    {
+      "key": "raven",
+      "class": "archer",
+      "name": "灰喙夜鴉・啄夜"
+    },
+    {
+      "key": "fox",
+      "class": "mage",
+      "name": "墨尾茸狐・燈守"
+    },
+    {
+      "key": "snake",
+      "class": "shifter",
+      "name": "燈縫細蛇・藥鱗"
+    },
+    {
+      "key": "spider",
+      "class": "weaver",
+      "name": "紗橋結蛛・織燭"
+    },
+    {
+      "key": "bone",
+      "class": "shield",
+      "name": "苔骨殼獸・磐甲"
+    },
+    {
+      "key": "tiekou",
+      "class": "shield",
+      "name": "白鐵盾衛・鐵扣"
+    },
+    {
+      "key": "dragon",
+      "class": "warrior",
+      "name": "黑鱗龍裔・蟄"
+    },
+    {
+      "key": "baigu",
+      "class": "weaver",
+      "name": "白骨先生"
+    },
+    {
+      "key": "luoqingluan",
+      "class": "mage",
+      "name": "洛青鸞"
+    }
+  ],
+  "initial_media_registry": {
+    "ASSETS": {
+      "initial_registry_count": 785,
+      "embedded": 785,
+      "external_or_relative": 0
+    },
+    "MUS": {
+      "initial_registry_count": 8,
+      "embedded": 8,
+      "external_or_relative": 0
+    }
+  },
+  "snapshot": {
+    "version": "v2.5.0",
+    "main_commit": "78d4771135e1cf461619f2bcaf1fd713992de496",
+    "index_git_blob": "0734dff521677f827dc635d6a1df86c9d75c2418",
+    "asset_commit": "a3761e78e2c729faea8bf44aeb9652c74f04825a",
+    "asset_pr": 1,
+    "asset_pr_merged": false
+  },
+  "statuses_count": 100
+}

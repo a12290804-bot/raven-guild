@@ -1,0 +1,526 @@
+{
+  "project": "渡鴉公會",
+  "version": "v2.5.0",
+  "handoff_date": "2026-10-31",
+  "game_unchanged_by_handoff": true,
+  "snapshot_main_commit": "78d4771135e1cf461619f2bcaf1fd713992de496",
+  "index_git_blob": "0734dff521677f827dc635d6a1df86c9d75c2418",
+  "index_sha256": "48affa41e0241ed3bdf536a7fc31ff3d0d126d9aca4022b576f3077aa3c9f029",
+  "files": [
+    {
+      "path": "FULL_HANDOFF.txt",
+      "bytes": 54549,
+      "sha256": "7572eb03df24761cac19fde4d3d1a3b7f8a4f7ff6bd0c34bbe093728a2e72499"
+    },
+    {
+      "path": "HANDOFF_FULL.md",
+      "bytes": 22937,
+      "sha256": "69b12c4003c3675365418402383cbaa6cc0877b399b59c159edf1641657b015e"
+    },
+    {
+      "path": "KNOWN_ISSUES.md",
+      "bytes": 6579,
+      "sha256": "c188946cb98cc327e2a77aa8e74e3466728b1e41e02edafe82392713a53bac18"
+    },
+    {
+      "path": "QA_RESULT.json",
+      "bytes": 769,
+      "sha256": "d901130014c92155d844740dd58e923b45ee1145a6cb890bad66c3a25f8e3d86"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2540,
+      "sha256": "b83df24815a836dd6198de6cbd3f06609f4cd760ac42251c299d4c07d1278381"
+    },
+    {
+      "path": "SOURCE_MAP.json",
+      "bytes": 47170,
+      "sha256": "98b41759bf8b014af5ee8ba1a80bc329401810237b28540e50717fd957d42c9d"
+    },
+    {
+      "path": "STATUS_MATRIX.csv",
+      "bytes": 15394,
+      "sha256": "9a630861329bee4e40190522e5dd8edf7b29498cdc769d78c677dae3eb2e57fa"
+    },
+    {
+      "path": "STATUS_MATRIX.json",
+      "bytes": 27339,
+      "sha256": "d8956020cf40ab93c7a2716a394bce050714afc8fde4ff26931e0dfebea07c8b"
+    },
+    {
+      "path": "TO_CLAUDE.md",
+      "bytes": 4570,
+      "sha256": "eb7b90c7e00c35bae45217487c17dcc6889dd826eaec1a6246b6ca095554c079"
+    },
+    {
+      "path": "art/costumes/baigu_costume241.jpg",
+      "bytes": 442868,
+      "sha256": "e45165e7457eea64933e4c457d0e031042b87b87f84f058b6423740f4a66b95a"
+    },
+    {
+      "path": "art/costumes/catalog.example.json",
+      "bytes": 482,
+      "sha256": "7bd863c7fe48ed1c6c0a75830218afdcb5c660ae76c2c2af513fdabf5ddab4c2"
+    },
+    {
+      "path": "art/costumes/catalog.json",
+      "bytes": 1267,
+      "sha256": "4339aa828cebfce3e7054cc90548b398cb3bcfbac3bbc070d348cb9e4e0da5e5"
+    },
+    {
+      "path": "art/costumes/luoqingluan_costume241.jpg",
+      "bytes": 513974,
+      "sha256": "4bcdf0d93b4ce27d650eed0b8395bef388e436d89854e2082b360cf1d1d4b499"
+    },
+    {
+      "path": "art/costumes/mageF_costume241.jpg",
+      "bytes": 481579,
+      "sha256": "4388041c0c009d23bf1dcf42245eae8fd248b5b6d6608f088c34f260dbcb73b9"
+    },
+    {
+      "path": "art/costumes/spear_costume241.jpg",
+      "bytes": 497693,
+      "sha256": "1f93657b8d6b21b0bdd84ca99113ac83f6483e69ee3d08c3f802d6c79a6fa7c6"
+    },
+    {
+      "path": "art/effects/v220/fx_arrow.png",
+      "bytes": 134952,
+      "sha256": "ff7f7a7bb74642000db317d1ce198991a950633af0097c9f34884ff57b85efe6"
+    },
+    {
+      "path": "art/effects/v220/fx_boss_break.png",
+      "bytes": 181592,
+      "sha256": "1e1939d138288375bf0999be3b4edb6dd3674ef1236ec08b769566674f82f521"
+    },
+    {
+      "path": "art/effects/v220/fx_boss_charge.png",
+      "bytes": 208918,
+      "sha256": "ee510adb5f0d1fd541085f5af152020b35765f9600e49ed72f0cb526034f8645"
+    },
+    {
+      "path": "art/effects/v220/fx_cleanse.png",
+      "bytes": 174068,
+      "sha256": "0a654ead26ecc88905992c5546fe98cf5eba15996c40926f6fba258f1286bfed"
+    },
+    {
+      "path": "art/effects/v220/fx_curse.png",
+      "bytes": 223097,
+      "sha256": "33f20fc754463286e599ee9bf042352d4db7144fc8d761f13157e44ab1ae0859"
+    },
+    {
+      "path": "art/effects/v220/fx_doom.png",
+      "bytes": 208762,
+      "sha256": "dd495ceb5990bd38de466aa4854c8eaa091c56efbeda28a70f70844ab97f5658"
+    },
+    {
+      "path": "art/effects/v220/fx_feathers.png",
+      "bytes": 243653,
+      "sha256": "c3b6a5d364cd103beea24bb48d4a29ffbc9745d2c89f72e0f6b6d6a9c7ecdcae"
+    },
+    {
+      "path": "art/effects/v220/fx_field.png",
+      "bytes": 192932,
+      "sha256": "0e2e7fdface76644d53f91cea4b9a9e70d01d685fb01f35aaaaa4ac67d497576"
+    },
+    {
+      "path": "art/effects/v220/fx_fire.png",
+      "bytes": 206972,
+      "sha256": "6f1ab6536c6c0ba48beaa0fc8317b5d27dd00b98d7e17b60ef53cd18a44f2a8a"
+    },
+    {
+      "path": "art/effects/v220/fx_foxfire.png",
+      "bytes": 238121,
+      "sha256": "3bcb9d11511fcc3af2cbb5ba217841c9f802d107ff585ba0173d25deb2a8d732"
+    },
+    {
+      "path": "art/effects/v220/fx_heal.png",
+      "bytes": 194275,
+      "sha256": "d7ea9f729016cf6da85fdbef273dbbd6a7dbec52bad7e0e2a99a6ad341b00116"
+    },
+    {
+      "path": "art/effects/v220/fx_ice.png",
+      "bytes": 228448,
+      "sha256": "84b653425ecebf6b9ad461d822f7c1b48e0d011aa0ceb48802012b0e8ea85620"
+    },
+    {
+      "path": "art/effects/v220/fx_mutation.png",
+      "bytes": 207104,
+      "sha256": "63bee36ed7f7995a9640fa7ae5598a1fb1d68f7fec392438123639f51d55b2fe"
+    },
+    {
+      "path": "art/effects/v220/fx_mystic.png",
+      "bytes": 187697,
+      "sha256": "411293011f2dedd97a825b546c043edd3b7731011d2f6efa5086f9f8dafd5443"
+    },
+    {
+      "path": "art/effects/v220/fx_poison.png",
+      "bytes": 200723,
+      "sha256": "359c47abeb6185b19ef6f13eb61ef716711a7df4194e6f3dbbd96407fc383185"
+    },
+    {
+      "path": "art/effects/v220/fx_puppet.png",
+      "bytes": 241640,
+      "sha256": "786dc824ce4e58ddb668ea2a2c8648873d00d7a0879a0f0b0acbd129383bbc6c"
+    },
+    {
+      "path": "art/effects/v220/fx_quench.png",
+      "bytes": 204621,
+      "sha256": "598eab9d11ac0c274f49a801c160874c90495ea0c64e836b44f88408ca143a58"
+    },
+    {
+      "path": "art/effects/v220/fx_shield.png",
+      "bytes": 204817,
+      "sha256": "7bae81730ae5a4c995f20ceb5a8f78f7ea67412f4ee1c073a9aeedb8dd4205f0"
+    },
+    {
+      "path": "art/effects/v220/fx_slash.png",
+      "bytes": 214050,
+      "sha256": "d835800886b2649e7fa14f44485861606bba3fda787ddc68c6c154cc8a058aba"
+    },
+    {
+      "path": "art/effects/v220/fx_soulbox.png",
+      "bytes": 171189,
+      "sha256": "057cb9c8a39eaf6ec173f58119bb5fdd3cb045b8dbb1ef99f631d50eb80235b6"
+    },
+    {
+      "path": "art/effects/v220/fx_threads.png",
+      "bytes": 159981,
+      "sha256": "792adc114e9a0d4b9ee3081dabdb3092bc0c30b88f040bc415189fe0a9f6d254"
+    },
+    {
+      "path": "art/effects/v220/fx_thrust.png",
+      "bytes": 165145,
+      "sha256": "88a3e8b26765039353364769a36c2186ff0da4b8f7a31577dfd6f6ebae4b9377"
+    },
+    {
+      "path": "art/effects/v220/st_bind.png",
+      "bytes": 64586,
+      "sha256": "de9f7110298ed6d4a477c7e60ba4d2b594c33dc9bec12dd54dde08899023bf8f"
+    },
+    {
+      "path": "art/effects/v220/st_bleed.png",
+      "bytes": 46810,
+      "sha256": "9762711a63d4ff5122e0ff46148510c85c9808c08361b053fe4cfff03a2ee9f1"
+    },
+    {
+      "path": "art/effects/v220/st_blind.png",
+      "bytes": 52672,
+      "sha256": "869dcd3ea43fd60d47d04dd2a5dd359e0ff75ad5dba59f9fe0245b6f84d48d66"
+    },
+    {
+      "path": "art/effects/v220/st_breath.png",
+      "bytes": 34317,
+      "sha256": "26c0f2added823b176d47859ee0c8cef597bb0b6112cbb8b0b807d24eb4aefe4"
+    },
+    {
+      "path": "art/effects/v220/st_brk.png",
+      "bytes": 55035,
+      "sha256": "764d09314c78c791ba9655fb65f35b5b627048bb7a0f633d1495afe15766580d"
+    },
+    {
+      "path": "art/effects/v220/st_burn.png",
+      "bytes": 56477,
+      "sha256": "c1514098986db3d6d2cde9c03ced903f98338e92c61e346e62f595882b9758e2"
+    },
+    {
+      "path": "art/effects/v220/st_charm.png",
+      "bytes": 62985,
+      "sha256": "d3a96b90ad942229ade75089ec6d04f0647a7972ac04eb70d6b20379dd2bee6c"
+    },
+    {
+      "path": "art/effects/v220/st_counter.png",
+      "bytes": 49500,
+      "sha256": "eeb272130d7b8af8a94d7e2349ee30850caf0f92880219ec49c839d13b6d5c47"
+    },
+    {
+      "path": "art/effects/v220/st_cover.png",
+      "bytes": 35407,
+      "sha256": "bbe755dbe7956f06b5e6e7ddecea7bd3f59cb3164f517b59a8411ec11d7b7c91"
+    },
+    {
+      "path": "art/effects/v220/st_curse.png",
+      "bytes": 52847,
+      "sha256": "899a5fa6ddbead96a83fda36a40c49412f68b96b2133a1619514cad8f1005bbf"
+    },
+    {
+      "path": "art/effects/v220/st_doom.png",
+      "bytes": 57937,
+      "sha256": "241b74b2356e04ca9414c64992c156ee349a248b12c6a785073b3b893a1065e4"
+    },
+    {
+      "path": "art/effects/v220/st_echo.png",
+      "bytes": 66463,
+      "sha256": "48a07a25bac4f4bec75cff4b2085ac61c28542f32aaef34d81c6068cf460f127"
+    },
+    {
+      "path": "art/effects/v220/st_erase.png",
+      "bytes": 36922,
+      "sha256": "ed05e533af9b3cb98a2034a93f772e0d79d5b14887bd3b64a2010ea5f1311928"
+    },
+    {
+      "path": "art/effects/v220/st_erode.png",
+      "bytes": 57560,
+      "sha256": "e9e3adbe3309c40829d392bc40bbc500e33ba35a5ea31dfe431052ebb4882af7"
+    },
+    {
+      "path": "art/effects/v220/st_evade.png",
+      "bytes": 61940,
+      "sha256": "18da9114494deea32b90d1ed8b7d7a1128c6f4fb8e16016271a7082b8ff5bf50"
+    },
+    {
+      "path": "art/effects/v220/st_freeze.png",
+      "bytes": 65614,
+      "sha256": "810c71f236c43fd9156009be58351c630823426e2479c2c0913d851026d1aa65"
+    },
+    {
+      "path": "art/effects/v220/st_fury.png",
+      "bytes": 56476,
+      "sha256": "d8796480eedbc340c75941479a894f027102a76581435eb31078734ffc7309e3"
+    },
+    {
+      "path": "art/effects/v220/st_hcut.png",
+      "bytes": 27856,
+      "sha256": "ea432c206cd5976e788d18d366f165aac29d7e7c1add2c212dee0d49a8205f6b"
+    },
+    {
+      "path": "art/effects/v220/st_hide.png",
+      "bytes": 42546,
+      "sha256": "b1115e4040f6cc24bebd01ab11fdecace6b5d7140cacd4cd6739449361f1cbcc"
+    },
+    {
+      "path": "art/effects/v220/st_hold.png",
+      "bytes": 54685,
+      "sha256": "f76ce0a9c3f14957ff4d8aab2bc41a35e2f513b6bf4bf852038223c0d5ebcf21"
+    },
+    {
+      "path": "art/effects/v220/st_link.png",
+      "bytes": 62289,
+      "sha256": "59a79e081512aed9dc5cca13edecb3f7f63cc2d2a96552861c0a68ecca5d37d4"
+    },
+    {
+      "path": "art/effects/v220/st_lit.png",
+      "bytes": 48239,
+      "sha256": "ec0062ae7bb043280c51022bc02d37f6531cab09786917d6968d80a4d2509e5f"
+    },
+    {
+      "path": "art/effects/v220/st_mark.png",
+      "bytes": 41943,
+      "sha256": "f5daca5857abc6476da88ef7824089d53f1e34d3dfc9cd36d779f1f65ea4ea19"
+    },
+    {
+      "path": "art/effects/v220/st_might.png",
+      "bytes": 53394,
+      "sha256": "b38f0935b885c913601f7b033f1f595e510fbdefedb636c17183fa8aabb525d8"
+    },
+    {
+      "path": "art/effects/v220/st_nheal.png",
+      "bytes": 30158,
+      "sha256": "de321a4d7bcf45516ebf307df33f8c70c78e7f7bea16b963146ce5529708e1b8"
+    },
+    {
+      "path": "art/effects/v220/st_poison.png",
+      "bytes": 52257,
+      "sha256": "181128e8693be90c0049cea4bfa501473a4d46c684c63c35d59668cb4d60afaa"
+    },
+    {
+      "path": "art/effects/v220/st_prey.png",
+      "bytes": 48772,
+      "sha256": "8589b88ce6367a0c83fe5ebbbe28b2be3e509a0564d72aac7f0c52da59b1b9c5"
+    },
+    {
+      "path": "art/effects/v220/st_proxy.png",
+      "bytes": 34959,
+      "sha256": "76005fbb874c7fd57cbd26d2bf5e53ea41ab15349b55dcd471a90eed546a9f4e"
+    },
+    {
+      "path": "art/effects/v220/st_pure.png",
+      "bytes": 32148,
+      "sha256": "01881ee0a0f3dab7e14ddc9678ad194a2f980c23625b5b6305b895f03638c069"
+    },
+    {
+      "path": "art/effects/v220/st_regen.png",
+      "bytes": 59460,
+      "sha256": "f9ea94e84f00ff5698176debf53efda7a7d62b6b69463537da95e1aea425b82f"
+    },
+    {
+      "path": "art/effects/v220/st_riposte.png",
+      "bytes": 54689,
+      "sha256": "25d0ca0c449adb3f5d669d9b7ae9584154741edd0f2066fb5f05e68e781ae19b"
+    },
+    {
+      "path": "art/effects/v220/st_seal.png",
+      "bytes": 33527,
+      "sha256": "3add409ae7db3e7a7259727b4690da6151d84dee8d38b83575cb898871d4db8a"
+    },
+    {
+      "path": "art/effects/v220/st_shell.png",
+      "bytes": 51029,
+      "sha256": "9db2f4ef7b182133f96c0264f2b458b2fd3fe187c8d8080f32f506163b288309"
+    },
+    {
+      "path": "art/effects/v220/st_shield.png",
+      "bytes": 46346,
+      "sha256": "c722ed84ebdc66626b2085c250333039aab612631e8c8ab689f1433b60a6cf45"
+    },
+    {
+      "path": "art/effects/v220/st_silence.png",
+      "bytes": 48126,
+      "sha256": "1af7d4129cfeb873d398eb6d5783a87b47ecb99032ea933e8ab13ec069385eda"
+    },
+    {
+      "path": "art/effects/v220/st_slow.png",
+      "bytes": 69809,
+      "sha256": "a4bb1bc0950ccf21fac67506646af0c4b45d9935b09fa571eb17af202087b41c"
+    },
+    {
+      "path": "art/effects/v220/st_spike.png",
+      "bytes": 53010,
+      "sha256": "5464cccd0b20e9124c022c84931b8fabdb572edace1cec978391e28c21414a45"
+    },
+    {
+      "path": "art/effects/v220/st_stun.png",
+      "bytes": 61323,
+      "sha256": "707d56471db080abaf3920c364eaf1482f8045b12a18a84f84976b6252ce1ec3"
+    },
+    {
+      "path": "art/effects/v220/st_terror.png",
+      "bytes": 37395,
+      "sha256": "22b6d847e58756a91ffe79f1d6747095cc89b2225cdbeb5bdd3295e9fba15012"
+    },
+    {
+      "path": "art/effects/v220/st_umb.png",
+      "bytes": 39742,
+      "sha256": "efaaa2858b16f5a741af3f86bb4bfcaa025c8a1f7195c3ea45254ee4cb258274"
+    },
+    {
+      "path": "art/effects/v220/st_vow.png",
+      "bytes": 28046,
+      "sha256": "caa5fb32724158d7ab2a58f43b7dc35763b6fb1f5e2f9d4b09bd6aae99b09c65"
+    },
+    {
+      "path": "art/effects/v220/st_vuln.png",
+      "bytes": 55412,
+      "sha256": "93cd7aeee81674287a31a00e39b69579b834c8149c43fbf5bcb4f298c196a92f"
+    },
+    {
+      "path": "art/effects/v220/st_wall.png",
+      "bytes": 49826,
+      "sha256": "ad8d7806a0dd2fdcd581c09bbdc6a136f28fef1ebae6e08b9083ffa2b6196268"
+    },
+    {
+      "path": "art/effects/v220/st_ward.png",
+      "bytes": 55006,
+      "sha256": "31055e9d51094997e7513c41f3e6756c2f46166b0fcfe31f7dd3f2e13262f323"
+    },
+    {
+      "path": "art/effects/v220/st_weak.png",
+      "bytes": 24140,
+      "sha256": "3848c583e9fed1d78b804e6cc6471338f9459b29dae6bd9c3ff925182ed32099"
+    },
+    {
+      "path": "art/effects/v220/sys_fear.png",
+      "bytes": 55506,
+      "sha256": "337576b8f3aa75712c84f8cf4812941d357f35f911c4760831a0a4e88507e695"
+    },
+    {
+      "path": "art/effects/v220/sys_rebirth.png",
+      "bytes": 66680,
+      "sha256": "0c91145b5e5472d42ed5c2581190503c4335aa7cd929e473e8f17f7f14439876"
+    },
+    {
+      "path": "art/effects/v220/sys_turbidity.png",
+      "bytes": 57928,
+      "sha256": "bce25f61eb9287af79af20762349aa9aab309f17f1ac9465e31ddad62be62359"
+    },
+    {
+      "path": "documents/Gemini_v3.pdf",
+      "bytes": 599937,
+      "sha256": "2bdaf671818d5b7cc49814d0c1f3c67ea2da405aff530ee52b28a4890d2c2481"
+    },
+    {
+      "path": "documents/PROVENANCE.json",
+      "bytes": 459,
+      "sha256": "4ddcbab76f06dc0ca71040398a87487fa2f395515d507e0a9fd1ac62dfe7971f"
+    },
+    {
+      "path": "documents/RELEASE_NOTES_v250.md",
+      "bytes": 6654,
+      "sha256": "c1e3da45c08ffa0c1bb92bcd35784034382f97a0b2342bddec390145b79b23fd"
+    },
+    {
+      "path": "index.html",
+      "bytes": 24336789,
+      "sha256": "48affa41e0241ed3bdf536a7fc31ff3d0d126d9aca4022b576f3077aa3c9f029"
+    },
+    {
+      "path": "source/RESTORE_FROM_GIT.md",
+      "bytes": 1410,
+      "sha256": "ad85d827876c15fabb96b9ac388cc9f9e80e0ecf6e295dbd6cdd17bbe35260f5"
+    },
+    {
+      "path": "source/asset_entries.json",
+      "bytes": 9161,
+      "sha256": "c518d948bce764d9bb63126f78ae88053417828e7257792f602bd2cad29d3c9f"
+    },
+    {
+      "path": "source/build.py",
+      "bytes": 3845,
+      "sha256": "7c925356e295a7ef336dfaaa36910422d8d0dadca4f8edf6a18943f2ec7f9cc7"
+    },
+    {
+      "path": "source/fixtures.py",
+      "bytes": 1139,
+      "sha256": "5a0a7bacf170e73b2f37335442d03c9e96fefc4f61a4e730ec58810ea7fc0075"
+    },
+    {
+      "path": "source/game.readable.js",
+      "bytes": 1254462,
+      "sha256": "f20da27affc398d94545ca23cf20de6e58136450b73607f853a440d69d054aef"
+    },
+    {
+      "path": "source/input/index.html",
+      "bytes": 24301835,
+      "sha256": "70c67195ced9633eea4aed993743c1d1f9f83f7a820855e9978661edadd4a3fb"
+    },
+    {
+      "path": "source/legacy/base.txt",
+      "bytes": 930,
+      "sha256": "16162bd0720688761c509284dd2d59ebdee5a5c9864b399e6cbf314e24b4caed"
+    },
+    {
+      "path": "source/legacy/qa241.js",
+      "bytes": 6453,
+      "sha256": "b25a5d8301cd715fab33a942cb68ed9018d747ffec50633c18a096bd4fa16f37"
+    },
+    {
+      "path": "source/qa.js",
+      "bytes": 10885,
+      "sha256": "4ab3a13df8003a2d441d939712d18b6b014a7f6d381746baf2c9783eb6c52458"
+    },
+    {
+      "path": "source/rebuild_offline.py",
+      "bytes": 1474,
+      "sha256": "4ac234e9e5b327d762fd10067f7961cff99e3b049187a1baee92a585425ade57"
+    },
+    {
+      "path": "source/remote-fixture.py",
+      "bytes": 1324,
+      "sha256": "cd279bb760fa9977ee7f5f4e368d9f3a3306c4135cc1787dd50444b2a4567b82"
+    },
+    {
+      "path": "source/review/Gemini_v3.txt",
+      "bytes": 62220,
+      "sha256": "9762563c04366612a295ac4a7f1423f3ffcb245e25a85f7dc8e7a5ecc449d88d"
+    },
+    {
+      "path": "source/style.css",
+      "bytes": 721,
+      "sha256": "27aa24e122a74bc4026a22d728a26132d8899a9f4a9c978915ada9223d94555a"
+    },
+    {
+      "path": "source/update.js",
+      "bytes": 34171,
+      "sha256": "9fad724d41484d5115cef1679e08dc8415343d0a8fdfce46c7bfa9774d0c6718"
+    }
+  ]
+}
