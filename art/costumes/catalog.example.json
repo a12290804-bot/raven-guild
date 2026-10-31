@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "costumes": [
+    {
+      "id": "healerf_silk_night",
+      "hero": "healerF",
+      "name": "夜繭行醫",
+      "theme": "蜘蛛・繭絲元素",
+      "published": false,
+      "line": "「衣料輕了些，藥箱的位置我還得習慣。」",
+      "images": {
+        "normal": "art/costumes/healerF/night/normal.webp",
+        "hurt": "art/costumes/healerF/night/hurt.webp",
+        "fallen": "art/costumes/healerF/night/fallen.webp"
+      }
+    }
+  ]
+}
