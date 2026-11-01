@@ -1,0 +1,49 @@
+{
+  "version": 3,
+  "costumes": [
+    {
+      "id": "spear_241",
+      "hero": "spear",
+      "name": "血翼槍誓",
+      "theme": "血翼與鱗甲",
+      "line": "換了這身甲，槍還是要握穩。",
+      "published": true,
+      "images": {
+        "normal": "art/costumes/spear_costume241.jpg"
+      }
+    },
+    {
+      "id": "magef_241",
+      "hero": "mageF",
+      "name": "異眼候燈",
+      "theme": "異眼與觸鬚",
+      "line": "燈上多了幾隻眼睛，也不代表它會替你認路。",
+      "published": true,
+      "images": {
+        "normal": "art/costumes/mageF_costume241.jpg"
+      }
+    },
+    {
+      "id": "baigu_241",
+      "hero": "baigu",
+      "name": "幽骨提線",
+      "theme": "骷髏與魂線",
+      "line": "衣服換了，線的分寸還是一樣。站遠些，別纏著。",
+      "published": true,
+      "images": {
+        "normal": "art/costumes/baigu_costume241.jpg"
+      }
+    },
+    {
+      "id": "luoqingluan_241",
+      "hero": "luoqingluan",
+      "name": "玄鈴幽環",
+      "theme": "骨鈴與環陣",
+      "line": "鈴聲聽著不同了？先站穩，再慢慢分辨。",
+      "published": true,
+      "images": {
+        "normal": "art/costumes/luoqingluan_costume241.jpg"
+      }
+    }
+  ]
+}
