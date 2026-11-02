@@ -4903,7 +4903,7 @@ function gift290(){try{if(!S||S.gift290)return;S.gift290=1;S.tickets210=(S.ticke
 function useWbReset290(){if(!idle180())return;if((S.wbReset290||0)<1)return toast('沒有世界王次數重置券');init180(S);const d=worldDay180();if(!(S.world180.claims[d]>0))return toast('今天的世界王次數還沒用掉');S.wbReset290--;delete S.world180.claims[d];save();toast('今天的世界王次數已重置');}
 {const o=homePage;homePage=function(...a){const r=o(...a);try{gift290();fruitMile290();for(const h of S.heroes)ttInit290(h);if((S.wbReset290||0)>0&&$('stage')&&!$('stage').querySelector('[data-wbr290]'))$('stage').insertAdjacentHTML('beforeend',`<button class="btn" data-wbr290 onclick="useWbReset290()">世界王次數重置券 ×${S.wbReset290}</button>`);}catch(e){}return r;};}
 
-const VER='v2.9.0';
+const VER='v2.9.1';
 AUTHOR_ANN155.unshift(['v2.8.0',['怪物依難度階數使用各自的血量／攻擊：首領 200萬→1.2億、世界王 1000萬→1.8億（第1～9階），精英與一般怪按比例；未重生第1階維持原樣。','裝備依取得階數提升基礎數值（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成；舊裝備視為第1階不削弱。']]);AUTHOR_ANN155.unshift(['v2.7.0',['技能分支 Lv50～80 逐步開放並互斥；連段與跨職業狀態搭配（標記、流血、中毒、麻痺、恐懼…）。','中毒上限6層（蕁／鳶8層），毒爆附禁療與麻痺。','污染階對重生角色的技能變化與代價。','怪物強度依隊伍戰力（等級＋裝備＋重生）與污染統一提升；取消護盾上限。','天賦全面改寫（23 職業 Lv13 收割型／Lv20 機制型）；分支三型 強化／轉化／連動；Lv60 流派印記；Lv75／80 終極選擇；重鑄券。','污染第5階嫉妒、第9階瘋癲額外行動；6件套專屬連動。','裝備階級：第 N 階取得的裝備基礎數值依階倍增（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成。','樂子點與異界點收益提高：完成 +40%、未完成／失敗 +60%。','裝備：新詞條「領主傷害增強」；史詩保留較小的特殊效果；特色／傳說隨等級重算（只升不降）；洗練含基礎數值；淬煉追加隨機詞條。']]);AUTHOR_ANN155.unshift(['v2.5.1',['補回70張戰鬥特效／狀態圖示與時裝目錄（art/effects/v220、art/costumes）。','新增〈內心的惡魔〉限時活動預告面板（即將開放，僅展示圖片）。','流派試煉套用與主線相同的重生難度強化。','重生前自動備份存檔；重生會讓主線地圖回到第一層、技能依等級重新取得。','萬相套裝 2／4／6 件效果小幅加強；兌換券顯示名稱統一為「混沌券」。']]);AUTHOR_ANN155.unshift(['v2.5.3',['第四章〈六芒門前〉移入主線：地窖第 20～24 層，新怪物滑槽蜈蚣、回音籤影、氣閥獵犬；第 22 層管線守衛、第 24 層六角驗印機（含二階段與倒下圖）。調查入口移到地窖入口，大廳按鈕移除。','鍛鍊房回歸，入口在候燈迴廊。','重生不再重置地圖與技能，只推進劇情；重生前仍會備份存檔。','長槍手與白骨先生時裝換成動態圖。','九階慾望難度：我想看你努力、執念、貪慾、惡慾、食慾、色慾、傲慢、墮落、瘋癲，每重生一次開一階；每階有自己的戰鬥規則，前面的階會以殘響疊加。','怪物等級真的會提高數值（防禦、速度、抗性，Lv30 起護盾），重生後怪物生命 ×1.25、攻擊 ×1.15；第四章怪物至少 Lv60。','世界王：最多八人、不限回合，每升一階掉落 +12%。','語嫣房「主宰」：新的三階段與結局；未解鎖時顯示還缺哪幾間。','重生劇情延長，各階慾望有不同的低語與事件。','〈內心的惡魔〉限時活動開放：活動與巡夜卡片進入，每天三次，異界點可換時裝與套裝。','回憶房改用首領記錄，補上地址之門、第四章與白鐵礦城的領主。']]);
 AUTHOR_ANN155.unshift(['v2.6.0',['怪物等級真正生效：等級跟隨隊伍（精英+2、首領+3），生命／攻擊／防禦依等級成長；第四章最低 Lv60。','九階慾望難度倍率改為取代舊難度加成（不再疊乘），單次受擊上限防止滿血秒殺。','污染技能整合為八層專屬技能；修正封印、閃避、狂怒、侵蝕 NaN，新增狀態「麻痺」。','23 位職業各新增一招 Lv15 技能與 Lv30 天賦「異界回聲」：帶回標記、恐懼、影步、掩護、頂盾，並加入禁療與麻痺。','新套裝「污染・八相」「管線」，22 組舊套裝加上狀態效果，16 件新橘字（含 8 件污染裝備）；舊裝備全部保留。']]);
 AUTHOR_ANN155.unshift(['v2.5.2',['〈內心的惡魔〉預告移到主畫面橫幅與「三房・傳送門・活動」裡。','重生頁說明改成新規則。']]);const ANN=AUTHOR_ANN155;
@@ -4944,4 +4944,16 @@ AUTHOR_ANN155.unshift(['v2.8.2',['修正：裝備沒有跟著難度變強。重�
 AUTHOR_ANN155.unshift(['v2.8.3',['統一成長循環：怪物、裝備、角色一起不斷往上。越強的隊伍打越強的怪，掉落依隊伍戰力與該場怪物強度變得更好（世界王最好）。','重生角色的基礎屬性與體質隨重生次數與等級成長。','不會秒殺：首領與世界王開場血量已考慮爆發，單擊從半血以上打倒時血量會擴充；怪物攻擊依隊伍生命與防禦定位，首領一擊約 12%～22% 生命。','修正：裝備速度不再被階級倍率放大（既有裝備不調整）。初生不變。']]);
 
 AUTHOR_ANN155.unshift(['v2.8.4',['怪物破盾：首領、世界王、語嫣房與亂入的攻擊，會依隊伍生命、平均護盾、抗性與減傷一起定位，大護盾不再擋住所有攻擊。','一般怪物的普攻對護盾造成雙倍傷害。','沒有護盾時，單下攻擊仍遠低於角色最大生命，不會被秒殺。初生不變。']]);
-AUTHOR_ANN155.unshift(['v2.9.0',['天賦樹：舊的固定天賦改為每個職業三條分支的天賦樹，每升 1 級得 1 點，每次重生再加 5 點（最多 40）。小節點 5 級、中節點 3 級、改變技能的重要節點 1 級（3 點），還有二選一、跨職業協同、污染階節點，Lv60 開放誓約。舊角色已依推薦路線自動分配，效果不會比以前弱，並可免費重置一次。','忘卻羽毛可重置天賦；轉職果實可重選職業分支並退回天賦點。','裝備分階：每件裝備顯示取得時的難度階，低階裝備可以帶到高階使用，高階裝備不能在較低難度穿上；重生隊伍取得的裝備只有重生角色能穿。倉庫新增分階頁籤。','怪物造成的流血現在會正常扣血；怪物的灼燒與中毒改依角色生命計算，不會一跳就打掉整條血。','贈禮：每個存檔一次送渡鴉券 ×20、世界王次數重置券 ×1、轉職果實 ×1。']]);</script></body></html>
+AUTHOR_ANN155.unshift(['v2.9.1',['修正：剛進入戰鬥時觸發的隨機事件會蓋住戰鬥畫面。現在戰鬥中不會跳出隨機事件，會等戰鬥結束再出現。']]);AUTHOR_ANN155.unshift(['v2.9.0',['天賦樹：舊的固定天賦改為每個職業三條分支的天賦樹，每升 1 級得 1 點，每次重生再加 5 點（最多 40）。小節點 5 級、中節點 3 級、改變技能的重要節點 1 級（3 點），還有二選一、跨職業協同、污染階節點，Lv60 開放誓約。舊角色已依推薦路線自動分配，效果不會比以前弱，並可免費重置一次。','忘卻羽毛可重置天賦；轉職果實可重選職業分支並退回天賦點。','裝備分階：每件裝備顯示取得時的難度階，低階裝備可以帶到高階使用，高階裝備不能在較低難度穿上；重生隊伍取得的裝備只有重生角色能穿。倉庫新增分階頁籤。','怪物造成的流血現在會正常扣血；怪物的灼燒與中毒改依角色生命計算，不會一跳就打掉整條血。','贈禮：每個存檔一次送渡鴉券 ×20、世界王次數重置券 ×1、轉職果實 ×1。']]);</script><script>
+// ===== v2.9.1 戰鬥中不跳隨機事件 =====
+(function(){
+const Q291=window.Q291=[];
+const inBat291=()=>!!(BAT&&document.getElementById('battle'));
+function flush291(){if(!Q291.length)return;if(!RUN||BAT||document.getElementById('battle')){if(!RUN){Q291.length=0;return}return setTimeout(flush291,400)}if(!$('vn').classList.contains('hide'))return setTimeout(flush291,400);const f=Q291.shift();try{f()}catch(e){console.warn(e)}if(Q291.length)setTimeout(flush291,400)}
+function guard291(name){const o=window[name];if(typeof o!=='function')return;window[name]=function(...a){if(inBat291()){const r=RUN;Q291.push(()=>{if(RUN===r)o.apply(this,a)});setTimeout(flush291,400);return null}return o.apply(this,a)}}
+['eerieEvent253','runEvent','ch2Scene','ch3Scene','ptlScene'].forEach(guard291);
+try{eerieEvent253=window.eerieEvent253;runEvent=window.runEvent;ch2Scene=window.ch2Scene;ch3Scene=window.ch3Scene;ptlScene=window.ptlScene}catch(e){}
+const B291=battle;battle=function(...a){if(BAT&&document.getElementById('battle'))return;if(!BAT)document.querySelectorAll('#battle').forEach(e=>e.remove());if(!$('vn').classList.contains('hide'))vnClose();return B291.apply(this,a)};
+const VN291=vn;vn=function(o,...a){if(inBat291()&&!(RUN&&(RUN.arena||RUN.world180))){const r=RUN;Q291.push(()=>{if(RUN===r)VN291(o,...a)});setTimeout(flush291,400);return}return VN291(o,...a)};
+})();
+</script></body></html>
