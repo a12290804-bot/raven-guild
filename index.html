@@ -2386,7 +2386,7 @@ const DIFF=[
 DIFF.push(
  ['色慾・你聽見了嗎',1.5,1.24,1.5,'「靠近一點。我有話，只說給你聽。」','生命 ×1.5、攻擊 ×1.24。<br>低語追加魅惑招式：可能讓隊友短暫失神或攻擊同伴。<br>積分 ×1.5、額外掉落 +26%。',{def:5,sk:[0,4],ch:.13,gear:1.26}],
  ['傲慢・別讓我失望',1.55,1.28,1.58,'「這種程度，還需要我認真嗎？」','生命 ×1.55、攻擊 ×1.28。<br>開場護盾 28% 最大生命；不吃嘲諷；負面狀態持續時間減半。<br>暴擊時她會回嘴。',{def:7,cres:.08,shieldPct:.28,noTaunt:1,debuffHalf:1,sk:[0,2],ch:.14,gear:1.3}],
- ['混沌・今天不照規矩',1.67,1.35,1.75,'「規則？我想換就換。你跟得上嗎？」','生命 ×1.67、攻擊 ×1.35。<br>每場隨機抽取其他心情的一種效果，35% 機率再疊加第二種；開場會公布。<br>積分 ×1.75，掉落 +35%。',{chaos:1,gear:1.35}]
+ ['混沌・今天不照規矩',1.67,1.5,1.75,'「規則？我想換就換。你跟得上嗎？」','生命 ×1.67、攻擊 ×1.5。<br>每場隨機抽取其他心情的一種效果，35% 機率再疊加第二種；開場會公布。<br>積分 ×1.75，掉落 +35%。',{chaos:1,gear:1.35}]
 );
 const DIFF_ORDER=[0,1,2,3,6,7,4,5,8];
 const DIFF_COLORS=['#9be39b','var(--gold)','#c9a6ff','#ffb07a','#ff8a6a','#ff4f7f','#f1a6dd','#e7c484','#d0b5ff'];
@@ -2427,7 +2427,7 @@ function healUnit(q,h,src){if(BAT&&hcM(q)===0)return 0;if(q.uq&&q.uq.includes('k
 function shieldAmt(p,amt){return Math.round((p.atk*amt+15)*(p.pow||1)*(T_(p,'h6')?1.3:1))}
 function foeHit(f,o,m,mag){const p=o.p;const ev=(S.weather==='fog'?.08:0)+Math.max(0,(p.dodge||0)+(has(p,'evade')?.2:0)+(p.fx&&p.fx.lastAlive&&RUN.party.filter(q=>q.hp>0).length===1?.15:0)-(f.acc||0))+(has(f,'blind')?.3:0);
  if(Math.random()<ev){pop($('al'+o.k),'閃避','miss');if(T_(p,'c20'))p.shadow=Math.min(4,(p.shadow||0)+1);if(has(p,'riposte'))counterHit(p,o.k,f,.8,'影步反擊');return {d:0,miss:1}}
- const def=p.def*(T_(p,'s13')?1+.5*(1-p.hp/p.maxhp):1)*(has(p,'brk')?.6:1)*(p.setB2?1.25:1)*(p.form===1?1.2:1)*(has(p,'erode')?1-.06*p.st.erode.v:1);const r=roll(foeAtk(f),def*40/(40+(BAT&&!FOES[BAT.kind].boss&&!RUN.mem?Math.max(0,(BAT.mlv||0)-24)*6:0)),m,Math.max(0,f.crit-(p.crr||0)));const d=hurtAlly(p,Math.max(1,Math.round(r.d*(S.weather==='rain'&&BAT.lastFoeFire?.85:1)*(1-(mag?(p.mres||0):(p.pres||0))))));pop($('al'+o.k),(r.c?'暴擊 ':'')+d,r.c?'crit':'');if(d>0&&p.thn&&f.hp>0){const t=Math.max(1,Math.round(d*p.thn));f.hp-=t;const sm=sumOf(p);if(sm)sm.d+=t;pop($('foeBox'),'反傷 '+t,'');if(f.hp<=0)onFoeDown(f,p)}
+ const def=p.def*(T_(p,'s13')?1+.5*(1-p.hp/p.maxhp):1)*(has(p,'brk')?.6:1)*(p.setB2?1.25:1)*(p.form===1?1.2:1)*(has(p,'erode')?1-.06*p.st.erode.v:1);const r=roll(foeAtk(f),def*40/(40+defCut296()),m,Math.max(0,f.crit-(p.crr||0)));const d=hurtAlly(p,Math.max(1,Math.round(r.d*(S.weather==='rain'&&BAT.lastFoeFire?.85:1)*(1-(mag?(p.mres||0):(p.pres||0))))));pop($('al'+o.k),(r.c?'暴擊 ':'')+d,r.c?'crit':'');if(d>0&&p.thn&&f.hp>0){const t=Math.max(1,Math.round(d*p.thn));f.hp-=t;const sm=sumOf(p);if(sm)sm.d+=t;pop($('foeBox'),'反傷 '+t,'');if(f.hp<=0)onFoeDown(f,p)}
  if(p.hp>0&&p.fx&&p.fx.rockLayer&&d>0){p.rock=(p.rock||0)+1;if(p.rock>=6){p.rock=0;blog(short(p.key)+' 身上的岩層崩落了！');BAT.foes.forEach(g=>{if(g.hp>0)counterHit(p,o.k,g,.8,'岩層崩落')})}}
  if(p.hp>0&&p.fx){if(p.fx.tStack&&has(p,'taunt'))p.tst=Math.min(5,(p.tst||0)+1);if(p.fx.hitShield){p.hitN=(p.hitN||0)+1;if(p.hitN%p.fx.hitShield===0){p.sh+=Math.round(p.maxhp*.15);blog(short(p.key)+'「三層」，舉盾得到護盾。')}}}
  if(p.fx&&f.hp>0){if(p.fx.hoodBlind&&Math.random()<p.fx.hoodBlind)give(f,'blind',2);if(p.fx.hitBurn&&Math.random()<p.fx.hitBurn)give(f,'burn',2,stVal('burn',p))}
@@ -4625,7 +4625,7 @@ function gsAll260(){if(BAT&&BAT.foes)for(const f of BAT.foes)if(f.hp>0)try{monst
 const BAT260GS=battle;battle=function(...a){const r=BAT260GS(...a);gsAll260();try{drawBattle()}catch(e){}return r;};
 const WF260GS=wFix260;wFix260=function(){WF260GS();gsAll260();};const NR260GS=newRound;newRound=function(...a){const r=NR260GS(...a);gsAll260();return r;};
 // 首領／精英破盾：命中帶護盾的隊員時先撕掉部分護盾（不限制玩家護盾量）
-const FA260GS=foeAct;foeAct=function(f,i){try{gsAll260();if(f&&f.antiSh260&&f.hp>0&&RUN&&BAT&&BAT.turn%2===0){for(const al of RUN.party.filter(p=>p.hp>0&&p.sh>p.maxhp*.3)){const cut=Math.round(al.sh*.5+f.atk*.5);al.sh=Math.max(0,al.sh-cut);blog(f.name+'「撕盾」：撕開 '+(al.name||'隊員')+' 的護盾 '+cut+'。');}}}catch(e){}return FA260GS(f,i);};
+const FA260GS=foeAct;foeAct=function(f,i){try{gsAll260();const n296=tier253(),ro296=f?role260(f):'mob',bo296=ro296==='boss'||ro296==='world';if(f&&f.hp>0&&RUN&&BAT&&(bo296?(n296>=1||BAT.turn%2===0):ro296==='elite'?BAT.turn%2===0:(n296>=1&&BAT.turn%2===0))){for(const al of RUN.party.filter(p=>p.hp>0&&p.sh>p.maxhp*.3)){const cut=Math.round(al.sh*(n296>=1?.5+.05*n296:.5)+f.atk*.5);al.sh=Math.max(0,al.sh-cut);blog(f.name+'「撕盾」：撕開 '+(al.name||'隊員')+' 的護盾 '+cut+'。');}}}catch(e){}return FA260GS(f,i);};
 // 附身：用被附身者真實的攻擊計算（含暴擊與防禦）
 demonRound253=function(){if(!RUN?.demon253||!BAT||(BAT.turn||0)%2)return;const P=RUN.demon253.possessed,al=RUN.party.map((p,i)=>({p,i})).filter(o=>o.p.hp>0);const c=al.filter(o=>!P.includes(o.i));if(!c.length||al.length<2)return;const o=pick(c);P.push(o.i);const tg=pick(al.filter(x=>x!==o));const r=roll(o.p.atk||10,tg.p.def||0,1.2,o.p.crit||.1,false,o.p.cdm||1.6);let d=r.d;const ab=Math.min(tg.p.sh||0,d);tg.p.sh=(tg.p.sh||0)-ab;d-=ab;tg.p.hp=Math.max(1,tg.p.hp-d);blog('附身：'+(o.p.name||'一名隊員')+' 的眼神空了一瞬，轉身打向 '+(tg.p.name||'隊友')+(r.c?'（暴擊）':'')+'（'+r.d+'）。');};
 // ===== v2.7.0 技能・分支・天賦・裝備重製（依 v270_skill_design / v270_gear_design） =====
@@ -4907,7 +4907,7 @@ function gift290(){try{if(!S||S.gift290)return;S.gift290=1;S.tickets210=(S.ticke
 function useWbReset290(){if(!idle180())return;if((S.wbReset290||0)<1)return toast('沒有世界王次數重置券');init180(S);const d=worldDay180();if(!(S.world180.claims[d]>0))return toast('今天的世界王次數還沒用掉');S.wbReset290--;delete S.world180.claims[d];save();toast('今天的世界王次數已重置');}
 {const o=homePage;homePage=function(...a){const r=o(...a);try{gift290();fruitMile290();for(const h of S.heroes)ttInit290(h);if((S.wbReset290||0)>0&&$('stage')&&!$('stage').querySelector('[data-wbr290]'))$('stage').insertAdjacentHTML('beforeend',`<button class="btn" data-wbr290 onclick="useWbReset290()">世界王次數重置券 ×${S.wbReset290}</button>`);}catch(e){}return r;};}
 
-const VER='v2.9.7';
+const VER='v2.9.8';
 AUTHOR_ANN155.unshift(['v2.8.0',['怪物依難度階數使用各自的血量／攻擊：首領 200萬→1.2億、世界王 1000萬→1.8億（第1～9階），精英與一般怪按比例；未重生第1階維持原樣。','裝備依取得階數提升基礎數值（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成；舊裝備視為第1階不削弱。']]);AUTHOR_ANN155.unshift(['v2.7.0',['技能分支 Lv50～80 逐步開放並互斥；連段與跨職業狀態搭配（標記、流血、中毒、麻痺、恐懼…）。','中毒上限6層（蕁／鳶8層），毒爆附禁療與麻痺。','污染階對重生角色的技能變化與代價。','怪物強度依隊伍戰力（等級＋裝備＋重生）與污染統一提升；取消護盾上限。','天賦全面改寫（23 職業 Lv13 收割型／Lv20 機制型）；分支三型 強化／轉化／連動；Lv60 流派印記；Lv75／80 終極選擇；重鑄券。','污染第5階嫉妒、第9階瘋癲額外行動；6件套專屬連動。','裝備階級：第 N 階取得的裝備基礎數值依階倍增（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成。','樂子點與異界點收益提高：完成 +40%、未完成／失敗 +60%。','裝備：新詞條「領主傷害增強」；史詩保留較小的特殊效果；特色／傳說隨等級重算（只升不降）；洗練含基礎數值；淬煉追加隨機詞條。']]);AUTHOR_ANN155.unshift(['v2.5.1',['補回70張戰鬥特效／狀態圖示與時裝目錄（art/effects/v220、art/costumes）。','新增〈內心的惡魔〉限時活動預告面板（即將開放，僅展示圖片）。','流派試煉套用與主線相同的重生難度強化。','重生前自動備份存檔；重生會讓主線地圖回到第一層、技能依等級重新取得。','萬相套裝 2／4／6 件效果小幅加強；兌換券顯示名稱統一為「混沌券」。']]);AUTHOR_ANN155.unshift(['v2.5.3',['第四章〈六芒門前〉移入主線：地窖第 20～24 層，新怪物滑槽蜈蚣、回音籤影、氣閥獵犬；第 22 層管線守衛、第 24 層六角驗印機（含二階段與倒下圖）。調查入口移到地窖入口，大廳按鈕移除。','鍛鍊房回歸，入口在候燈迴廊。','重生不再重置地圖與技能，只推進劇情；重生前仍會備份存檔。','長槍手與白骨先生時裝換成動態圖。','九階慾望難度：我想看你努力、執念、貪慾、惡慾、食慾、色慾、傲慢、墮落、瘋癲，每重生一次開一階；每階有自己的戰鬥規則，前面的階會以殘響疊加。','怪物等級真的會提高數值（防禦、速度、抗性，Lv30 起護盾），重生後怪物生命 ×1.25、攻擊 ×1.15；第四章怪物至少 Lv60。','世界王：最多八人、不限回合，每升一階掉落 +12%。','語嫣房「主宰」：新的三階段與結局；未解鎖時顯示還缺哪幾間。','重生劇情延長，各階慾望有不同的低語與事件。','〈內心的惡魔〉限時活動開放：活動與巡夜卡片進入，每天三次，異界點可換時裝與套裝。','回憶房改用首領記錄，補上地址之門、第四章與白鐵礦城的領主。']]);
 AUTHOR_ANN155.unshift(['v2.6.0',['怪物等級真正生效：等級跟隨隊伍（精英+2、首領+3），生命／攻擊／防禦依等級成長；第四章最低 Lv60。','九階慾望難度倍率改為取代舊難度加成（不再疊乘），單次受擊上限防止滿血秒殺。','污染技能整合為八層專屬技能；修正封印、閃避、狂怒、侵蝕 NaN，新增狀態「麻痺」。','23 位職業各新增一招 Lv15 技能與 Lv30 天賦「異界回聲」：帶回標記、恐懼、影步、掩護、頂盾，並加入禁療與麻痺。','新套裝「污染・八相」「管線」，22 組舊套裝加上狀態效果，16 件新橘字（含 8 件污染裝備）；舊裝備全部保留。']]);
 AUTHOR_ANN155.unshift(['v2.5.2',['〈內心的惡魔〉預告移到主畫面橫幅與「三房・傳送門・活動」裡。','重生頁說明改成新規則。']]);const ANN=AUTHOR_ANN155;
@@ -5293,7 +5293,7 @@ function fel293(f){if(!f.mel293)f.mel293=mel293(f.kind293||BAT.kind);return f.me
 const HST293={blood:['bleed',2],fire:['burn',2],poison:['poison',3],ice:['freeze',1],thunder:['paral',1],erode:['erode',2],curse:['curse',2],shatter:['brk',2],light:['blind',1],holy:['hcut',2],silk:['bind',1],dread:['terror',1],seal:['silence',1],shock:['stun',1]};
 function hres293(p,pk){let r=0;try{const h=S.heroes.find(x=>x.id===p.id);if(h&&h.tt290){const T=tree290(h.key,h),P=tt290(h).pts;for(const x of T.nodes)if(x.k==='rs293'&&x.pk===pk)r+=.05*(P[x.id]||0);}r+=gear293(p).res[pk]||0;}catch(e){}return r;}
 function hadd293(p,pk,n,f){if(!p||!(p.hp>0)||!n)return;if(Math.random()<hres293(p,pk))return;const T=tier253();const E=p.he293||(p.he293={});BAT.trig293=BAT.trig293||{};BAT.trig293['M:'+pk]=(BAT.trig293['M:'+pk]||0)+1;
- const other=EPK292.find(k=>k!==pk&&E[k]>0);if(other&&p.hrx293!==BAT.turn){p.hrx293=BAT.turn;E[other]--;const d=Math.round(p.maxhp*.04*(1+.1*T));const pv=window.__f284;window.__f284=null;try{hurtAlly(p,d,1)}finally{window.__f284=pv}blog(`怪物元素反應「${rxName292(other,pk)}」：${short(p.key)} 受到 ${d} 點傷害。`);BAT.trig293['MR:'+rk292(other,pk)]=1;}
+ const other=EPK292.find(k=>k!==pk&&E[k]>0);if(other&&p.hrx293!==BAT.turn){p.hrx293=BAT.turn;E[other]--;const d=Math.round(p.maxhp*.04*(1+.1*T)*(1+.15*T));const pv=window.__f284,sh0=p.sh||0;window.__f284=null;p.sh=0;try{hurtAlly(p,d,1)}finally{window.__f284=pv;p.sh=(p.sh||0)+sh0}blog(`怪物元素反應「${rxName292(other,pk)}」：${short(p.key)} 受到 ${d} 點傷害。`);BAT.trig293['MR:'+rk292(other,pk)]=1;}
  E[pk]=(E[pk]||0)+n;const thr=Math.max(2,EP292[pk][3]+1-(T>=6?1:0));
  if(E[pk]>=thr){E[pk]=0;const [k,t]=HST293[pk];const pv=window.__foe290;window.__foe290=f;try{give(p,k,t,Math.round(p.maxhp*.03))}catch(e){}finally{window.__foe290=pv}BAT.trig293['MT:'+pk]=(BAT.trig293['MT:'+pk]||0)+1;blog(`${short(p.key)} 身上的「${EP292[pk][0]}」層數達門檻：${STI[k]?STI[k][1]:k}！`);}}
 function mstk293(f){const T=tier253();let n=1+(T>=4?1:0)+(T>=7?1:0);try{const al=BAT.foes.filter(x=>x.hp>0);const pk=fel293(f)[0];if(al.filter(x=>fel293(x)[0]===pk).length>=2)n++;}catch(e){}return n;}
@@ -5409,4 +5409,17 @@ try{AUTHOR_ANN155.unshift(['v2.9.5',['槿的時裝「凜冬之槍・寒霜貫槍
 try{AUTHOR_ANN155.unshift(['v2.9.4',['槿的新時裝改名為「凜冬之槍・寒霜貫槍」，並新增時裝背景故事。']])}catch(e){}
 try{AUTHOR_ANN155.unshift(['v2.9.3',['每位英雄的身份分支換成專屬節點，並新增「協同」一行；元素槽第 3、4 層各補一個小節點，第 5、6 層現在點得到。','元素層就是原本的狀態：血＝流血、火＝燃燒、毒＝中毒、蝕＝侵蝕、咒＝詛咒、雷＝麻痺，抗性、淨化與裝備判定共用。','怪物也有元素了（第 1 階起，初生不啟用）：攻擊會在英雄身上疊層、引爆並觸發反應，首領每 3 回合施放元素招式；天賦樹與裝備有對應抗性。','新增元素詞綴與 14 組元素套裝（2／4 件），舊裝備保留。','移除：65 級覺醒（伴生物保留，改為只給基本屬性）、Lv50～80 技能分支、異界回聲、舊固定天賦與戰鬥天賦分支、轉職果實（每顆換 1 根忘卻羽毛）、單次扣血 35% 上限。技能的附加狀態全部改由天賦元素槽提供。','忘卻羽毛與世界王次數重置券統一在公會塔・交易購買（各 800 積分）；世界王畫面一直顯示重置券按鈕。','長槍手槿升為超凡，灰喙夜鴉啄夜升為傳世並進入抽卡池：常駐 75%、精銳 20%、超凡 4.7%、傳世 0.3%，傳世 200 抽保底。','槿新時裝「最後的希望」上架。每人送一次免費重置天賦。']]);for(const a of AUTHOR_ANN155)if(/^v2\.(4|7)\./.test(a[0])&&!a[1].some(x=>/v2\.9\.3 起已移除/.test(x)))a[1].push('（v2.9.3 起已移除：技能分支、覺醒、異界回聲與舊天賦。）');}catch(e){}
 
-</script></body></html>
+</script>
+<script>
+// v2.9.8 怪物強化：只加強怪物，不設任何上限；初生不變
+function defCut296(){try{if(!BAT||!RUN)return 0;const lv=BAT.mlv||(RUN.world180?powerLv260():0),boss=!!(FOES[BAT.kind]?.boss||RUN.mem||BAT.dom||BAT.chief||RUN.world180);if(!boss)return Math.max(0,lv-24)*6;const n=tier253();if(n<1)return 0;return Math.max(0,lv-24)*(1.5+.5*n);}catch(e){return 0}}
+function floor296(f){if(!f||!RUN||!RUN.party||!BAT)return;const n=tier253();if(n<1)return;const al=RUN.party.filter(p=>p.maxhp&&p.hp>0);if(!al.length)return;const N=al.length,role=role260(f);
+ const tgt=al.reduce((a,p)=>a+p.maxhp+(p.sh||0),0)/N,pdef=al.reduce((a,p)=>a+(p.def||0),0)/N,res=Math.max(.2,al.reduce((a,p)=>a+1-((p.pres||0)+(p.mres||0))/2,0)/N);
+ const fr={mob:.06+.005*n,elite:.10+.008*n,boss:.15+.0125*n,world:.15+.0125*n}[role]||.06;const de=pdef*40/(40+defCut296());const need=Math.round(fr*tgt*(40+de)/40/res);if((f.atk||0)<need)f.atk=need;}
+{const o=monsterScale260;monsterScale260=function(f){const r=o(f);try{floor296(f)}catch(e){console.warn('floor296',e)}return r;};}
+{const o=give;give=function(u,k,t,v,...a){try{if(BAT&&RUN&&RUN.party&&RUN.party.includes(u)&&(k==='burn'||k==='poison'||k==='bleed')&&typeof v==='number'&&v>0){const T=tier253();if(T>=1)v=v*(1+.15*T);}}catch(e){}return o(u,k,t,v,...a);};}
+{const o=dotBase260;dotBase260=function(){o();try{if(!RUN||!BAT)return;const T=tier253();if(T<1)return;for(const p of RUN.party){const b=p.st&&p.st.bleed;if(b&&b.t>0&&b.amp296!==b.b){b.b=Math.round(b.b*(1+.15*T));b.amp296=b.b;}}}catch(e){}};}
+{const o=battle;battle=function(...a){const r=o(...a);try{if(BAT&&RUN&&tier253()>=8)BAT.foes.forEach(f=>{if(!f.t8_296){f.t8_296=1;f.atk=Math.round(f.atk*1.08);}});}catch(e){}return r;};}
+try{AUTHOR_ANN155.unshift(['v2.9.8',['怪物強化（初生不變）：首領、主宰、記憶房與世界王也會照等級削弱我方防禦，而且比小怪削得更重。','怪物攻擊下限改為照實際受到的傷害計算：第 1 階起首領每下約打掉目標生命加護盾的 15～25%，小怪約 6～10%，世界王至少比照首領。','怪物造成的流血、燃燒、中毒、元素反應與引爆隨難度階數加強（每階 +15%）；元素反應直接穿透護盾。','撕盾：第 1 階起小怪也會撕盾；首領每回合都能撕，比例 50%＋每階 5%。','重生高階的攻擊倍率不再倒退（混沌心情攻擊 ×1.5，第 8 階額外 +8%）。']])}catch(e){}
+</script>
+</body></html>
