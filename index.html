@@ -4607,15 +4607,15 @@ const NR2_260=newRound;newRound=function(...a){const r=NR2_260(...a);try{wFix260
 trainRoom=TRAINROOM0;trainFight=TRAINFIGHT0;const ROOMPAGE253=roomPage156;roomPage156=function(k,...a){if(k==='train'){if(RUN||BAT)return;S.trainUsed=S.trainUsed||[];return trainRoom();}const rr=ROOMPAGE253(k,...a);if(k==='arena')try{domLock253()}catch(e){}return rr;};
 
 // ===== v2.6.0 全域怪物強度（唯一共用）：依隊伍戰力等級（等級＋裝備＋重生）與污染階 =====
-const HPB270=[2e6,4e6,7e6,1.2e7,2e7,3.5e7,5.5e7,8e7,1.2e8],HPW270=[1e7,1.5e7,2.2e7,3.2e7,4.5e7,6.5e7,9e7,1.3e8,1.8e8],ATK270=[1,1.12,1.25,1.4,1.55,1.7,1.9,2.1,2.4];
+const HPB270=[5e6,8e6,1.2e7,1.8e7,2.7e7,4e7,6e7,8.5e7,1.2e8],HPW270=[2.5e7,3.2e7,4e7,5e7,6.5e7,8.5e7,1.1e8,1.4e8,1.8e8],ATK270=[1.3,1.4,1.5,1.6,1.75,1.9,2.05,2.2,2.4];
 const GS260={hp:1,atk:1,def:1,turns:{mob:3,elite:6,boss:8,world:7}};
-function role260(f){if(RUN&&RUN.world180)return 'world';if(f.boss||f.bossR||f.chief||(BAT&&(BAT.dom||BAT.chief)))return 'boss';if(f.elite)return 'elite';return 'mob';}
+function role260(f){if(RUN&&RUN.world180)return 'world';if(f.boss||f.bossR||f.chief||(BAT&&(BAT.dom||BAT.chief)))return 'boss';if(f.elite||(BAT&&BAT.elite))return 'elite';return 'mob';}
 function monsterScale260(f){if(!f||!RUN||!RUN.party)return;const ph=f.ph||0,first=f.gs260!==ph+1;f.gs260=ph+1;const P=powerLv260(),n=Math.max(0,tier253()),al=RUN.party.filter(p=>p.maxhp),N=Math.max(1,al.length);
  const php=al.reduce((a,p)=>a+p.maxhp,0)/N,pdef=al.reduce((a,p)=>a+(p.def||0),0)/N,shp=al.reduce((a,p)=>a+(p.maxhp||0)+(p.sh||0),0)/N;
  const rbP=RUN.party.some(q=>{const h=S.heroes.find(x=>x.id===q.id);return h&&rb210(h)>0}),soft=rbP||n>0?1:.45,pf=Math.max(.5,Math.pow(P/40,2));const role=role260(f),T=GS260.turns[role]*(1+.06*n),rk={mob:1.1,elite:1.35,boss:1.35,world:1.6}[role],EA=22+P*9.5;
  let hpF=Math.round(EA*N*T*(rbP||n>0?4*pf:2)*(1+.35*n)*soft*GS260.hp*(role==='world'?[1,1.2,1.4][Math.min(2,ph)]:1)),atkF=Math.round((rbP||n>0?ATK270[Math.min(8,n)]:1)*(pdef*1.3+php*(rbP||n>0?.2:.13)+Math.max(0,shp-php)*.3)*rk*(1+.15*n)*soft*GS260.atk),defF=Math.round((8+P*(rbP||n>0?.8:.5))*(1+.06*n)*GS260.def);
  if(rbP||n>0){const tt=Math.min(8,n),base=(role==='world'?HPW270:HPB270)[tt]*(role==='world'?[1,1.2,1.4][Math.min(2,ph)]:1),big2=Math.round(base*{world:1,boss:1,elite:.2,mob:.04}[role]*GS260.hp);if(big2>hpF)hpF=big2;}
- if(role==='world'?f.maxhp!==f.gsHp260:(first&&f.maxhp<hpF)){f.gsHp260=hpF;const r=f.hp/Math.max(1,f.maxhp);f.maxhp=hpF;f.hp=Math.max(1,Math.round(hpF*Math.min(1,r||1)));if(RUN.world180){RUN.world180.phaseMax200=f.maxhp;RUN.world180.phaseHP200=f.hp;}}
+ if(role==='world'&&f.maxhp!==f.gsHp260)hpF=Math.max(hpF,f.maxhp);if(role==='world'?f.maxhp!==f.gsHp260:(first&&f.maxhp<hpF)){f.gsHp260=hpF;const r=f.hp/Math.max(1,f.maxhp);f.maxhp=hpF;f.hp=Math.max(1,Math.round(hpF*Math.min(1,r||1)));if(RUN.world180){RUN.world180.phaseMax200=f.maxhp;RUN.world180.phaseHP200=f.hp;}}
  if((f.atk||0)<atkF)f.atk=atkF;if((f.def||0)<defF)f.def=defF;if(role==='world'&&f.def>defF*1.6)f.def=Math.round(defF*1.6);f.antiSh260=role==='mob'?0:1;}
 function gsAll260(){if(BAT&&BAT.foes)for(const f of BAT.foes)if(f.hp>0)try{monsterScale260(f)}catch(e){console.warn(e)}}
 const BAT260GS=battle;battle=function(...a){const r=BAT260GS(...a);gsAll260();try{drawBattle()}catch(e){}return r;};
@@ -4742,7 +4742,31 @@ const STATS280=stats;stats=function(h,...a){const r=STATS280(h,...a);try{if(r&&h
 const HIT280=hitFoe;hitFoe=function(f,p,m=1,o={}){try{if(p&&RUN&&RUN.party&&RUN.party.includes(p)){const h=S.heroes.find(x=>x.id===p.id);if(h){const c=setCount270(h);let pc=0;for(const [sid,n]of Object.entries(c))if(n>=2){const T=setTier270(h,sid);if(T>1)pc+=Math.floor(Math.min(6,n)/2)*.02*(T-1);}if(pc>0)m*=1+pc;}}}catch(e){}return HIT280(f,p,m,o);};
 const TI280=tierItem270;tierItem270=function(it,n){const fresh=it&&typeof it==='object'&&!it.dt270;const r=TI280(it,n);if(fresh&&n>0&&r){r.ilv=Math.min(200,(r.ilv||1)+6*n);}return r;};
 const GEN280=genItem;genItem=function(t,rb=0,slot){const n=dropTier270();return GEN280(t,(rb||0)+(n>0?5*n:0),slot);};
-const VER='v2.8.0';
+
+// ===== v2.8.1 修正與強化 =====
+// 戰力反應：依隊伍實際攻擊（含暴擊）估算每回合輸出，首領／世界王血量至少撐到目標回合；第1回合後依實際輸出再校正（只升不降）
+const TT281={world:60,boss:35,elite:12,mob:4};
+function partyDps281(){if(!RUN||!RUN.party)return 0;return RUN.party.filter(p=>p.hp>0).reduce((a,p)=>a+(p.atk||0)*(1+(p.crit||0)*((p.cdm||1.6)-1))*6,0);}
+function powerHp281(f){try{if(!f||!RUN||!RUN.party)return;const rbP=RUN.party.some(q=>{const h=S.heroes.find(x=>x.id===q.id);return h&&rb210(h)>0});const n=tier253();if(!rbP&&n<=0)return;const role=role260(f),t=TT281[role]||4;const def=f.def||0,need=Math.round(partyDps281()*40/(40+def)*t);if(need>f.maxhp){const r=f.hp/Math.max(1,f.maxhp);f.maxhp=need;f.hp=Math.max(1,Math.round(need*Math.min(1,r||1)));if(role==='world'){f.gsHp260=f.maxhp;RUN.world180.phaseMax200=f.maxhp;RUN.world180.phaseHP200=f.hp;}}}catch(e){}}
+const GSA281=gsAll260;gsAll260=function(){GSA281();if(BAT&&BAT.foes)for(const f of BAT.foes)if(f.hp>0)powerHp281(f);};
+window.DMG281=0;const HIT281=hitFoe;hitFoe=function(f,p,m=1,o={}){const r=HIT281(f,p,m,o);try{if(r&&r.d&&RUN&&RUN.party&&RUN.party.includes(p))DMG281+=r.d;}catch(e){}return r;};
+const NR281=newRound;newRound=function(...a){try{if(BAT&&RUN&&!BAT.cal281&&BAT.turn>=1&&DMG281>0){BAT.cal281=1;const rbP=RUN.party.some(q=>{const h=S.heroes.find(x=>x.id===q.id);return h&&rb210(h)>0});if(rbP||tier253()>0){for(const f of BAT.foes){if(f.hp<=0)continue;const role=role260(f),need=Math.round(DMG281/Math.max(1,BAT.foes.length)*(TT281[role]||4));if(need>f.maxhp){const lost=f.maxhp-f.hp;f.maxhp=need;f.hp=Math.max(1,need-lost);if(role==='world'){f.gsHp260=f.maxhp;RUN.world180.phaseMax200=f.maxhp;RUN.world180.phaseHP200=f.hp;}}}}}}catch(e){}DMG281=BAT&&BAT.turn<1?0:DMG281;return NR281(...a);};
+const BATDMG281=battle;battle=function(...a){window.DMG281=0;return BATDMG281(...a);};
+// 世界王／活動：自行設定血量之後再套用一次，開場即為正確血量
+for(const fn of ['worldStart180','demonStart253']){const o=eval(fn);const w=function(...a){const r=o.apply(this,a);try{if(BAT){wFix260();gsAll260();drawBattle();}}catch(e){}return r;};eval(fn+'=w');}
+// 套裝整體強化：套裝部件白值 ×1.3（新掉落與既有裝備，只升不降）；2／4／6 件 額外 攻防生命 +8%／+18%／+30%，傷害 +6%／+14%／+25%
+function setBuffItem281(it){if(it&&it.set&&!it.sb281){it.sb281=1;for(const k of ['atk','def'])if(it[k])it[k]=Math.round(it[k]*1.3);if(it.at)for(const k in it.at)if(it.at[k]>0)it.at[k]=Math.round(it.at[k]*1.3);}return it;}
+{const o=mkSet;mkSet=function(...a){return setBuffItem281(o.apply(this,a));};}
+{const o=fixItem;fixItem=function(x){return setBuffItem281(o(x));};}
+function setTierBonus281(h){const c=setCount270(h);let s=0,d=0;for(const n of Object.values(c)){if(n>=6){s+=.30;d+=.25}else if(n>=4){s+=.18;d+=.14}else if(n>=2){s+=.08;d+=.06}}return [s,d];}
+{const o=stats;stats=function(h,...a){const r=o(h,...a);try{if(r&&h&&h.eq){const [s]=setTierBonus281(h);if(s>0){for(const k of ['atk','def','maxhp'])if(r[k])r[k]=Math.round(r[k]*(1+s));}}}catch(e){}return r;};}
+{const o=hitFoe;hitFoe=function(f,p,m=1,o2={}){try{if(p&&RUN&&RUN.party&&RUN.party.includes(p)){const h=S.heroes.find(x=>x.id===p.id);if(h){const [,d]=setTierBonus281(h);if(d>0)m*=1+d;}}}catch(e){}return o(f,p,m,o2);};}
+// 世界王／語嫣房／活動掉落：至少與同階地城相同，世界王再好一些（稀有度、等級、白值）
+function dropBoost281(){if(!RUN)return null;if(RUN.world180)return {rb:12,lv:6,m:1.15};if(RUN.arena||RUN.demon253)return {rb:6,lv:3,m:1.05};return null;}
+{const o=genItem;genItem=function(t,rb=0,slot){const b=window.__db281||dropBoost281();return o(t,(rb||0)+(b?b.rb:0),slot);};}
+{const o=tierItem270;tierItem270=function(it,n){const fresh=it&&typeof it==='object'&&!it.dt270;const b=window.__db281||dropBoost281();const r=o(it,n);if(fresh&&r&&b&&!r.db281){r.db281=1;r.ilv=Math.min(200,(r.ilv||1)+b.lv);for(const k of ['atk','def'])if(r[k])r[k]=Math.round(r[k]*b.m);}return r;};}
+for(const fn of ['finishWorld180','finishBattle']){const o=eval(fn);const w=function(...a){const prev=window.__db281;try{window.__db281=dropBoost281()||prev;return o.apply(this,a);}finally{window.__db281=prev;}};eval(fn+'=w');}
+const VER='v2.8.1';
 AUTHOR_ANN155.unshift(['v2.8.0',['怪物依難度階數使用各自的血量／攻擊：首領 200萬→1.2億、世界王 1000萬→1.8億（第1～9階），精英與一般怪按比例；未重生第1階維持原樣。','裝備依取得階數提升基礎數值（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成；舊裝備視為第1階不削弱。']]);AUTHOR_ANN155.unshift(['v2.7.0',['技能分支 Lv50～80 逐步開放並互斥；連段與跨職業狀態搭配（標記、流血、中毒、麻痺、恐懼…）。','中毒上限6層（蕁／鳶8層），毒爆附禁療與麻痺。','污染階對重生角色的技能變化與代價。','怪物強度依隊伍戰力（等級＋裝備＋重生）與污染統一提升；取消護盾上限。','天賦全面改寫（23 職業 Lv13 收割型／Lv20 機制型）；分支三型 強化／轉化／連動；Lv60 流派印記；Lv75／80 終極選擇；重鑄券。','污染第5階嫉妒、第9階瘋癲額外行動；6件套專屬連動。','裝備階級：第 N 階取得的裝備基礎數值依階倍增（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成。','樂子點與異界點收益提高：完成 +40%、未完成／失敗 +60%。','裝備：新詞條「領主傷害增強」；史詩保留較小的特殊效果；特色／傳說隨等級重算（只升不降）；洗練含基礎數值；淬煉追加隨機詞條。']]);AUTHOR_ANN155.unshift(['v2.5.1',['補回70張戰鬥特效／狀態圖示與時裝目錄（art/effects/v220、art/costumes）。','新增〈內心的惡魔〉限時活動預告面板（即將開放，僅展示圖片）。','流派試煉套用與主線相同的重生難度強化。','重生前自動備份存檔；重生會讓主線地圖回到第一層、技能依等級重新取得。','萬相套裝 2／4／6 件效果小幅加強；兌換券顯示名稱統一為「混沌券」。']]);AUTHOR_ANN155.unshift(['v2.5.3',['第四章〈六芒門前〉移入主線：地窖第 20～24 層，新怪物滑槽蜈蚣、回音籤影、氣閥獵犬；第 22 層管線守衛、第 24 層六角驗印機（含二階段與倒下圖）。調查入口移到地窖入口，大廳按鈕移除。','鍛鍊房回歸，入口在候燈迴廊。','重生不再重置地圖與技能，只推進劇情；重生前仍會備份存檔。','長槍手與白骨先生時裝換成動態圖。','九階慾望難度：我想看你努力、執念、貪慾、惡慾、食慾、色慾、傲慢、墮落、瘋癲，每重生一次開一階；每階有自己的戰鬥規則，前面的階會以殘響疊加。','怪物等級真的會提高數值（防禦、速度、抗性，Lv30 起護盾），重生後怪物生命 ×1.25、攻擊 ×1.15；第四章怪物至少 Lv60。','世界王：最多八人、不限回合，每升一階掉落 +12%。','語嫣房「主宰」：新的三階段與結局；未解鎖時顯示還缺哪幾間。','重生劇情延長，各階慾望有不同的低語與事件。','〈內心的惡魔〉限時活動開放：活動與巡夜卡片進入，每天三次，異界點可換時裝與套裝。','回憶房改用首領記錄，補上地址之門、第四章與白鐵礦城的領主。']]);
 AUTHOR_ANN155.unshift(['v2.6.0',['怪物等級真正生效：等級跟隨隊伍（精英+2、首領+3），生命／攻擊／防禦依等級成長；第四章最低 Lv60。','九階慾望難度倍率改為取代舊難度加成（不再疊乘），單次受擊上限防止滿血秒殺。','污染技能整合為八層專屬技能；修正封印、閃避、狂怒、侵蝕 NaN，新增狀態「麻痺」。','23 位職業各新增一招 Lv15 技能與 Lv30 天賦「異界回聲」：帶回標記、恐懼、影步、掩護、頂盾，並加入禁療與麻痺。','新套裝「污染・八相」「管線」，22 組舊套裝加上狀態效果，16 件新橘字（含 8 件污染裝備）；舊裝備全部保留。']]);
 AUTHOR_ANN155.unshift(['v2.5.2',['〈內心的惡魔〉預告移到主畫面橫幅與「三房・傳送門・活動」裡。','重生頁說明改成新規則。']]);const ANN=AUTHOR_ANN155;
@@ -4775,4 +4799,6 @@ label252();
 </script><script>
 // v2.5.3 主畫面：恢復候燈迴廊入口
 (function(){const H=homePage;homePage=function(...a){const r=H(...a);try{const st=$('stage');if(st&&!st.querySelector('.hub-entry253')){const pins=[...st.querySelectorAll('.scene-pin')];const host=(pins[0]&&pins[0].parentElement)||st;host.insertAdjacentHTML('beforeend','<button class="scene-pin hub-entry253" style="left:27%;top:83%" onclick="roomHub156()">候燈迴廊<br><small style="font-size:11px;opacity:.8">三房・重生・活動</small></button>');const b=host.querySelector('.hub-entry253'),hr=host.getBoundingClientRect();const lefts=pins.filter(p=>p.getBoundingClientRect().left+p.offsetWidth/2<hr.left+hr.width/2);if(lefts.length&&hr.height){const bot=Math.max(...lefts.map(p=>p.getBoundingClientRect().bottom))-hr.top;const left=lefts[lefts.length-1].style.left||'27%';b.style.left=left;b.style.top=(bot+14+b.offsetHeight/2)+'px';}}}catch(e){console.warn(e)}return r;};})();
+
+AUTHOR_ANN155.unshift(['v2.8.1',['「我想看你努力」以上怪物大幅強化：首領 500萬起、世界王 2500萬起，攻擊 ×1.3 起（初生不變）。','修正：精英怪正確套用精英血量；世界王與活動開場血量即為正確數值，初生世界王不再降低。','怪物血量會依隊伍實際戰力提高，高戰力隊伍面對的首領與世界王血量相應增加（只升不降）。','套裝整體強化：部件白值 ×1.3；2／4／6 件額外 攻防生命 +8%／18%／30%、傷害 +6%／14%／25%。','世界王、語嫣房與活動的掉落提升：稀有度、等級與白值至少與同階地城相同，世界王更好。']]);
 </script></body></html>
