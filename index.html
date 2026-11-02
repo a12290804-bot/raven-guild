@@ -4085,7 +4085,7 @@ AUTHOR_ANN155.unshift(['v2.3.0',['這次先修戰鬥開場卡住的問題，並�
 // v2.4.0 — one authoritative set of prices and guarded encounter effects.
 const ECON240={ticket:20,ravenToJx:5,skinJx:500,skinRaven:100};
 const CHAOS_PRICES240={potion:2,calm:2,whet:2,charm:2,unc:2,oil:1,bandage:3,soul:6,box:4,gear:6,gearR:12,set2:18,set4:28,foxring:36,wanx:36,waxp:4};
-const GIFT_COSTUMES295=['spear_293'];
+const GIFT_COSTUMES295=['spear_293','spider_299','shieldf_299'];
 function init240(o){
  if(!o.update240){for(const h of o.heroes||[]){h.legacySkills240=AV240(h).slice();h.legacyAw240=h.lv>=40&&h.br2!=null;}o.update240=1;}
  o.chaosDay240=o.chaosDay240&&typeof o.chaosDay240==='object'?o.chaosDay240:{};
@@ -4490,7 +4490,7 @@ const ALLYACT260=allyAct;allyAct=function(p,i){if(p&&p.hp>0&&paralSkip260(p,shor
 const GIVE260=give;give=function(u,k,t,v){const r=GIVE260(u,k,t,v);if(k==='paral'&&u&&u.st&&u.st.paral){u.st.vuln=u.st.vuln&&u.st.vuln.t>t?u.st.vuln:{t:Math.max(1,t||1),v:.15};}return r;};
 const HIT260=hitFoe;hitFoe=function(f,p,m=1,o={}){if(f&&has(f,'evade')&&!o.sureHit240&&Math.random()<.2){blog(f.name+' 閃開了攻擊。');return {d:0,miss:1};}if(f&&has(f,'paral'))m*=1.15;return HIT260(f,p,m,o);};
 if(!STI.paral)STI.paral=['⚡','麻痺'];if(!NEG.includes('paral'))NEG.push('paral');
-const HURT260=hurtAlly;hurtAlly=function(p,raw,...a){if(p&&p.maxhp&&raw>0){const boss=BAT&&(BAT.foes||[]).some(f=>f.boss||F_BOSS260(f));raw=Math.min(raw,p.maxhp*(boss?.75:.55));}return HURT260(p,raw,...a);};function F_BOSS260(f){return !!(FOES[f.k||f.key]&&FOES[f.k||f.key].boss)||RUN&&(RUN.world180||RUN.mem)}
+const HURT260=hurtAlly;hurtAlly=function(p,raw,...a){if(p&&p.maxhp&&raw>0){const boss=BAT&&(BAT.foes||[]).some(f=>f.boss||F_BOSS260(f));}return HURT260(p,raw,...a);};function F_BOSS260(f){return !!(FOES[f.k||f.key]&&FOES[f.k||f.key].boss)||RUN&&(RUN.world180||RUN.mem)}
 // v2.6.0 23 職業新技能與第五天賦（新 id，舊 id 不動）
 const NSK260={
 shieldF:{n:'霜羽頂盾',d:'全隊頂盾 2 回合並被保護，自身嘲諷 2 回合。',cd:5,t:'buff',tg:'team',st:['umb',2],also:['taunt',2],fx:'shieldglow'},
@@ -4907,7 +4907,7 @@ function gift290(){try{if(!S||S.gift290)return;S.gift290=1;S.tickets210=(S.ticke
 function useWbReset290(){if(!idle180())return;if((S.wbReset290||0)<1)return toast('沒有世界王次數重置券');init180(S);const d=worldDay180();if(!(S.world180.claims[d]>0))return toast('今天的世界王次數還沒用掉');S.wbReset290--;delete S.world180.claims[d];save();toast('今天的世界王次數已重置');}
 {const o=homePage;homePage=function(...a){const r=o(...a);try{gift290();fruitMile290();for(const h of S.heroes)ttInit290(h);if((S.wbReset290||0)>0&&$('stage')&&!$('stage').querySelector('[data-wbr290]'))$('stage').insertAdjacentHTML('beforeend',`<button class="btn" data-wbr290 onclick="useWbReset290()">世界王次數重置券 ×${S.wbReset290}</button>`);}catch(e){}return r;};}
 
-const VER='v2.9.8';
+const VER='v2.9.9';
 AUTHOR_ANN155.unshift(['v2.8.0',['怪物依難度階數使用各自的血量／攻擊：首領 200萬→1.2億、世界王 1000萬→1.8億（第1～9階），精英與一般怪按比例；未重生第1階維持原樣。','裝備依取得階數提升基礎數值（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成；舊裝備視為第1階不削弱。']]);AUTHOR_ANN155.unshift(['v2.7.0',['技能分支 Lv50～80 逐步開放並互斥；連段與跨職業狀態搭配（標記、流血、中毒、麻痺、恐懼…）。','中毒上限6層（蕁／鳶8層），毒爆附禁療與麻痺。','污染階對重生角色的技能變化與代價。','怪物強度依隊伍戰力（等級＋裝備＋重生）與污染統一提升；取消護盾上限。','天賦全面改寫（23 職業 Lv13 收割型／Lv20 機制型）；分支三型 強化／轉化／連動；Lv60 流派印記；Lv75／80 終極選擇；重鑄券。','污染第5階嫉妒、第9階瘋癲額外行動；6件套專屬連動。','裝備階級：第 N 階取得的裝備基礎數值依階倍增（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成。','樂子點與異界點收益提高：完成 +40%、未完成／失敗 +60%。','裝備：新詞條「領主傷害增強」；史詩保留較小的特殊效果；特色／傳說隨等級重算（只升不降）；洗練含基礎數值；淬煉追加隨機詞條。']]);AUTHOR_ANN155.unshift(['v2.5.1',['補回70張戰鬥特效／狀態圖示與時裝目錄（art/effects/v220、art/costumes）。','新增〈內心的惡魔〉限時活動預告面板（即將開放，僅展示圖片）。','流派試煉套用與主線相同的重生難度強化。','重生前自動備份存檔；重生會讓主線地圖回到第一層、技能依等級重新取得。','萬相套裝 2／4／6 件效果小幅加強；兌換券顯示名稱統一為「混沌券」。']]);AUTHOR_ANN155.unshift(['v2.5.3',['第四章〈六芒門前〉移入主線：地窖第 20～24 層，新怪物滑槽蜈蚣、回音籤影、氣閥獵犬；第 22 層管線守衛、第 24 層六角驗印機（含二階段與倒下圖）。調查入口移到地窖入口，大廳按鈕移除。','鍛鍊房回歸，入口在候燈迴廊。','重生不再重置地圖與技能，只推進劇情；重生前仍會備份存檔。','長槍手與白骨先生時裝換成動態圖。','九階慾望難度：我想看你努力、執念、貪慾、惡慾、食慾、色慾、傲慢、墮落、瘋癲，每重生一次開一階；每階有自己的戰鬥規則，前面的階會以殘響疊加。','怪物等級真的會提高數值（防禦、速度、抗性，Lv30 起護盾），重生後怪物生命 ×1.25、攻擊 ×1.15；第四章怪物至少 Lv60。','世界王：最多八人、不限回合，每升一階掉落 +12%。','語嫣房「主宰」：新的三階段與結局；未解鎖時顯示還缺哪幾間。','重生劇情延長，各階慾望有不同的低語與事件。','〈內心的惡魔〉限時活動開放：活動與巡夜卡片進入，每天三次，異界點可換時裝與套裝。','回憶房改用首領記錄，補上地址之門、第四章與白鐵礦城的領主。']]);
 AUTHOR_ANN155.unshift(['v2.6.0',['怪物等級真正生效：等級跟隨隊伍（精英+2、首領+3），生命／攻擊／防禦依等級成長；第四章最低 Lv60。','九階慾望難度倍率改為取代舊難度加成（不再疊乘），單次受擊上限防止滿血秒殺。','污染技能整合為八層專屬技能；修正封印、閃避、狂怒、侵蝕 NaN，新增狀態「麻痺」。','23 位職業各新增一招 Lv15 技能與 Lv30 天賦「異界回聲」：帶回標記、恐懼、影步、掩護、頂盾，並加入禁療與麻痺。','新套裝「污染・八相」「管線」，22 組舊套裝加上狀態效果，16 件新橘字（含 8 件污染裝備）；舊裝備全部保留。']]);
 AUTHOR_ANN155.unshift(['v2.5.2',['〈內心的惡魔〉預告移到主畫面橫幅與「三房・傳送門・活動」裡。','重生頁說明改成新規則。']]);const ANN=AUTHOR_ANN155;
@@ -5412,14 +5412,24 @@ try{AUTHOR_ANN155.unshift(['v2.9.3',['每位英雄的身份分支換成專屬節
 </script>
 <script>
 // v2.9.8 怪物強化：只加強怪物，不設任何上限；初生不變
-function defCut296(){try{if(!BAT||!RUN)return 0;const lv=BAT.mlv||(RUN.world180?powerLv260():0),boss=!!(FOES[BAT.kind]?.boss||RUN.mem||BAT.dom||BAT.chief||RUN.world180);if(!boss)return Math.max(0,lv-24)*6;const n=tier253();if(n<1)return 0;return Math.max(0,lv-24)*(1.5+.5*n);}catch(e){return 0}}
+function defCut296(){try{if(!BAT||!RUN)return 0;const lv=BAT.mlv||(RUN.world180?powerLv260():0),boss=!!(FOES[BAT.kind]?.boss||RUN.mem||BAT.dom||BAT.chief||RUN.world180);if(!boss)return Math.max(0,lv-24)*6;const n=tier253();if(n<1)return 0;return Math.max(0,lv-24)*(6+n);}catch(e){return 0}}
 function floor296(f){if(!f||!RUN||!RUN.party||!BAT)return;const n=tier253();if(n<1)return;const al=RUN.party.filter(p=>p.maxhp&&p.hp>0);if(!al.length)return;const N=al.length,role=role260(f);
  const tgt=al.reduce((a,p)=>a+p.maxhp+(p.sh||0),0)/N,pdef=al.reduce((a,p)=>a+(p.def||0),0)/N,res=Math.max(.2,al.reduce((a,p)=>a+1-((p.pres||0)+(p.mres||0))/2,0)/N);
- const fr={mob:.06+.005*n,elite:.10+.008*n,boss:.15+.0125*n,world:.15+.0125*n}[role]||.06;const de=pdef*40/(40+defCut296());const need=Math.round(fr*tgt*(40+de)/40/res);if((f.atk||0)<need)f.atk=need;}
+ const fr={mob:.06+.005*n,elite:.10+.008*n,boss:.15+.0125*n,world:.15+.0125*n}[role]||.06;const de=pdef*40/(40+defCut296());const need=Math.round(fr*tgt*(40+de)/40/res);f.atk=Math.max(1,need);}
 {const o=monsterScale260;monsterScale260=function(f){const r=o(f);try{floor296(f)}catch(e){console.warn('floor296',e)}return r;};}
 {const o=give;give=function(u,k,t,v,...a){try{if(BAT&&RUN&&RUN.party&&RUN.party.includes(u)&&(k==='burn'||k==='poison'||k==='bleed')&&typeof v==='number'&&v>0){const T=tier253();if(T>=1)v=v*(1+.15*T);}}catch(e){}return o(u,k,t,v,...a);};}
 {const o=dotBase260;dotBase260=function(){o();try{if(!RUN||!BAT)return;const T=tier253();if(T<1)return;for(const p of RUN.party){const b=p.st&&p.st.bleed;if(b&&b.t>0&&b.amp296!==b.b){b.b=Math.round(b.b*(1+.15*T));b.amp296=b.b;}}}catch(e){}};}
-{const o=battle;battle=function(...a){const r=o(...a);try{if(BAT&&RUN&&tier253()>=8)BAT.foes.forEach(f=>{if(!f.t8_296){f.t8_296=1;f.atk=Math.round(f.atk*1.08);}});}catch(e){}return r;};}
+{const o=battle;battle=function(...a){const r=o(...a);try{if(BAT&&RUN&&tier253()>=8)BAT.foes.forEach(f=>{if(!f.t8_296){f.t8_296=1;}});}catch(e){}return r;};}
 try{AUTHOR_ANN155.unshift(['v2.9.8',['怪物強化（初生不變）：首領、主宰、記憶房與世界王也會照等級削弱我方防禦，而且比小怪削得更重。','怪物攻擊下限改為照實際受到的傷害計算：第 1 階起首領每下約打掉目標生命加護盾的 15～25%，小怪約 6～10%，世界王至少比照首領。','怪物造成的流血、燃燒、中毒、元素反應與引爆隨難度階數加強（每階 +15%）；元素反應直接穿透護盾。','撕盾：第 1 階起小怪也會撕盾；首領每回合都能撕，比例 50%＋每階 5%。','重生高階的攻擊倍率不再倒退（混沌心情攻擊 ×1.5，第 8 階額外 +8%）。']])}catch(e){}
+</script>
+<script>
+// v2.9.9 強化／打造介面分類；怪物單擊上限已移除
+{const o=enhMenu;enhMenu=function(...a){const t=S.enhTier299;const T=it=>tierOf290(it);const bag0=S.bag,eqs=S.heroes.map(h=>h.eq);const tiers=[...new Set([...bag0,...S.heroes.flatMap(h=>Object.values(h.eq||{}))].filter(Boolean).map(T))].sort((x,y)=>x-y);
+ if(t!=null&&t!=='a'){S.bag=bag0.filter(it=>T(it)===t);S.heroes.forEach(h=>{h.eq=Object.fromEntries(Object.entries(h.eq||{}).filter(([,it])=>it&&T(it)===t));});}
+ let r;try{r=o(...a);}finally{S.bag=bag0;S.heroes.forEach((h,i)=>h.eq=eqs[i]);}
+ try{const tabs=`<div class="tier-tabs290" style="display:flex;gap:4px;overflow-x:auto;padding:4px 0;max-width:100%">`+[['a','全部'],...tiers.map(x=>[x,x?x+' 階':'初'])].map(([k,n])=>`<button class="btn small ${String(t==null?'a':t)===String(k)?'primary':''}" style="min-width:44px;min-height:36px;flex:0 0 auto" onclick="S.enhTier299=${k==='a'?"'a'":k};enhMenu()">${n}</button>`).join('')+`</div>`;$('box').insertAdjacentHTML('afterbegin',tabs);}catch(e){}return r;};}
+{const o=archiveGear250;archiveGear250=function(world=false,...a){const r=o(world,...a);try{if(world)return r;const q=S.gearQ299||'a',Q=u=>u.ep?'ep':u.leg?'leg':'sp';const box=$('box');box.querySelectorAll('article.q').forEach(el=>{const m=(el.querySelector('button[onclick^="craftGear250"]')?.getAttribute('onclick')||'').match(/craftGear250\('([^']+)'/);const u=m&&GEAR250[m[1]];if(u&&q!=='a'&&Q(u)!==q)el.style.display='none';});
+ const tabs=`<div class="tier-tabs290" style="display:flex;gap:4px;overflow-x:auto;padding:4px 0;max-width:100%">`+[['a','全部'],['sp','特色'],['leg','傳說'],['ep','史詩']].map(([k,n])=>`<button class="btn small ${q===k?'primary':''}" style="min-width:44px;min-height:36px;flex:0 0 auto" onclick="S.gearQ299='${k}';archiveGear250()">${n}</button>`).join('')+`</div>`;box.insertAdjacentHTML('afterbegin',tabs);}catch(e){}return r;};}
+try{AUTHOR_ANN155.unshift(['v2.9.9',['首領調整（初生不變）：第 1 階起首領與世界王每下約打掉目標生命加護盾的 16～25%，小怪約 6.5～10%，隨階數穩定上升，不再因防禦高反而更痛。','移除怪物單擊上限（原本小怪最多 55%、首領 75% 最大生命），不設任何上限。','強化裝備畫面新增階級分類；器物廊打造配方新增品質分類（特色／傳說／史詩）。','新增兩套贈送時裝，所有玩家直接擁有、可直接穿戴：織燭「蛛后葬燈」、霜綾「最後的希望」。']])}catch(e){}
 </script>
 </body></html>
