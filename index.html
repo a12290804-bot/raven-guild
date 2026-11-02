@@ -1029,7 +1029,7 @@ function showLevelUps(then){if(!LVQ.length){then&&then();return}const list=LVQ.s
   return `<div class="hero" style="align-items:flex-start"><img src="${A('h_'+u.key)}" alt=""><div class="info"><b>${short(u.key)}</b> 升到 <b style="color:var(--gold)">Lv${u.lv}</b>
   <div class="stats s5">${ATR.map(k=>s(u.before.a[k],u.after.a[k],ATN[k])).join('')}</div>
   <div class="stats">${s(u.before.maxhp,u.after.maxhp,'生命')}${s(u.before.atk,u.after.atk,'攻擊')}${s(u.before.def,u.after.def,'防禦')}${s(u.before.spd,u.after.spd,'速度')}</div>
-  ${u.nav.length?`<span class="up">學會新技能：${u.nav.map(k=>SK[k].n).join('、')}</span><br>`:''}${u.ntal&&u.ntal.length?`<span style="color:#b9a6ff">解鎖天賦：${u.ntal.map(t=>t[2]).join('、')}</span><br>`:''}${u.br?'<span style="color:var(--gold)">可以選擇職業分支了！回地方站後到「隊伍」點他的頭像。</span>':''}</div></div>`}).join('');
+  ${u.nav.length?`<span class="up">學會新技能：${u.nav.map(k=>SK[k].n).join('、')}</span><br>`:''}<span style="color:#b9a6ff">獲得天賦點（每升 1 級 +1 點）</span><br>${u.br?'<span style="color:var(--gold)">可以選擇職業分支了！回地方站後到「隊伍」點他的頭像。</span>':''}</div></div>`}).join('');
  modal(`<h2>升級！</h2>${rows}<div class="row"><button class="btn primary" id="lvOk">好</button></div>`);$('lvOk').onclick=()=>{closeModal();then&&then()}}
 function healAll(f){RUN.party.forEach(p=>{if(p.hp>0)p.hp=Math.min(p.maxhp,p.hp+Math.round(p.maxhp*f))})}
 function hurtAll(f){RUN.party.forEach(p=>{if(p.hp>0)p.hp=Math.max(1,p.hp-Math.round(p.maxhp*f))})}
@@ -4731,7 +4731,7 @@ CHBOOK.push([()=>true,'手冊・v2.7 技能與裝備','技能分支 Lv50～80 �
 
 // v2.7.0 裝備階級：在第 N 階取得的裝備基礎數值依階倍增（舊裝備視為第 1 階，不削弱）
 const GM270=[1,1.8,3,5,8,13,20,30,45];
-function dropTier270(){try{if(window.__dt270!=null)return window.__dt270;return RUN?Math.max(0,Math.min(8,tier253())):0}catch(e){return 0}}
+function dropTier270(){try{if(window.__dt270!=null)return window.__dt270;return RUN?Math.max(0,Math.min(8,tier253())):Math.max(0,Math.min(8,(S&&S.difficulty210)||0))}catch(e){return 0}}
 function tierItem270(it,n){if(!it||typeof it!=='object'||it.dt270)return it;it.dt270=n+1;const m=GM270[n];if(m>1){for(const k of ['atk','def'])if(it[k])it[k]=Math.round(it[k]*m);if(it.at)for(const k in it.at)if(it.at[k]>0)it.at[k]=Math.round(it.at[k]*m);if(it.b)for(const k of ['atk','def'])if(it.b[k])it.b[k]=Math.round(it.b[k]*m);}return it;}
 for(const fn of ['genItem','mkUQ','mkSet']){const o=window[fn]||eval(fn);const w=function(...a){return tierItem270(o.apply(this,a),dropTier270());};try{eval(fn+'=w');}catch(e){}}
 const GN270=gearName;gearName=function(it,...a){const t=GN270(it,...a);return it&&it.dt270>1?t+` <small class="tier270" style="color:#ff9b5c">第${it.dt270}階</small>`:t;};
@@ -4804,7 +4804,7 @@ atkFit283=function(f){if(!on283())return;const al=RUN.party.filter(p=>p.maxhp&&p
  const tgt=Math.round(share*hp*k);f.atk=Math.max(1,f.atk||0,tgt);
  const sh=shAvg284(al),raw=Math.max(1,f.atk/k);f.shMul284=role==='mob'?2:Math.max(1,share*(hp+sh)/raw);};
 {const o=foeHit;foeHit=function(f,...a){const pv=window.__f284;window.__f284=f;try{return o(f,...a)}finally{window.__f284=pv}};}
-{const o=hurtAlly;hurtAlly=function(p,raw,nos,...a){const f=window.__f284;if(f&&!nos&&p.sh>0&&raw>0&&RUN&&on283()){const mul=f.shMul284||(role260(f)==='mob'?2:1);if(mul>1){const ex=Math.min(p.sh,Math.round(raw*(mul-1)));p.sh-=ex;}}if(f&&!nos&&RUN&&on283()){const mx=((p.sh||0)+.35*p.maxhp)/mit284(p);if(raw>mx)raw=Math.round(mx);}return o(p,raw,nos,...a)};}
+{const o=hurtAlly;hurtAlly=function(p,raw,nos,...a){const f=window.__f284;if(f&&!nos&&p.sh>0&&raw>0&&RUN&&on283()){const mul=f.shMul284||(role260(f)==='mob'?2:1);if(mul>1){const ex=Math.min(p.sh,Math.round(raw*(mul-1)));p.sh-=ex;}}return o(p,raw,nos,...a)};}
 {const o=newRound;newRound=function(...a){try{if(RUN&&RUN.party){const al=RUN.party.filter(p=>p.hp>0);if(al.length)RUN.sh284=Math.max(RUN.sh284||0,al.reduce((x,p)=>x+(p.sh||0),0)/al.length);}}catch(e){}return o(...a)};}
 // ===== v2.9.0 天賦樹・轉職果實・裝備分階・狀態修正・贈禮 =====
 const TT290_BR={shield:['鐵壁','反擊','守誓'],lancer:['穿刺','血河','陣線'],mage:['烈焰','冰霜','雷光'],archer:['獵首','連射','陷阱'],healer:['續療','聖盾','淨化'],weaver:['傀儡','連結','魂匣'],scout:['影步','反刺','探索'],warrior:['狂戰','怒濤','戰吼'],assassin:['處決','毒刃','暗影'],curser:['衰弱','侵蝕','反噬'],shifter:['獸形','靈形','混形']};
@@ -4906,7 +4906,7 @@ function gift290(){try{if(!S||S.gift290)return;S.gift290=1;S.tickets210=(S.ticke
 function useWbReset290(){if(!idle180())return;if((S.wbReset290||0)<1)return toast('沒有世界王次數重置券');init180(S);const d=worldDay180();if(!(S.world180.claims[d]>0))return toast('今天的世界王次數還沒用掉');S.wbReset290--;delete S.world180.claims[d];save();toast('今天的世界王次數已重置');}
 {const o=homePage;homePage=function(...a){const r=o(...a);try{gift290();fruitMile290();for(const h of S.heroes)ttInit290(h);if((S.wbReset290||0)>0&&$('stage')&&!$('stage').querySelector('[data-wbr290]'))$('stage').insertAdjacentHTML('beforeend',`<button class="btn" data-wbr290 onclick="useWbReset290()">世界王次數重置券 ×${S.wbReset290}</button>`);}catch(e){}return r;};}
 
-const VER='v2.9.2';
+const VER='v2.9.3';
 AUTHOR_ANN155.unshift(['v2.8.0',['怪物依難度階數使用各自的血量／攻擊：首領 200萬→1.2億、世界王 1000萬→1.8億（第1～9階），精英與一般怪按比例；未重生第1階維持原樣。','裝備依取得階數提升基礎數值（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成；舊裝備視為第1階不削弱。']]);AUTHOR_ANN155.unshift(['v2.7.0',['技能分支 Lv50～80 逐步開放並互斥；連段與跨職業狀態搭配（標記、流血、中毒、麻痺、恐懼…）。','中毒上限6層（蕁／鳶8層），毒爆附禁療與麻痺。','污染階對重生角色的技能變化與代價。','怪物強度依隊伍戰力（等級＋裝備＋重生）與污染統一提升；取消護盾上限。','天賦全面改寫（23 職業 Lv13 收割型／Lv20 機制型）；分支三型 強化／轉化／連動；Lv60 流派印記；Lv75／80 終極選擇；重鑄券。','污染第5階嫉妒、第9階瘋癲額外行動；6件套專屬連動。','裝備階級：第 N 階取得的裝備基礎數值依階倍增（×1～×45），名稱顯示「第N階」；洗練／淬煉依階加成。','樂子點與異界點收益提高：完成 +40%、未完成／失敗 +60%。','裝備：新詞條「領主傷害增強」；史詩保留較小的特殊效果；特色／傳說隨等級重算（只升不降）；洗練含基礎數值；淬煉追加隨機詞條。']]);AUTHOR_ANN155.unshift(['v2.5.1',['補回70張戰鬥特效／狀態圖示與時裝目錄（art/effects/v220、art/costumes）。','新增〈內心的惡魔〉限時活動預告面板（即將開放，僅展示圖片）。','流派試煉套用與主線相同的重生難度強化。','重生前自動備份存檔；重生會讓主線地圖回到第一層、技能依等級重新取得。','萬相套裝 2／4／6 件效果小幅加強；兌換券顯示名稱統一為「混沌券」。']]);AUTHOR_ANN155.unshift(['v2.5.3',['第四章〈六芒門前〉移入主線：地窖第 20～24 層，新怪物滑槽蜈蚣、回音籤影、氣閥獵犬；第 22 層管線守衛、第 24 層六角驗印機（含二階段與倒下圖）。調查入口移到地窖入口，大廳按鈕移除。','鍛鍊房回歸，入口在候燈迴廊。','重生不再重置地圖與技能，只推進劇情；重生前仍會備份存檔。','長槍手與白骨先生時裝換成動態圖。','九階慾望難度：我想看你努力、執念、貪慾、惡慾、食慾、色慾、傲慢、墮落、瘋癲，每重生一次開一階；每階有自己的戰鬥規則，前面的階會以殘響疊加。','怪物等級真的會提高數值（防禦、速度、抗性，Lv30 起護盾），重生後怪物生命 ×1.25、攻擊 ×1.15；第四章怪物至少 Lv60。','世界王：最多八人、不限回合，每升一階掉落 +12%。','語嫣房「主宰」：新的三階段與結局；未解鎖時顯示還缺哪幾間。','重生劇情延長，各階慾望有不同的低語與事件。','〈內心的惡魔〉限時活動開放：活動與巡夜卡片進入，每天三次，異界點可換時裝與套裝。','回憶房改用首領記錄，補上地址之門、第四章與白鐵礦城的領主。']]);
 AUTHOR_ANN155.unshift(['v2.6.0',['怪物等級真正生效：等級跟隨隊伍（精英+2、首領+3），生命／攻擊／防禦依等級成長；第四章最低 Lv60。','九階慾望難度倍率改為取代舊難度加成（不再疊乘），單次受擊上限防止滿血秒殺。','污染技能整合為八層專屬技能；修正封印、閃避、狂怒、侵蝕 NaN，新增狀態「麻痺」。','23 位職業各新增一招 Lv15 技能與 Lv30 天賦「異界回聲」：帶回標記、恐懼、影步、掩護、頂盾，並加入禁療與麻痺。','新套裝「污染・八相」「管線」，22 組舊套裝加上狀態效果，16 件新橘字（含 8 件污染裝備）；舊裝備全部保留。']]);
 AUTHOR_ANN155.unshift(['v2.5.2',['〈內心的惡魔〉預告移到主畫面橫幅與「三房・傳送門・活動」裡。','重生頁說明改成新規則。']]);const ANN=AUTHOR_ANN155;
@@ -5188,4 +5188,211 @@ function talFx292(h){const o={};for(const id of ttIds290(h)){const v=PV[id]||{};
  const ob=new Map((o.bag||[]).filter(x=>x&&x.u!=null).map(x=>[x.u,x]));for(const it of r.bag||[]){const b=it&&ob.get(it.u);if(b&&b.tl290&&!it.tl290)it.tl290={...b.tl290};}}catch(e){console.warn('san292',e)}return r;};}
 {try{const raw=RGLS.getItem(KEY);const o=raw&&JSON.parse(raw);if(o&&S&&S.heroes){const r=sanitize({...o,ver:o.ver});if(r){for(const k of Object.keys(r))if(/29\d$/.test(k))S[k]=r[k];for(const h of S.heroes){const q=(r.heroes||[]).find(x=>x.id===h.id);if(q)for(const k of ['tt290','fruitAt290','mig292','pre292','old292'])if(q[k]!=null)h[k]=q[k];if(q&&q.eq&&h.eq)for(const s in h.eq)if(h.eq[s]&&q.eq[s]&&q.eq[s].tl290)h.eq[s].tl290=q.eq[s].tl290;}const ub=new Map((r.bag||[]).map(x=>[x&&x.u,x]));for(const it of S.bag||[]){const b=it&&ub.get(it.u);if(b&&b.tl290)it.tl290=b.tl290;}}}}catch(e){console.warn('restore292',e)}}
 try{AUTHOR_ANN155.unshift(['v2.9.2',['天賦樹改版：每名英雄一條身份分支＋兩個元素槽，14 條元素路徑（血、火、冰、毒、雷、蝕、咒、碎、光、聖、絲、魘、封、震）任選兩條，整隊同元素也可以。','技能保留倍率與特色，附加狀態改由元素槽提供；各元素有疊層、門檻反應與引爆，混搭會觸發交叉反應，同元素 2／3／4 人有隊伍共鳴。','二轉、三轉移除：已轉職角色退還遺產點（二轉 6、三轉 10），舊角色另補元素入門並送一次免費重置。','修正：重新整理後天賦點與贈禮狀態沒有被保存的問題。']]);}catch(e){}
+// ===== v2.9.3 專屬身份節點・元素即狀態・怪物元素・元素裝備・覺醒移除・道具統一・位階與抽卡 =====
+// ---------- 1. 天賦樹：身份分支專屬節點 + 元素槽補節點 ----------
+Object.assign(TT290_SMALL,{rs293:['同元素抗性（怪物）',.05,'%']});
+const ID293={
+shieldF:[['羽盾回饋','regenSelf',[.005,.01,.015]],['反羽','counter',[.1,.2,.3]],['護陣預備','shieldStart',[.03,.06,.09]],['萬羽承擊','dr',.15],['逆羽追擊','counter',.35],'stack'],
+shieldM:[['岩心','dr',[.02,.04,.06]],['厚岩','defP',[.04,.08,.12]],['退一步','dr',[.04,.08,.12],'low50'],['崩岩反震','counter',.4],['不倒岩','cheat',1],'det'],
+shield0:[['押金','dmg',[.03,.06,.09],'elite'],['壓陣','dr',[.02,.04,.06]],['殺價','dmg',[.05,.1,.15],'elite'],['賞金獵首','killCd',1],['債主上門','dmg',.25,'elem'],'stack'],
+knightW:[['誓言','dr',[.02,.04,.06]],['淨誓','cleanse',[.2,.35,.5]],['霜衛','shieldStart',[.02,.04,.06]],['不朽誓約','teamCheat',1],['白羽審判庭','cleanse',.6],'heal'],
+bone:[['厚殼','defP',[.04,.08,.12]],['苔殼','regenSelf',[.005,.01,.015]],['殼縫','dr',[.02,.04,.06]],['殼滿反刺','counter',.35],['苔殼庇護','regenTeam',.01],'det'],
+tiekou:[['扣環','shieldStart',[.03,.05,.07]],['鎖死','dr',[.02,.04,.06]],['礦燈','dr',[.01,.02,.03]],['最後一道門','teamCheat',1],['鎖鏈連扣','shieldCast',.03],'stack'],
+spear:[['拒馬架槍','counter',[.1,.2,.3]],['返身槍','dmg',[.05,.1,.15]],['守望','dmg',[.04,.08,.12],'mark'],['槍林','extraHit',1],['千槍歸陣','markJump',1],'hit'],
+horn:[['怒血','dmg',[.03,.06,.09],'low50self'],['角衝','dmg',[.04,.08,.12]],['餘怒','rageStart',[10,20,30]],['狂角','cdRefund',.35],['岩心領隊','dr',.08],'stack'],
+dragon:[['淺眠','dmg',[.03,.06,.09]],['龍鱗','dr',[.02,.04,.06]],['龍息','dmg',[.04,.08,.12],'elite'],['燼鱗甦醒','spread',.3],['古龍餘息','spread',.2],'thr'],
+mageF:[['燈芯','dmg',[.04,.08,.12],'lit'],['接續','dmg',[.03,.06,.09]],['照夜','crit',[.03,.06,.09]],['燈陣','detP',.25],['照夜護航','dr',.08],'elemDmg'],
+mageM:[['燭心','dmg',[.05,.1,.15]],['餘燼','killCd',[0,0,1]],['蓄燭','dmg',[.03,.06,.09],'elite'],['不滅薪火','deathBurst',2],['燭盡','burnSelf',.35],'det'],
+mage0:[['刻名','dmg',[.03,.06,.09],'elem'],['無聲','detP',[.1,.2,.3]],['褪名','dmg',[.03,.06,.09]],['無名倒數','spread',.25],['名冊','detP',.3],'det'],
+foxgirl:[['幻步','dodge',[.03,.06,.09]],['殘影','counter',[.1,.15,.2]],['緋燈','dr',[.02,.04,.06]],['緋光迷途','crit',.15],['雙影','cheat',1],'hit'],
+fox:[['分燈','dmg',[.03,.06,.09]],['嗅跡','crit',[.05,.1,.15],'mark'],['守燈','dr',[.02,.04,.06]],['群燈','spread',.25],['傳燈','markJump',1],'hit'],
+healerF:[['急救','heal',[.1,.2,.3],'low30'],['藥盾','shieldCast',[.01,.02,.03]],['清創','cleanse',[.15,.3,.45]],['救援藥箱','teamCheat',1],['急診','cdRefund',.4],'heal'],
+healer1:[['劑量','heal',[.03,.06,.09]],['苦口','heal',[.02,.04,.06],'elemT'],['反用','cleanse',[.15,.3,.45]],['以毒續命','healDet',.08],['雙效','healDmg',.5],'heal'],
+herb:[['苔生','heal',[.1,.2,.3]],['長青','regenTeam',[.005,.01,.015]],['藥圃','shieldStart',[.02,.04,.06]],['藥圃長青','shieldCast',.02],['處方','teamCheat',1],'heal'],
+snake:[['細鱗','heal',[.08,.16,.24]],['蟒鱗','dr',[.04,.08,.12]],['蛻皮','regenSelf',[.01,.02,.03]],['雙生蛻形','dmg',.15],['巨蟒纏身','dr',.12],'det'],
+raven:[['點名','cdm',[.08,.16,.24]],['高空','dmg',[.1,.2,.3],'first'],['群鴉','extraHit',[0,1,1]],['群鴉追獵','killCd',1],['一箭','dmg',.3,'low30'],'thr'],
+archerH:[['影步','cdm',[.1,.2,.3]],['收尾','dmg',[.06,.12,.18],'low50'],['獵場','dodge',[.02,.04,.06]],['無聲收割','killCd',1],['獵場佈置','startHide',2],'stack'],
+spider:[['同命','dmg',[.05,.1,.15]],['紗橋','dr',[.02,.04,.06]],['替身絲','dr',[.03,.06,.09],'low50'],['同命織網','spread',.25],['縛影','dr',.1],'hit'],
+baigu:[['多偶','dmg',[.03,.06,.09]],['骨線','dmg',[.05,.1,.15]],['替骨','dr',[.03,.06,.09]],['百線牽魂','spread',.3],['魂匣','deathBurst',.5],'det'],
+luoqingluan:[['鈴音','shieldCast',[.01,.02,.03]],['淨域','cleanse',[.2,.35,.5]],['清響','regenTeam',[.005,.01,.015]],['清域守序','cleanse',1],['骨鈴掩火','dr',.08],'heal']};
+const IDE293={dmg:'技能傷害',dr:'受到傷害 −',heal:'治療量',shieldStart:'開場全隊護盾（最大生命）',regenSelf:'每回合自身回復',regenTeam:'每回合全隊回復',counter:'受擊時反擊 0.6 倍的機率',dodge:'閃避',crit:'暴擊率',cdm:'暴擊傷害',defP:'防禦',rageStart:'開場怒氣',cheat:'每場 1 次：自身致命傷改為保留 1 點生命',teamCheat:'每場 1 次：隊友致命傷改為保留 1 點生命',killCd:'擊倒敵人時，所有技能冷卻 −',extraHit:'傷害技能追加一擊（0.6 倍）',markJump:'擊倒敵人時，標記下一名敵人並追刺 0.6 倍',spread:'傷害技能另對其他敵人造成本次傷害的',deathBurst:'每場 1 次：自身倒下時對全體造成攻擊倍率',detP:'元素引爆傷害',cleanse:'每回合淨化 1 名隊友 1 個負面狀態的機率',shieldCast:'施放技能時全隊護盾（最大生命）',healDet:'自身每引爆 1 次元素，全隊回復最大生命',healDmg:'施放非傷害技能時，對生命最低的敵人造成攻擊倍率',burnSelf:'施技消耗 10% 生命，技能傷害',cdRefund:'施技後該技能冷卻 −1 的機率',startHide:'開場隱身回合'};
+const IDC293={mark:'（對標記目標）',elite:'（對精英與首領）',low50:'（目標生命低於 50%）',low50self:'（自身生命低於 50%）',low30:'（目標生命低於 30%）',lit:'（對照明目標）',first:'（每場第一擊）',elem:'（目標每有 1 種元素層）',elemT:'（敵人每有 1 種元素層）'};
+const SYN293={hit:['協同・連擊疊層','多段／多目標技能的每一擊，兩個元素槽各多疊 1 層'],stack:['協同・元素附著','每次附加元素多 1 層'],det:['協同・引爆','元素引爆傷害 +25%，引爆後保留 1 層'],thr:['協同・破綻','元素門檻 −1 層'],heal:['協同・藥引','施放治療或護盾技能時，對攻擊最高的敵人附兩個元素槽各 1 層'],elemDmg:['協同・顯影','對身上有元素層的敵人傷害 +15%']};
+const PCT293=k=>!['rageStart','cheat','teamCheat','killCd','extraHit','markJump','startHide'].includes(k);
+function idDesc293(e,v,c){const f=x=>PCT293(e)?Math.round(x*1000)/10+'%':x;const val=Array.isArray(v)?v.map(f).join('/'):f(v);if(['cheat','teamCheat','extraHit','markJump'].includes(e))return IDE293[e]+(c?IDC293[c]||'':'');if(e==='deathBurst')return IDE293[e]+' '+v+' 倍';return IDE293[e]+(e==='dr'?'':' +')+val+(c?IDC293[c]||'':'');}
+const EXTRA293=['atkP','hpP','defP','critA','spdA','dodgeA'];
+const TC293={};
+const TREE292_293=tree292;
+tree292=function(key,h){const pa=h?slots292(h):['blood','fire'];const ck=key+'|'+pa.join(',');if(TC293[ck])return TC293[ck];const base=TREE292_293(key,h);const D=HD292[key]||{br:'本色',sm:['atkP','hpP','defP','spdA']};const I=ID293[key]||ID293.spear;
+ const N=base.nodes.filter(x=>x.b!==0).map(x=>({...x}));const A=[];const add=o=>{o.id='a3_'+o.L+'_'+A.filter(x=>x.L===o.L).length;A.push(o);};
+ const sm=(L,k)=>add({b:0,L,ty:'s',max:5,cost:1,k,n:D.br+'・'+TT290_SMALL[k][0]});
+ const sms=[...D.sm];const ex=EXTRA293.find(k=>!sms.includes(k));sms.push(ex);
+ sm(1,sms[0]);sm(1,sms[1]);
+ I.slice(0,3).forEach(m=>add({b:0,L:2,ty:'m',max:3,cost:1,k:'id293',e:m[1],v:m[2],c:m[3],n:m[0]}));
+ sm(3,sms[2]);sm(3,sms[3]);
+ add({b:0,L:4,ty:'M',max:1,cost:3,k:'id293',e:I[3][1],v:I[3][2],c:I[3][3],n:I[3][0]});sm(4,sms[4]);
+ add({b:0,L:5,ty:'M',max:1,cost:3,k:'id293',e:I[4][1],v:I[4][2],c:I[4][3],n:I[4][0]});
+ const sy=SYN293[I[5]];add({b:0,L:6,ty:'M',max:1,cost:3,k:'syn293',syn:I[5],n:sy[0]});
+ // 元素槽：第 3、4 層各補一個 5/5 小節點，讓 34／40 門檻點得到
+ pa.forEach((pk,i)=>{const b=i+1,E=EP292[pk];const mk=(L,k,nm)=>{const o={b,L,ty:'s',max:5,cost:1,k,pk,n:E[0]+'・'+nm};o.id='p'+b+'_'+pk+'_'+L+'_x293';N.push(o);};mk(3,'rs293','抗性');mk(4,'pathP','精煉');});
+ return TC293[ck]={...base,names:[D.br,base.names[1],base.names[2]],nodes:[...A,...N]};};
+tree290=tree292;
+{const o=ttDesc290;ttDesc290=function(x){if(x.k==='id293')return idDesc293(x.e,x.v,x.c)+(x.ty==='m'?'（1/2/3 級）':'');if(x.k==='syn293')return SYN293[x.syn][1];if(x.k==='rs293')return '怪物「'+EP292[x.pk][1]+'」疊層有 5%／級機率被抵銷';return o(x);};}
+{const o=ttIds290;ttIds290=function(h){return o(h).filter(id=>!/^t92_rs293_/.test(id)&&!/^t9i_/.test(id));};}
+ttPath290=function(h){const T=tree290(h.key,h),N=T.nodes,P=[];const push=(x,n)=>{if(x)for(let i=0;i<n;i++)P.push(x.id)};const g=(b,k)=>N.find(x=>x.b===b&&x.k===k);
+ push(g(1,'pEntry'),1);push(g(2,'pEntry'),1);for(const x of N.filter(x=>x.b===0&&x.L===1))push(x,5);push(g(1,'pEntry'),2);push(g(2,'pEntry'),2);
+ for(const b of [0,1,2])for(let L=1;L<=6;L++){const ns=N.filter(x=>x.b===b&&x.L===L);for(const x of ns.filter(x=>x.ty!=='M'))push(x,x.max);for(const x of ns.filter(x=>x.ty==='M'))push(x,1);}return P;};
+function idr293(h,e){const T=tree290(h.key,h),P=tt290(h).pts;let out=[];for(const x of T.nodes){const r=P[x.id]||0;if(!r||x.k!=='id293'||x.e!==e)continue;const v=Array.isArray(x.v)?x.v[r-1]:x.v;out.push([v,x.c]);}return out;}
+function idv293(h,e,c){return idr293(h,e).filter(z=>(z[1]||'')===(c||'')).reduce((a,z)=>a+z[0],0);}
+function syn293(h){const T=tree290(h.key,h),P=tt290(h).pts;const x=T.nodes.find(x=>x.k==='syn293');return x&&P[x.id]?x.syn:null;}
+// 身份節點中的數值類（防禦／閃避／暴擊／暴傷）併入 PV
+{const o=ttIds290;ttIds290=function(h){const r=o(h);try{const m={defP:idv293(h,'defP'),dodgeA:idv293(h,'dodge'),critA:idv293(h,'crit'),cdmA:idv293(h,'cdm')};for(const k in m)if(m[k]){const id='t93_'+k+'_'+Math.round(m[k]*1000);PV[id]={[k]:m[k]};r.push(id);}}catch(e){}return r;};}
+// ---------- 2. 戰鬥：身份節點 ----------
+function ph293(p){return p&&S.heroes.find(x=>x.id===p.id&&RUN&&RUN.party&&RUN.party.includes(p));}
+function cd293(p){return BAT&&BAT.cd&&BAT.cd[RUN.party.indexOf(p)];}
+{const o=hitFoe;hitFoe=function(f,p,m=1,o2={}){let mm=m;try{const h=ph293(p);if(h&&h.tt290&&f){let b=idv293(h,'dmg');const lo=f.hp/f.maxhp;if(has(f,'mark'))b+=idv293(h,'dmg','mark');if(isBoss292(f))b+=idv293(h,'dmg','elite');if(lo<.5)b+=idv293(h,'dmg','low50');if(lo<.3)b+=idv293(h,'dmg','low30');if(has(f,'lit'))b+=idv293(h,'dmg','lit');if(p.hp<p.maxhp*.5)b+=idv293(h,'dmg','low50self');if(!p.first293){b+=idv293(h,'dmg','first');}const ne=f.e292?Object.values(f.e292).filter(v=>v>0).length:0;b+=ne*idv293(h,'dmg','elem');if(ne&&syn293(h)==='elemDmg')b+=.15;b+=idv293(h,'burnSelf');if(b)mm*=1+b;}}catch(e){}
+ const r=o(f,p,mm,o2);try{if(r&&!r.miss&&p&&RUN.party.includes(p))p.first293=1;}catch(e){}return r;};}
+{const o=hurtAlly;hurtAlly=function(p,raw,nos,...a){try{const h=ph293(p);if(h&&h.tt290&&raw>0){let dr=idv293(h,'dr');if(p.hp<p.maxhp*.5)dr+=idv293(h,'dr','low50');if(dr>0)raw=Math.round(raw*Math.max(.05,1-dr));}
+ // 致命保護
+ if(raw>=p.hp+(p.sh||0)&&p.hp>0&&BAT){const h2=ph293(p);if(h2&&h2.tt290&&idv293(h2,'cheat')&&!p.cheat293){p.cheat293=1;blog(short(p.key)+' 撐住了致命的一擊！');raw=Math.max(0,p.hp+(p.sh||0)-1);}else if(!BAT.tc293){const g=RUN.party.find(q=>q!==p&&q.hp>0&&(()=>{const hq=ph293(q);return hq&&hq.tt290&&idv293(hq,'teamCheat')})());if(g){BAT.tc293=1;blog(short(g.key)+' 護住了 '+short(p.key)+'，保留 1 點生命。');raw=Math.max(0,p.hp+(p.sh||0)-1);}}}}catch(e){}
+ const r=o(p,raw,nos,...a);
+ try{const h=ph293(p);if(h&&h.tt290&&!nos&&BAT&&r>0&&p.hp>0){const f=window.__f284;const c=idr293(h,'counter').reduce((s,z)=>s+z[0],0);if(f&&f.hp>0&&Math.random()<c)hitFoe(f,p,.6,{x292:1});}
+  if(h&&h.tt290&&p.hp<=0&&!p.burst293){const v=idv293(h,'deathBurst');if(v){p.burst293=1;blog(short(p.key)+' 倒下前爆發！');BAT.foes.filter(x=>x.hp>0).forEach(x=>hitFoe(x,p,v,{x292:1,sureHit240:1}));}}}catch(e){}return r;};}
+{const o=healUnit;healUnit=function(q,amt,src){try{const h=src&&ph293(src);if(h&&h.tt290&&amt>0){let b=idv293(h,'heal');if(q.hp<q.maxhp*.3)b+=idv293(h,'heal','low30');const ne=BAT?BAT.foes.filter(f=>f.hp>0&&f.e292&&Object.values(f.e292).some(v=>v>0)).length:0;b+=ne*idv293(h,'heal','elemT');if(b)amt=Math.round(amt*(1+b));}}catch(e){}return o(q,amt,src);};}
+{const o=post292;post292=function(p,h,C){o(p,h,C);try{const s=C.s,k=C.k;if(!s)return;const hit=[...C.hits.keys()].filter(f=>f.hp>0),foes=BAT.foes.filter(f=>f.hp>0),pa=slots292(h),sy=syn293(h);BAT.trig293=BAT.trig293||{};const T=n=>BAT.trig293[n]=(BAT.trig293[n]||0)+1;
+ if(C.dmg>0){const eh=idv293(h,'extraHit');if(eh&&hit[0]){hitFoe(hit[0],p,.6*(s.m||1),{x292:1});T('extraHit');}
+  const sp=idv293(h,'spread');if(sp){foes.filter(f=>!C.hits.has(f)).forEach(f=>hit292(f,p,(C.dmg*sp)/Math.max(1,p.atk)/Math.max(1,hit.length)));T('spread');}
+  if(sy==='hit'){hit.forEach(f=>{const c=C.hits.get(f)||1;pa.forEach(pk=>add292(f,pk,Math.min(4,c),p,1));});T('syn:hit');}
+  const bs=idv293(h,'burnSelf');if(bs){p.hp=Math.max(1,Math.round(p.hp-p.maxhp*.1));}}
+ else{const hd=idv293(h,'healDmg');if(hd&&foes.length){const f=foes.slice().sort((a,b)=>a.hp-b.hp)[0];hit292(f,p,hd);T('healDmg');}
+  if(sy==='heal'&&foes.length){const f=foes.slice().sort((a,b)=>b.atk-a.atk)[0];pa.forEach(pk=>add292(f,pk,1,p));T('syn:heal');}}
+ // 引爆保底：主力技不存在或沒施放時，任一技能命中（或非傷害技對層數最高的敵人）在達門檻時引爆
+ {const H=hooks292(h);pa.forEach(pk=>{if(!rank292(h,'pDet',pk))return;if(H.main&&H.main===k)return;const tg=hit.length?hit:foes.slice().sort((a,b)=>(el292(b)[pk]||0)-(el292(a)[pk]||0)).slice(0,1);tg.forEach(f=>{if(f.hp>0&&(el292(f)[pk]||0)>=thr292(p,pk)){det292(f,pk,p);T('autoDet:'+pk);}});});}
+ const sc=idv293(h,'shieldCast');if(sc){party292().forEach(q=>q.sh=(q.sh||0)+Math.round(q.maxhp*sc));T('shieldCast');}
+ const cr=idv293(h,'cdRefund');if(cr&&Math.random()<cr){const cd=cd293(p);if(cd&&cd[k]>0)cd[k]--;T('cdRefund');}}catch(e){console.warn('post293',e)}};}
+{const o=onFoeDown;onFoeDown=function(f,p){const was=f&&!f.dn;const r=o(f,p);try{if(was&&f.dn&&p&&RUN.party.includes(p)){const h=ph293(p);if(h&&h.tt290){const kc=idv293(h,'killCd');if(kc){const cd=cd293(p);if(cd)for(const x in cd)if(cd[x]>0)cd[x]=Math.max(0,cd[x]-kc);}if(idv293(h,'markJump')){const n=BAT.foes.find(x=>x.hp>0);if(n){give(n,'mark',2);hitFoe(n,p,.6,{x292:1});}}}}}catch(e){}return r;};}
+{const o=det292;det292=function(f,pk,p,mul=1,keep){let m=mul;let h=null;try{h=ph293(p);if(h&&h.tt290){m*=1+idv293(h,'detP')+(syn293(h)==='det'?.25:0);}m*=1+(gear293(p).det[pk]||0)+((gear293(p).set[pk]||0)>=2?.15:0);}catch(e){}const n=(el292(f)[pk]||0);const r=o(f,pk,p,m,keep);try{if(r&&h&&h.tt290){if(syn293(h)==='det'&&!keep&&n>1)el292(f)[pk]=1;const hd=idv293(h,'healDet');if(hd)party292().forEach(q=>healUnit(q,Math.round(q.maxhp*hd),p));}sync293(f);}catch(e){}return r;};}
+{const o=thr292;thr292=function(p,pk){let t=o(p,pk);try{const h=p&&ph293(p);if(h&&h.tt290&&syn293(h)==='thr')t--;const G=gear293(p);t-=(G.thr[pk]||0)+((G.set[pk]||0)>=4?1:0);}catch(e){}return Math.max(1,t);};}
+{const o=newRound;newRound=function(...a){const r=o(...a);try{if(BAT&&RUN&&RUN.party){for(const p of party292()){const h=ph293(p);if(!h||!h.tt290)continue;const rs=idv293(h,'regenSelf'),rt=idv293(h,'regenTeam'),cl=idr293(h,'cleanse').reduce((s,z)=>s+z[0],0);if(rs)healUnit(p,Math.round(p.maxhp*rs),p);if(rt)party292().forEach(q=>healUnit(q,Math.round(q.maxhp*rt),p));if(cl&&Math.random()<cl){const q=party292().find(q=>NEG.some(k=>has(q,k)));if(q){const k=NEG.find(k=>has(q,k));delete q.st[k];}}}}}catch(e){console.warn('round293',e)}return r;};}
+function start293(){try{if(!BAT||!RUN||BAT.s293)return;BAT.s293=1;for(const p of party292()){const h=ph293(p);if(!h||!h.tt290)continue;p.first293=0;p.cheat293=0;p.burst293=0;const ss=idv293(h,'shieldStart');if(ss)party292().forEach(q=>q.sh=(q.sh||0)+Math.round(q.maxhp*ss));const rg=idv293(h,'rageStart');if(rg)p.rage=(p.rage||0)+rg;const hd=idv293(h,'startHide');if(hd)give(p,'hide',hd);}}catch(e){console.warn('start293',e)}}
+{const o=allyAct;allyAct=function(p,i){start293();return o(p,i);};}
+// ---------- 3. 元素層＝原本狀態 ----------
+const SYNC293={blood:'bleed',fire:'burn',poison:'poison',erode:'erode',curse:'curse',thunder:'paral'};
+function sync293(f){if(!f||!f.e292)return;f.st=f.st||{};for(const pk in SYNC293){const k=SYNC293[pk],n=f.e292[pk]||0,s=f.st[k];if(n>0){if(s&&!s.e293){s.stacks293=n;s.t=Math.max(s.t||0,3);}else f.st[k]={...(s||{}),t:3,v:0,e293:1,stacks212:Math.min(99,n),stacks293:n};f.seen293=f.seen293||{};f.seen293[pk]=1;}else if(s&&s.e293)delete f.st[k];}}
+{const o=add292;add292=function(f,pk,n,p,noRx){let nn=n;try{if(p&&n){const G=gear293(p);nn+=(G.stk[pk]||0)+((G.set[pk]||0)>=4?1:0);const h=ph293(p);if(h&&h.tt290&&syn293(h)==='stack')nn++;}}catch(e){}const pv=window.__p293;window.__p293=p;try{return o(f,pk,nn,p,noRx);}finally{window.__p293=pv;try{sync293(f)}catch(e){}}};}
+{const o=g292;g292=function(f,k,t,v){const pv=window.__statusSource156;if(window.__p293)window.__statusSource156=window.__p293;try{return o(f,k,t,v)}finally{window.__statusSource156=pv;}};}
+// 淨化／驅散原狀態時，同步清掉元素層
+{const o=tick292;tick292=function(){try{for(const f of (BAT&&BAT.foes)||[]){if(!f.e292||!f.seen293)continue;for(const pk in SYNC293){if((f.e292[pk]||0)>0&&f.seen293[pk]&&!(f.st&&f.st[SYNC293[pk]]))f.e292[pk]=0;}}}catch(e){}o();try{for(const f of (BAT&&BAT.foes)||[])sync293(f);}catch(e){}};}
+// ---------- 4. 怪物元素 ----------
+const MRX293=[[/火|燭|焰|燼|狐|炎|灼/,'fire'],[/霜|冰|雪|寒/,'ice'],[/毒|蛇|蠍|蕈|菇|苔|孢/,'poison'],[/血|蛭|牙|狼|獵犬/,'blood'],[/雷|電|閃|氣閥/,'thunder'],[/蝕|酸|史萊姆|鏽|腐/,'erode'],[/咒|怨|鬼|魂|新娘/,'curse'],[/石|岩|甲|錘|礦|骨/,'shatter'],[/燈|光|鏡/,'light'],[/聖|鈴|祭/,'holy'],[/蛛|絲|網|繭|線/,'silk'],[/魘|夢|恐|眼|影/,'dread'],[/封|印|簽|書|紙|籤/,'seal'],[/震|鐘|響|蜈蚣|音/,'shock']];
+function hash293(s){let x=7;for(const c of String(s))x=(x*31+c.charCodeAt(0))>>>0;return x;}
+function mel293(kind){const F=FOES[kind]||{};const txt=(F.name||'')+(F.n||'')+kind;const out=[];for(const [re,pk] of MRX293)if(re.test(txt)&&!out.includes(pk))out.push(pk);if(!out.length)out.push(EPK292[hash293(kind)%14]);if(out.length<2&&(F.boss||F.yy||hash293(kind+'2')%2)){let k=EPK292[hash293(kind+'x')%14];if(k===out[0])k=EPK292[(EPK292.indexOf(k)+5)%14];out.push(k);}return out.slice(0,2);}
+function on293(){try{return !!(RUN&&BAT&&!RUN.arena&&tier253()>=1);}catch(e){return false}}
+function fel293(f){if(!f.mel293)f.mel293=mel293(f.kind293||BAT.kind);return f.mel293;}
+const HST293={blood:['bleed',2],fire:['burn',2],poison:['poison',3],ice:['freeze',1],thunder:['paral',1],erode:['erode',2],curse:['curse',2],shatter:['brk',2],light:['blind',1],holy:['hcut',2],silk:['bind',1],dread:['terror',1],seal:['silence',1],shock:['stun',1]};
+function hres293(p,pk){let r=0;try{const h=S.heroes.find(x=>x.id===p.id);if(h&&h.tt290){const T=tree290(h.key,h),P=tt290(h).pts;for(const x of T.nodes)if(x.k==='rs293'&&x.pk===pk)r+=.05*(P[x.id]||0);}r+=gear293(p).res[pk]||0;}catch(e){}return r;}
+function hadd293(p,pk,n,f){if(!p||!(p.hp>0)||!n)return;if(Math.random()<hres293(p,pk))return;const T=tier253();const E=p.he293||(p.he293={});BAT.trig293=BAT.trig293||{};BAT.trig293['M:'+pk]=(BAT.trig293['M:'+pk]||0)+1;
+ const other=EPK292.find(k=>k!==pk&&E[k]>0);if(other&&p.hrx293!==BAT.turn){p.hrx293=BAT.turn;E[other]--;const d=Math.round(p.maxhp*.04*(1+.1*T));const pv=window.__f284;window.__f284=null;try{hurtAlly(p,d,1)}finally{window.__f284=pv}blog(`怪物元素反應「${rxName292(other,pk)}」：${short(p.key)} 受到 ${d} 點傷害。`);BAT.trig293['MR:'+rk292(other,pk)]=1;}
+ E[pk]=(E[pk]||0)+n;const thr=Math.max(2,EP292[pk][3]+1-(T>=6?1:0));
+ if(E[pk]>=thr){E[pk]=0;const [k,t]=HST293[pk];const pv=window.__foe290;window.__foe290=f;try{give(p,k,t,Math.round(p.maxhp*.03))}catch(e){}finally{window.__foe290=pv}BAT.trig293['MT:'+pk]=(BAT.trig293['MT:'+pk]||0)+1;blog(`${short(p.key)} 身上的「${EP292[pk][0]}」層數達門檻：${STI[k]?STI[k][1]:k}！`);}}
+function mstk293(f){const T=tier253();let n=1+(T>=4?1:0)+(T>=7?1:0);try{const al=BAT.foes.filter(x=>x.hp>0);const pk=fel293(f)[0];if(al.filter(x=>fel293(x)[0]===pk).length>=2)n++;}catch(e){}return n;}
+{const o=foeHit;foeHit=function(f,O,m,mag){const r=o(f,O,m,mag);try{if(on293()&&r&&!r.miss&&r.d!==0&&O&&O.p&&f){const els=fel293(f);const pk=els[(BAT.turn+(f.i293||0))%els.length];hadd293(O.p,pk,mstk293(f),f);}}catch(e){console.warn('mel293',e)}return r;};}
+{const o=foeAct;foeAct=function(f,i){const r=o(f,i);try{if(on293()&&f&&f.hp>0&&isBoss292(f)&&BAT.turn>=2&&BAT.turn%3===0&&f.bm293!==BAT.turn){f.bm293=BAT.turn;const pk=fel293(f)[0];const nm=(FOES[BAT.kind]||{}).name||'首領';blog(`${nm} 施放元素招式「${EP292[pk][0]}之潮」！全隊疊上 2 層「${EP292[pk][1]}」。`);BAT.trig293=BAT.trig293||{};BAT.trig293['BM:'+pk]=1;party292().forEach(p=>hadd293(p,pk,2,f));}}catch(e){console.warn('bm293',e)}return r;};}
+{const o=newRound;newRound=function(...a){const r=o(...a);try{if(BAT&&RUN&&RUN.party)for(const p of RUN.party){if(!p.he293)continue;for(const pk in p.he293)if(p.he293[pk]>0&&Math.random()<.25)p.he293[pk]--;}}catch(e){}return r;};}
+// ---------- 5. 元素裝備 ----------
+const AFX293={stk:'層數 +1',thr:'門檻 −1',det:'引爆傷害',res:'抗性'};
+function gear293(p){const id=p&&p.id;if(BAT){BAT.g293=BAT.g293||{};if(BAT.g293[id])return BAT.g293[id];}const o={stk:{},thr:{},det:{},res:{},set:{}};try{const h=S.heroes.find(x=>x.id===id);if(h)for(const s in h.eq){const it=h.eq[s];if(!it)continue;const a=it.el293;if(a&&EP292[a.pk]){if(a.k==='stk'||a.k==='thr')o[a.k][a.pk]=(o[a.k][a.pk]||0)+1;else o[a.k][a.pk]=(o[a.k][a.pk]||0)+(a.v||0);}if(it.es293&&EP292[it.es293])o.set[it.es293]=(o.set[it.es293]||0)+1;}}catch(e){}if(BAT)BAT.g293[id]=o;return o;}
+function elAffix293(it,force){const T=(()=>{try{return tier253()}catch(e){return 0}})();const ks=['stk','thr','det','res'];const k=ks[Math.floor(Math.random()*4)],pk=EPK292[Math.floor(Math.random()*14)];const rk=it.r||0;it.el293={pk,k,v:k==='det'?+(.1*(1+.15*T)*(1+.25*rk)).toFixed(3):k==='res'?+(.05*(1+.1*T)*(1+.2*rk)).toFixed(3):1};if(force||Math.random()<.4+.2*rk)it.es293=EPK292[Math.floor(Math.random()*14)];}
+function bigDrop293(){try{return !!(RUN&&(RUN.world180||(BAT&&FOES[BAT.kind]&&(FOES[BAT.kind].yy||FOES[BAT.kind].boss))))}catch(e){return false}}
+{const o=genItem;genItem=function(...a){const it=o(...a);try{if(it&&!it.el293){const legend=(it.r||0)>=3||it.leg||it.uq;const ch=legend?1:bigDrop293()?.5:.22;if(Math.random()<ch)elAffix293(it,legend);}}catch(e){}return it;};}
+function elText293(it){if(!it||!it.el293&&!it.es293)return '';const a=it.el293,p=[];if(a&&EP292[a.pk]){const E=EP292[a.pk];p.push(E[0]+'元素・'+(a.k==='stk'?E[1]+'層數 +1':a.k==='thr'?E[1]+'門檻 −1':a.k==='det'?E[0]+'引爆傷害 +'+Math.round(a.v*100)+'%':'對怪物'+E[1]+'抗性 +'+Math.round(a.v*100)+'%'));}if(it.es293&&EP292[it.es293]){const E=EP292[it.es293];p.push(E[0]+'元素套裝（2 件：'+E[0]+'效果 +15%；4 件：'+E[1]+'層數 +1、門檻 −1）');}return p.join('；');}
+{const o=gearDesc;gearDesc=function(it,...a){let r=o(it,...a);try{const t=elText293(it);if(t&&typeof r==='string')r+=(r?'；':'')+t;}catch(e){}return r;};}
+{const o=eff292;eff292=function(p,pk){let e=o(p,pk);try{const G=gear293(p);if((G.set[pk]||0)>=2)e+=.15;}catch(e2){}return e;};}
+// ---------- 6. 技能附加狀態最後一關掃描 ----------
+const KEEP293=new Set(['mark','lit','prey','doom']);
+const NEG293=new Set([...NEG,'bind','paral'].filter(k=>!KEEP293.has(k)));
+const NSKFIX293={spear:{m:1.5,st:['mark',3]},shield0:{m:1.3,st:['mark',3]},knightW:{m:1.4,teamSt:['umb',1]},bone:{m:.8,selfSt:['ward',2]},horn:{m:1.6,rageAdd:15},dragon:{m:1,tg:'all',rageAdd:10},healer1:{m:1.2,selfHeal:.05},herb:{m:.6,teamBuff155:['regen',2]},snake:{m:1.3},mageF:{m:.9,st:['lit',2]},mageM:{m:1.5,elem:'fire'},mage0:{m:1.3,st:['doom',3]},raven:{m:1.4,st:['prey',3]},spider:{m:1.1},baigu:{m:.8}};
+function reach293(){const ks=new Set();for(const c of CANDS){try{const h={key:c.key,lv:99,rebirth210:3,id:-1,br:0,br2:0,eq:{},bonus:{},skills:[]};avail(h).forEach(k=>ks.add(k));baseOf(c.key).forEach(x=>ks.add(x[0]));branches200(c.key).forEach(b=>b.s.forEach(k=>ks.add(k)));}catch(e){}ks.add('v260_'+c.key);ks.add('aw_'+c.key);}for(const k of Object.keys(SK))if(SK[k]&&(SK[k].owner200||/^(v260_|aw_|v210_|v200_|spear_20|p2_)|_2x$/.test(k)))ks.add(k);return [...ks].filter(k=>SK[k]&&!(typeof KILL292!=='undefined'&&KILL292.has(k)));}
+function strip293(k){const s=SK[k];if(!s)return;let ch=0;const neg=a=>Array.isArray(a)&&NEG293.has(a[0]);
+ if(/^v260_/.test(k)&&!s.fix293){const o=k.slice(5),F=NSKFIX293[o];if(F){Object.assign(s,F);s.fix293=1;ch=1;if(s.t==='debuff'||s.t==='buff'&&F.m){s.t='dmg';s.tg=s.tg==='team'?'one':s.tg||'one';}}}
+ for(const fd of ['st','also','also2'])if(neg(s[fd])){delete s[fd];ch=1;}
+ if(s.t==='debuff'&&!s.st){s.t='dmg';s.m=s.m||.6;if(!s.tg||s.tg==='high')s.tg='one';s.cast292=1;ch=1;}
+ for(const fd of ['bleed','erode','foePoison','boom'])if(s[fd]){delete s[fd];ch=1;}
+ if(s.extra200==='bind'||s.extra200==='curseAll'){delete s.extra200;ch=1;}
+ if(['opening','fracture','bleed','burn','poison','curse'].includes(s.combo200)){s.combo200=null;delete s.combo200;ch=1;}
+ if(ch||s.strip292||s.owner200||/^v260_/.test(k)){try{s.d=desc200(s).replace(/。?$/,'。')+(ch||s.strip292?'附加狀態改由天賦元素槽提供。':'');}catch(e){}}s.strip293=1;}
+const RIDW293=/(流血|燃燒|中毒|凍結|減速|致盲|沉默|暈眩|破甲|侵蝕|(?<!延爆)詛咒|虛弱|恐懼|魅惑|封印|褪名|減療|禁療|易傷|束縛|麻痺|寒意)/;
+function selfcheck293(){const bad=[];for(const k of reach293()){const s=SK[k];if(!s)continue;for(const fd of ['st','also','also2'])if(Array.isArray(s[fd])&&NEG293.has(s[fd][0])&&s.t!=='buff')bad.push(k+':'+fd);for(const fd of ['bleed','erode','foePoison'])if(s[fd])bad.push(k+':'+fd);const d=(s.d||'').replace(/附加狀態改由天賦元素槽提供。?/g,'');if(RIDW293.test(d)&&!/^(buff|heal|shield|cleanse|vow|revive|reviveAll|panacea)$/.test(s.t))bad.push(k+':text:'+d.match(RIDW293)[0]);}
+ try{for(const c of CANDS){const h={key:c.key,lv:99,rebirth210:3,id:-1,br:0,br2:0,eq:{},bonus:{},skills:[]};const L=talList(h);if(L.length)bad.push(c.key+':talList:'+L.length);}}catch(e){bad.push('talList:err')}
+ try{for(const k in KIT200)if(RIDW293.test(KIT200[k].role||''))bad.push(k+':tag');}catch(e){}
+ try{for(const k in POLLUTION_SKILLS240)if(RIDW293.test(POLLUTION_SKILLS240[k][3].replace(/施術者.*$/,''))&&POLLUTION_SKILLS240[k][1]!=='deep293')bad.push(k+':pollution');}catch(e){}
+ window.SELF293=bad;if(bad.length)console.warn('v2.9.3 自檢：殘留 '+bad.length+' 筆',bad);return bad;}
+// 標籤行：只留身份詞
+const TAG293={shieldF:'援護・反擊・盾陣',shieldM:'磐岩・承傷・反震',shield0:'壓制・戰利品・威嚇',knightW:'誓約・淨化・代受',bone:'甲殼・防禦轉傷・再生',tiekou:'鎖扣・護盾・封增益',spear:'長槍追擊・陣線・多段',horn:'怒氣・衝陣・低血狂戰',dragon:'甦醒・龍威・怒氣',mageF:'照明・燈陣・接續',mageM:'燭焰本體・餘燼・爆發',mage0:'咒印・延爆・無名',foxgirl:'幻步・魅影・燈火',fox:'分身・掩護・標記',healerF:'急救・淨化・藥盾',healer1:'以毒為藥・劑量',herb:'再生・苔生・藥圃',snake:'蛻形・雙態',raven:'獵物・狙擊・鴉群',archerH:'隱身・收割・獵場',spider:'牽絲・連結・替身',baigu:'傀儡・魂匣・替身',luoqingluan:'骨鈴・淨域・護盾'};
+try{for(const k in KIT200)if(TAG293[k])KIT200[k].role=TAG293[k];}catch(e){}
+// 污染式 → 元素深化
+const PKEEP293=new Set(['shield','ward','regen','clean','puppet','link','prey','seal','mark']);
+try{for(const k in POLLUTION_SKILLS240){const P=POLLUTION_SKILLS240[k];if(['bone','herb','snake'].includes(k)&&P[1]!=='regen'){P[1]='regen';}if(!PKEEP293.has(P[1])){const cost=(P[3].match(/施術者.*$/)||[''])[0];P[1]='deep293';P[3]='元素深化：兩個元素槽各多疊 1 層；'+cost;}}}catch(e){}
+{const o=give;give=function(u,k,...a){if(k==='deep293')return;return o(u,k,...a);};}
+{const o=skillExtras155;skillExtras155=function(p,s){const plan=s&&s.pollution240;const first=plan&&p.pollutionCast240!==BAT.turn;const r=o(p,s);try{if(first&&plan[1]==='deep293'){const h=hp292(p);const f=BAT.foes.filter(x=>x.hp>0).sort((a,b)=>b.hp-a.hp)[0];if(h&&f){slots292(h).forEach(pk=>add292(f,pk,1,p));BAT.trig293=BAT.trig293||{};BAT.trig293.deep=(BAT.trig293.deep||0)+1;blog(short(p.key)+'「'+plan[0]+'」深化了元素層。');}}}catch(e){}return r;};}
+// 異界回聲、舊固定天賦、戰鬥天賦分支：全部移除，能力只來自天賦樹
+for(const k in NTAL260)delete NTAL260[k];
+talList=function(h){return [];};
+talH=function(h){try{ttInit290(h);return ttIds290(h);}catch(e){return [];}};
+xTal=function(h){return [];};
+talentBranches180=function(h){return [['（已移除）',{},''],['（已移除）',{},'']];};
+chooseTalent180=function(){toast('戰鬥天賦分支已移除，改由天賦樹發展');};
+// ---------- 7. 覺醒移除、伴生物只給屬性 ----------
+const ROLE293={tank:['shieldF','shieldM','shield0','knightW','bone','tiekou'],war:['spear','horn','dragon'],mage:['mageF','mageM','mage0','foxgirl','fox','luoqingluan'],rog:['archerH','raven'],heal:['healerF','healer1','herb','snake'],web:['spider','baigu']};
+function role293(k){for(const r in ROLE293)if(ROLE293[r].includes(k))return r;return 'war';}
+function bondStat293(key,lv){lv=Math.max(1,Math.min(10,lv||1));const g=lv-1,sp=1+(lv>=5?1:0)+(lv>=10?1:0);switch(role293(key)){case'tank':return {hpP:.03+.005*g,defP:.03+.005*g};case'war':return {atkP:.03+.005*g,hpP:.02+.003*g};case'mage':return {atkP:.03+.005*g,spdA:sp};case'rog':return {atkP:.03+.005*g,critA:.01+.003*g};case'heal':return {hpP:.03+.005*g,atkP:.02+.003*g};default:return {hpP:.03+.005*g,spdA:sp};}}
+bondEffect170=function(it){const o=bondStat293(it.owner156,it.growth156||1);for(const k in o)o[k]=+o[k].toFixed(4);return o;};
+awakening156=function(){return null;};chooseAw156=function(){toast('65 級覺醒已移除');};
+try{if(typeof bondRoute170==='function'){const o=bondRoute170;bondRoute170=function(k,j){const r=o(k,0);return {...r,fx:bondStat293(k,1)};};}}catch(e){}
+chooseBond170=function(id){const h=S.heroes.find(h=>h.id===id);if(RUN||BAT||!h)return;let it=ownedBond170(h.key);if(it)return;const c={scrap:5,thread:3,crystal:1};if(!canMaterials156(c))return toast('材料不足');payMaterials156(c);it=mkUQ('bond156_'+h.key);it.owner156=h.key;it.growth156=1;it.locked=1;it.x={};it.route170=0;S.bag.push(it);try{it.n=bondRoute170(h.key,0).name;normalizeBond180(it);}catch(e){}save();bondMenu156(id);};
+{const o=bondMenu156;bondMenu156=function(id){o(id);try{const h=S.heroes.find(h=>h.id===id);const box=$('box');const it=ownedBond170(h.key),lv=it?.growth156||1;box.querySelectorAll('.q').forEach((el,i)=>{if(el.querySelector('[onclick^="chooseBond170"]'))el.remove();});const p=box.querySelector('p');if(p)p.textContent='每人一件伴生物，只提供基本屬性，依定位成長（1～10 級）。';const fx=bondStat293(h.key,lv);box.querySelector('h2')?.insertAdjacentHTML('afterend',`<div class="q"><b>${esc(it?.n||bondRoute170(h.key,0).name)}</b>・第 ${lv} 級<p>${Object.entries(fx).map(([k,v])=>(FXN292[k]||{spdA:'速度',critA:'暴擊率'}[k]||k)+' +'+(k==='spdA'?v:Math.round(v*1000)/10+'%')).join('、')}</p><p class="lore">${esc((BOND156[h.key]||[])[1]||'')}</p>${it?'':`<button class="btn" onclick="chooseBond170(${id},0)">締結（廢料 5、夜紡絲 3、凝光晶 1）</button>`}</div>`);}catch(e){console.warn('bond293',e)}};}
+try{for(const k in PERSONAL156){const u=UQ['personal156_'+k];if(u){u.fx=bondStat293(k,1);u.d='本人專屬；隨修補成長。依定位提供基本屬性。';}}}catch(e){}
+{const o=heroDetail;heroDetail=function(id){o(id);try{const box=$('box');box.querySelectorAll('section.q,div.q,details').forEach(el=>{const t=(el.querySelector('b,summary')||{}).textContent||'';if(/65 級覺醒|覺醒・二選一|異界回聲|戰鬥天賦分支/.test(t))el.remove();});box.querySelectorAll('button').forEach(b=>{if(/技能分支|Lv50～80/.test(b.textContent))b.remove();});box.querySelectorAll('p').forEach(p=>{if(/血爆／毒爆／燃爆/.test(p.textContent))p.textContent='目標有任一元素達門檻層數時，優先施放引爆類技能。';});}catch(e){}};}
+skillBranchMenu210=function(id){toast('Lv50～80 技能分支已移除，改由天賦樹發展');};
+{const o=growthMenu180;growthMenu180=function(id){o(id);try{$('box').querySelectorAll('details').forEach(d=>{if(/戰鬥天賦分支/.test(d.querySelector('summary')?.textContent||''))d.remove();});}catch(e){}};}
+// 達標引爆優先：改讀元素門檻
+try{if(typeof comboReady212==='function'){const o=comboReady212;comboReady212=function(f,...a){try{if(f&&f.e292){for(const pk in f.e292)if(f.e292[pk]>=EP292[pk][3])return true;}}catch(e){}return o(f,...a);};}}catch(e){}
+// ---------- 8. 轉職果實移除；忘卻羽毛與重置券在公會塔・交易 ----------
+useFruit290=function(){toast('轉職果實已移除');};fruitMile290=function(){};
+buy290=function(k){if(!idle180())return;if(k==='fruit')return toast('轉職果實已移除');if(S.pts<800)return toast('積分不足');S.pts-=800;if(k==='wbr')S.wbReset290=(S.wbReset290||0)+1;else S.feather290=(S.feather290||0)+1;save();res();toast(k==='wbr'?'買下世界王次數重置券':'買下忘卻羽毛');};
+{const o=talentTree290;talentTree290=function(id,tab){o(id,tab);try{const box=$('box');box.querySelectorAll('button').forEach(b=>{if(/^買忘卻羽毛|^購買・/.test(b.textContent.trim()))b.remove();});box.querySelectorAll('p.note').forEach(p=>{if(/轉職果實/.test(p.textContent))p.remove();});const r=box.querySelector('.tt290 .row');if(r)r.insertAdjacentHTML('beforeend','<span class="note">忘卻羽毛在公會塔・交易購買</span>');}catch(e){}};}
+{const o=exchMenu;exchMenu=function(...a){const r=o(...a);try{const box=$('box');box.insertAdjacentHTML('beforeend',`<section class="q x293"><b style="color:var(--gold)">道具（積分）</b><p class="note">持有積分 ${S.pts}</p><div class="exchange-part240"><span>忘卻羽毛（重置天賦）・持有 ${S.feather290||0}</span><button class="btn small" ${S.pts<800?'disabled':''} onclick="buy290('feather');exchMenu()">800 積分</button></div><div class="exchange-part240"><span>世界王次數重置券・持有 ${S.wbReset290||0}</span><button class="btn small" ${S.pts<800?'disabled':''} onclick="buy290('wbr');exchMenu()">800 積分</button></div></section>`);}catch(e){console.warn('exch293',e)}return r;};}
+{const o=worldScene180;worldScene180=function(...a){const r=o(...a);try{const st=$('stage');if(st&&!st.querySelector('[data-wbr293]')){const n=S.wbReset290||0;const html=`<div class="q" data-wbr293 style="position:relative;z-index:5;margin:6px"><button class="btn" ${n<1?'disabled':''} onclick="useWbReset290();worldScene180()">使用世界王次數重置券（持有 ${n}）</button></div>`;const pg=st.querySelector('section')||st;pg.insertAdjacentHTML('afterbegin',html);}}catch(e){console.warn('wb293',e)}return r;};}
+{const o=homePage;homePage=function(...a){const r=o(...a);try{$('stage')?.querySelectorAll('[data-wbr290]').forEach(b=>b.remove());}catch(e){}return r;};}
+// ---------- 9. 位階與抽卡 ----------
+{const o=rank210;rank210=function(k){if(k==='spear')return 2;if(k==='raven')return 3;return o(k);};}
+summonRank210=function(roll){return roll<.003?3:roll<.05?2:roll<.25?1:0;};
+summon210=function(count){if(!idle180()||![1,10].includes(count))return;init210(S);if(S.tickets210<count)return toast('渡鴉券不足。');S.tickets210-=count;const out=[];const g=S.summon210;for(let i=0;i<count;i++){g.p3_293=(g.p3_293||0)+1;let rank=g.p3_293>=200?3:summonRank210(Math.random());if(rank<3&&g.pity>=59)rank=2;else if(rank<2&&g.low>=9)rank=Math.random()<.05?2:1;let pool=summonPool210(rank);if(!pool.length){rank=2;pool=summonPool210(2);}const c=pick(pool),owned=S.heroes.some(h=>h.key===c.key);g.total++;if(rank===3)g.p3_293=0;g.pity=rank>=2?0:g.pity+1;g.low=rank>=1?0:g.low+1;if(owned){const n=[10,25,60,120][rank];S.shards210[c.key]=(S.shards210[c.key]||0)+n;out.push({k:c.key,n});}else{addHero(c.key);out.push({k:c.key,n:0});}}save();recruitScene210();modal(`<h2>這次到訪的夥伴</h2>${out.map(o=>`<div class="hero rank-frame210-${rank210(o.k)}"><img src="${A('h_'+o.k)}"><div class="info"><b>${esc(cand(o.k).name)}</b> ${rankTag210(o.k)}<p>${o.n?'重複角色 → 專屬碎片 '+o.n:'首次加入・見習渡鴉'}</p></div></div>`).join('')}<p class="note">傳世保底：${g.p3_293}/200</p><button class="btn primary" onclick="closeModal()">返回招集所</button>`);window.__sum293=out;};
+{const o=recruitScene210;recruitScene210=function(...a){const r=o(...a);try{const c=$('stage').querySelector('.summon-controls210');if(c&&!c.querySelector('.rate293'))c.insertAdjacentHTML('beforeend',`<p class="note rate293">機率：常駐 75%、精銳 20%、超凡 4.7%、傳世 0.3%。傳世 200 抽保底（單抽與十抽合併計算，目前 ${(S.summon210&&S.summon210.p3_293)||0}/200）；重複傳世轉 120 枚專屬碎片。</p>`);c&&c.querySelectorAll('p').forEach(p=>{if(/5%|保底/.test(p.textContent)&&!p.classList.contains('rate293'))p.remove();});}catch(e){}return r;};}
+// ---------- 10. 公會塔手冊：元素與連動（由資料產生） ----------
+function elemBook293(){const L=EPK292.map(k=>{const E=EP292[k];return `<b>${E[0]}・${E[1]}</b>：疊層上限 ${E[2]}，門檻 ${E[3]} 層。疊層：${STK292[k]}。門檻：${THR292[k]}。引爆：${DET292[k]}。${SYNC293[k]?'層數就是原本的「'+(STI[SYNC293[k]]?STI[SYNC293[k]][1]:SYNC293[k])+'」狀態，抗性、淨化、裝備判定共用。':''}`}).join('<br>');
+ const R=Object.entries(RXN292).map(([k,v])=>k.split('|').map(x=>EP292[x][0]).join('×')+'「'+v[0]+'」：'+v[1]).join('<br>');
+ return `14 條元素路線（每位英雄兩個元素槽任選，整隊同元素也可以）：<br>${L}<br><br><b>同元素共鳴</b>：同路徑 2 人效果 +10%、門檻 −1；3 人 +20%、引爆另對全體造成層數×5%；4 人 +35%、每回合自動替全體敵人疊 1 層，每場一次「元素潮」讓全體觸發門檻反應。隊上有 3 種以上路徑時「萬象」：交叉反應 ×1.2。<br><br><b>交叉反應</b>（共 91 組，每名敵人每回合 1 次）：目標已有 A 元素層時再附 B 就會觸發。專屬反應 ${Object.keys(RXN292).length} 組：<br>${R}<br>其餘 ${91-Object.keys(RXN292).length} 組：雙方各消耗 1 層，以 A 的引爆 0.6 倍結算並觸發 B 的門檻反應。<br><br><b>首領控制轉換</b>：首領、精英、入侵者與她的房間首領吃到凍結、暈眩、恐懼時，改為減速 2 回合＋虛弱 1 回合，3 回合內不再被控。<br><br><b>怪物元素</b>：第 1 階起（初生不啟用），每種怪物依外觀帶 1～2 條元素，攻擊會在英雄身上疊層，達門檻就附上對應狀態；不同元素疊在同一名英雄身上會觸發反應。同元素怪物一起出現時每次多疊 1 層；第 4、7 階再各多 1 層，第 6 階起門檻 −1。首領與她的房間的首領每 3 回合施放元素招式「〇之潮」。天賦樹元素槽第 3 層的「抗性」節點與裝備的抗性詞綴可以抵銷疊層。<br><br><b>元素裝備</b>：新掉落裝備可能帶元素詞綴（層數 +1、門檻 −1、引爆傷害、抗性），數值隨難度階與稀有度提高；元素套裝 2 件效果 +15%，4 件層數 +1、門檻 −1。傳說裝必帶詞綴與套裝；世界王、首領與她的房間掉落機率更高。舊裝備全部保留。`;}
+try{CHBOOK.push([()=>true,'公會塔手冊・元素與連動',elemBook293()]);for(const c of CHBOOK)if(/技能分支 Lv50～80/.test(c[2]))c[2]=c[2]+'（v2.9.3 起已移除：技能分支、覺醒、轉職果實與舊天賦，改由天賦樹與元素槽提供。）';}catch(e){console.warn('book293',e)}
+// ---------- 11. 移除 35% 單次扣血上限：見 v2.8.4 區塊（已刪除該段程式） ----------
+// ---------- 12. 遷移 ----------
+function mig293(h){if(!h||h.mig293)return null;h.mig293=1;const T=tt290(h),got=[];let pts=0;
+ if(h.awChoice156!=null||h.lv>=65||h.legacyAw240){pts+=2;got.push('覺醒返還 2 天賦點');if(h.awChoice156!=null){S.mats=S.mats||{};S.mats.crystal=(S.mats.crystal||0)+3;S.mats.thread=(S.mats.thread||0)+5;got.push('凝光晶 3、夜紡絲 5');}}
+ h.awChoice156=null;try{const it=ownedBond170(h.key);if(it){if(it.route170===1&&!it.legacyBond170){S.mats.thread=(S.mats.thread||0)+5;S.mats.crystal=(S.mats.crystal||0)+3;got.push('伴生物路線補償：夜紡絲 5、凝光晶 3');}it.route170=0;it.n=bondRoute170(h.key,0).name;}}catch(e){}
+ T.leg=(T.leg||0)+pts;const keep=T.pa;T.pts={};T.oath=null;T.free=1;T.auto=1;T.pa=keep;try{ttAuto290(h)}catch(e){}got.push('免費重置天賦 1 次');return got;}
+function migAll293(){if(!S||!S.heroes)return;const rep=[];for(const h of S.heroes){const g=mig293(h);if(g&&g.length)rep.push([short(h.key),g]);}
+ if(!S.mig293){S.mig293=1;const n=S.fruit290||0;if(n>0){S.feather290=(S.feather290||0)+n;rep.unshift(['轉職果實',['每顆換成 1 根忘卻羽毛：共 '+n+' 根']]);}S.fruit290=0;save();if(rep.length)setTimeout(()=>{try{modal(`<h2>v2.9.3 遷移</h2><p>覺醒、技能分支、轉職果實和舊天賦已移除，以下已退還：</p>${rep.map(([n,g])=>`<p><b>${esc(n)}</b>：${g.join('、')}</p>`).join('')}<button class="btn primary" onclick="closeModal()">知道了</button>`)}catch(e){}},900);}else save();window.__mig293=rep;}
+{const o=homePage;homePage=function(...a){try{migAll292();migAll293()}catch(e){console.warn('mig293',e)}return o(...a);};}
+// 存檔保留 v2.9.3 欄位
+{const SAN=sanitize;sanitize=function(o){const r=SAN(o);if(!r||!o)return r;try{for(const h of r.heroes||[]){const old=(o.heroes||[]).find(q=>q.id===h.id);if(!old)continue;if(old.mig293)h.mig293=1;if(old.eq&&h.eq)for(const s in h.eq){const a=h.eq[s],b=old.eq[s];if(a&&b){if(b.el293)a.el293={...b.el293};if(b.es293)a.es293=b.es293;}}}const ob=new Map((o.bag||[]).filter(x=>x&&x.u!=null).map(x=>[x.u,x]));for(const it of r.bag||[]){const b=it&&ob.get(it.u);if(b){if(b.el293)it.el293={...b.el293};if(b.es293)it.es293=b.es293;}}if(o.summon210&&r.summon210&&o.summon210.p3_293!=null)r.summon210.p3_293=o.summon210.p3_293;}catch(e){console.warn('san293',e)}return r;};}
+{try{const raw=RGLS.getItem(KEY);const o=raw&&JSON.parse(raw);if(o&&S&&S.heroes){for(const h of S.heroes){const q=(o.heroes||[]).find(x=>x.id===h.id);if(!q)continue;if(q.mig293)h.mig293=1;if(q.eq&&h.eq)for(const s in h.eq){if(h.eq[s]&&q.eq[s]){if(q.eq[s].el293)h.eq[s].el293=q.eq[s].el293;if(q.eq[s].es293)h.eq[s].es293=q.eq[s].es293;}}}const ub=new Map((o.bag||[]).map(x=>[x&&x.u,x]));for(const it of S.bag||[]){const b=it&&ub.get(it.u);if(b){if(b.el293)it.el293=b.el293;if(b.es293)it.es293=b.es293;}}if(o.summon210&&S.summon210&&o.summon210.p3_293!=null)S.summon210.p3_293=o.summon210.p3_293;}}catch(e){console.warn('restore293',e)}}
+// 掃描 + 自檢（所有定義完成後）
+try{for(const k of reach293())strip293(k);}catch(e){console.warn('strip293',e)}
+try{if(typeof encCard154==='function'){}}catch(e){}
+
+// 1b：條件句改為「目標身上每有 1 種元素層」（冰、火、毒槍都吃得到）
+try{const RW=/凍結|減速|侵蝕|寒意|流血|中毒|燃燒/;const ks=Object.keys(COMBO200).filter(k=>!['opening','fracture','bleed','burn','poison','curse'].includes(k)&&RW.test(COMBO200[k][1]));for(const k of ks)COMBO200[k]=[COMBO200[k][0],'目標身上每有 1 種元素層或負面狀態，傷害 +8%（最高 +40%）。'];const o=comboMult200;comboMult200=function(f,o2){if(o2&&ks.includes(o2.combo200)){const n=(f.e292?Object.values(f.e292).filter(v=>v>0).length:0)+(f.st?Object.keys(f.st).filter(k=>NEG.includes(k)&&f.st[k]&&f.st[k].t>0).length:0);return 1+Math.min(.4,.08*n);}return o(f,o2);};for(const k of reach293()){const s=SK[k];if(s&&ks.includes(s.combo200))try{s.d=desc200(s)+'附加狀態改由天賦元素槽提供。'}catch(e){}}}catch(e){console.warn('combo293',e)}
+setTimeout(()=>{try{selfcheck293()}catch(e){console.warn('self293',e)}},0);
+try{AUTHOR_ANN155.unshift(['v2.9.3',['每位英雄的身份分支換成專屬節點，並新增「協同」一行；元素槽第 3、4 層各補一個小節點，第 5、6 層現在點得到。','元素層就是原本的狀態：血＝流血、火＝燃燒、毒＝中毒、蝕＝侵蝕、咒＝詛咒、雷＝麻痺，抗性、淨化與裝備判定共用。','怪物也有元素了（第 1 階起，初生不啟用）：攻擊會在英雄身上疊層、引爆並觸發反應，首領每 3 回合施放元素招式；天賦樹與裝備有對應抗性。','新增元素詞綴與 14 組元素套裝（2／4 件），舊裝備保留。','移除：65 級覺醒（伴生物保留，改為只給基本屬性）、Lv50～80 技能分支、異界回聲、舊固定天賦與戰鬥天賦分支、轉職果實（每顆換 1 根忘卻羽毛）、單次扣血 35% 上限。技能的附加狀態全部改由天賦元素槽提供。','忘卻羽毛與世界王次數重置券統一在公會塔・交易購買（各 800 積分）；世界王畫面一直顯示重置券按鈕。','長槍手槿升為超凡，灰喙夜鴉啄夜升為傳世並進入抽卡池：常駐 75%、精銳 20%、超凡 4.7%、傳世 0.3%，傳世 200 抽保底。','槿新時裝「最後的希望」上架。每人送一次免費重置天賦。']]);for(const a of AUTHOR_ANN155)if(/^v2\.(4|7)\./.test(a[0])&&!a[1].some(x=>/v2\.9\.3 起已移除/.test(x)))a[1].push('（v2.9.3 起已移除：技能分支、覺醒、異界回聲與舊天賦。）');}catch(e){}
+
 </script></body></html>

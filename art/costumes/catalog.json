@@ -55,6 +55,17 @@
       "images": {
         "normal": "art/costumes/raven_costume280.gif"
       }
+    },
+    {
+      "id": "spear_293",
+      "hero": "spear",
+      "name": "最後的希望",
+      "theme": "殘光與長槍",
+      "line": "這一槍要是也落空，就真的沒有下一次了。所以，不會落空。",
+      "published": true,
+      "images": {
+        "normal": "art/costumes/spear_costume293.gif"
+      }
     }
   ]
 }
