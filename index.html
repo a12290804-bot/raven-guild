@@ -932,7 +932,7 @@ const fresh=()=>({inv:{},met:{},rc:{},qSeen:{},claims:0,retSeen:[],retHurt:false
  quests:[],qid:1,cnt:{},recPool:[],shop:[],visitor:null,bless:null,clues:0,memUsed:[],sangDone:false,altar:0});
 let S=fresh(),RUN=null,BAT=null,WALK=null,AREA='hall';
 const n0=(v,d)=>Number.isFinite(+v)&&+v>=0?Math.floor(+v):d;
-function fixHero(h){const c=cand(h&&h.key);if(!c)return null;const eq={};const src=Object.assign({},h.eq||{});if(src.c&&!src.r1)src.r1=src.c;for(const s of SLOTS){const it=src[s]&&typeof src[s]==='object'?fixItem(src[s]):null;eq[s]=it&&it.s===slotType(s)?it:null}
+function fixHero(h){const c=cand(h&&h.key);if(!c){try{if(h&&h.key)(window.__orph402=window.__orph402||[]).push(JSON.parse(JSON.stringify(h)))}catch(e){}return null;}const eq={};const src=Object.assign({},h.eq||{});if(src.c&&!src.r1)src.r1=src.c;for(const s of SLOTS){const it=src[s]&&typeof src[s]==='object'?fixItem(src[s]):null;eq[s]=it&&it.s===slotType(s)?it:null}
  const bonus={};for(const k of ATR)if(h.bonus&&h.bonus[k])bonus[k]=Math.min(30,n0(h.bonus[k],0));
  const o={id:n0(h.id,0),key:c.key,lv:Math.min(80,Math.max(1,n0(h.lv,1))),xp:n0(h.xp,0),row:h.row==='back'?'back':'front',eq,br:(h.br===0||h.br===1)?h.br:null,br2:(h.br2===0||h.br2===1)?h.br2:null,skills:[],dead:h.dead===true,tr3:h.tr3===1?1:0,star:Math.min(5,Math.max(0,n0(h.star,0))),bonus,lk:Math.min(10,Math.max(0,n0(h.lk,rnd(0,10))))};
  const av=avail(o);o.skills=[...new Set((Array.isArray(h.skills)?h.skills:[]).filter(x=>av.includes(x)))].slice(0,slots(o));if(!o.skills.length)o.skills=av.slice(0,2);return o}
@@ -4907,7 +4907,7 @@ function gift290(){try{if(!S||S.gift290)return;S.gift290=1;S.tickets210=(S.ticke
 function useWbReset290(){if(!idle180())return;if((S.wbReset290||0)<1)return toast('沒有世界王次數重置券');init180(S);const d=worldDay180();if(!(S.world180.claims[d]>0))return toast('今天的世界王次數還沒用掉');S.wbReset290--;delete S.world180.claims[d];save();toast('今天的世界王次數已重置');}
 {const o=homePage;homePage=function(...a){const r=o(...a);try{gift290();fruitMile290();for(const h of S.heroes)ttInit290(h);if((S.wbReset290||0)>0&&$('stage')&&!$('stage').querySelector('[data-wbr290]'))$('stage').insertAdjacentHTML('beforeend',`<button class="btn" data-wbr290 onclick="useWbReset290()">世界王次數重置券 ×${S.wbReset290}</button>`);}catch(e){}return r;};}
 
-const VER='v4.1.0-1';
+const VER='v4.1.0-2';
 // ===== v3.0.0 修正 =====
 function personalPlan300(){try{const hs=(RUN&&RUN.party||[]).map(q=>S.heroes.find(h=>h.id===q.id)).filter(h=>h&&UQ['personal156_'+h.key]);if(!hs.length)return '';const own=k=>[...S.bag,...S.heroes.flatMap(h=>Object.values(h.eq||{}))].some(it=>it&&it.uq==='personal156_'+k);const pool=hs.filter(h=>!own(h.key)&&!((S.plans||{})['personal156_'+h.key]>0));const h=pick(pool.length?pool:hs);const id='personal156_'+h.key;S.plans=S.plans||{};S.plans[id]=(S.plans[id]||0)+1;return '📜「'+UQ[id].n+'」（'+short(h.key)+'專屬）圖紙';}catch(e){return ''}}
 const REF300={};
@@ -6767,5 +6767,22 @@ new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nod
 scan(document);
 }catch(e){console.warn('f401',e)}
 try{AUTHOR_ANN155.unshift(['v4.1.0-1',['緊急修正：角色和場景圖片改從遊戲網站本身讀取，不再經過容易被限流的外部連結，圖片不會再讀不到。','畫面外的圖片延後載入，開頁面比較快。']])}catch(e){}
+</script>
+<script>
+// ===== v4.1.0-2 緊急修正：角色資料不會再因為讀取順序被弄丟；可以從瀏覽器備份找回不見的角色 =====
+try{
+const HAVE=k=>S.heroes.some(h=>h.key===k);
+function readd402(h,src){try{if(!h||!h.key||HAVE(h.key)||!cand(h.key))return false;const f=fixHero(JSON.parse(JSON.stringify(h)));if(!f)return false;for(const k in h){if(/\d{3}$/.test(k)&&h[k]!=null&&typeof h[k]!=='function')f[k]=typeof h[k]==='object'?JSON.parse(JSON.stringify(h[k])):h[k];}if(Array.isArray(h.skills))f.skills=h.skills.filter(x=>SK[x]);if(S.heroes.some(x=>x.id===f.id))f.id=Math.max(0,...S.heroes.map(x=>x.id||0))+1;S.heroes.push(f);return true;}catch(e){console.warn('readd402',e);return false}}
+// 1) 讀取時先被擱置的角色，等所有角色資料都準備好再放回來
+function orphans402(){try{const L=window.__orph402||[];let n=0;for(const h of L)if(readd402(h,'orph'))n++;window.__orph402=[];if(n){save();}return n;}catch(e){return 0}}
+// 2) 掃描瀏覽器裡的備份，找出存檔裡沒有、但備份裡有的角色
+function scanBackups402(){const found={};try{const st=typeof RGLS!=='undefined'?RGLS:localStorage;const keys=[];try{for(let i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));}catch(e){}for(const k of new Set([...keys,'RAVEN_GUILD_V4_BACKUP_REBIRTH','RG_BACKUP_MEM253'])){let raw=null;try{raw=st.getItem(k)}catch(e){}if(!raw||raw.length<50)continue;let o=null;try{o=JSON.parse(raw)}catch(e){continue}let sv=o;try{if(o&&typeof o.save==='string')sv=JSON.parse(o.save);}catch(e){}if(!sv||!Array.isArray(sv.heroes))continue;const at=(o&&o.at)||'';for(const h of sv.heroes){if(!h||!h.key||HAVE(h.key)||!cand(h.key))continue;if(!found[h.key]||String(at)>String(found[h.key].at))found[h.key]={h,at,from:k};}}}catch(e){console.warn('scan402',e)}return found;}
+window.recover402=function(){const f=scanBackups402();const ks=Object.keys(f);if(!ks.length){modal('<h2>找回角色</h2><p>瀏覽器的備份裡沒有找到不見的角色。</p><button class="btn" onclick="closeModal()">好</button>');return;}
+ modal(`<h2>找回角色</h2><p>在瀏覽器的備份裡找到這些現在不在隊伍裡的角色：</p>${ks.map(k=>`<p><b>${esc(cand(k).name)}</b> Lv${f[k].h.lv||1}${f[k].h.rebirth210?'・重生 '+f[k].h.rebirth210:''} <span class="note">（備份時間 ${esc(String(f[k].at).slice(0,16).replace('T',' '))}）</span></p>`).join('')}<p class="note">只會把角色放回來，其他進度（裝備、積分、劇情）都不會被備份蓋掉。</p><div class="row"><button class="btn primary" onclick="recoverDo402()">全部找回</button><button class="btn" onclick="S.ptl=S.ptl||{};S.ptl.rec402=1;save();closeModal()">先不要</button></div>`);};
+window.recoverDo402=function(){const f=scanBackups402();let n=0;const names=[];for(const k of Object.keys(f)){if(readd402(f[k].h,'backup')){n++;names.push(cand(k).name);}}save();closeModal();toast(n?'找回了：'+names.join('、'):'沒有可以找回的角色。');};
+setTimeout(()=>{try{orphans402();const f=scanBackups402();const ks=Object.keys(f).filter(k=>['moli','sihuang','baigu','luoqingluan'].includes(k)||rank210(k)>=2);if(ks.length&&!(S.ptl&&S.ptl.rec402))recover402();}catch(e){console.warn('rec402',e)}},3000);
+{const o=bookMenu;bookMenu=function(...a){const r=o.apply(this,a);try{$('box')?.insertAdjacentHTML('afterbegin','<button class="btn" onclick="recover402()">從備份找回角色</button>');}catch(e){}return r;};}
+}catch(e){console.warn('v402',e)}
+try{AUTHOR_ANN155.unshift(['v4.1.0-2',['緊急修正：遊戲讀取時，新角色的資料不會再因為讀取順序被弄丟。','如果有角色不見了，遊戲會自動檢查瀏覽器裡的備份，找到就問你要不要找回；圖鑑裡也有「從備份找回角色」。只會放回角色，其他進度不會被覆蓋。']])}catch(e){}
 </script>
 </body></html>
