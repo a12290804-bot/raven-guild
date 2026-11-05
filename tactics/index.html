@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#120e0b">
+<title>語嫣・永生戰棋（P0 原型）</title>
+<style>
+:root{--bg:#120e0b;--panel:#1d1712;--line:#3a2e24;--ink:#e9dcc4;--dim:#a8977c;--gold:#d8b56a;--blue:#6f9fd8;--red:#d86a5f;--warn:#b48cff;--ok:#8fc77a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif TC","PingFang TC","Microsoft JhengHei",serif}
+body{padding:8px 8px calc(140px + env(safe-area-inset-bottom));max-width:540px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:6px}
+h1{font-size:16px;line-height:1.3;margin:0;color:var(--gold);letter-spacing:1px;flex:1 1 100%}
+.chip{font-size:13px;padding:3px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+.gatebar{flex:1;min-width:120px;height:10px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#2a1d17}
+.gatebar i{display:block;height:100%;background:linear-gradient(90deg,#a2543e,#d8b56a)}
+#board{display:grid;grid-template-columns:repeat(12,1fr);gap:1px;background:#0a0807;border:1px solid var(--line);border-radius:6px;padding:1px;touch-action:manipulation;user-select:none}
+.c{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;overflow:hidden}
+.c .tg{position:absolute;left:2px;top:1px;font-size:9px;color:#0008;font-weight:700;pointer-events:none}
+.PLAIN{background:#5b5140}.FOREST{background:#34452e}.HILL{background:#7a6748}.SWAMP{background:#3d4636}.WALL{background:#2b2a2a}.SHALLOW_WATER{background:#33505a}.DEEP_WATER{background:#1b2d38}.FLESH{background:#6b2f2f}.GATE{background:#4a3221}
+.FOREST{background-image:radial-gradient(circle at 30% 40%,#2a3a25 18%,transparent 19%),radial-gradient(circle at 70% 65%,#2a3a25 18%,transparent 19%)}
+.HILL{background-image:linear-gradient(135deg,transparent 45%,#8a7655 46%,#8a7655 54%,transparent 55%)}
+.WALL{background-image:repeating-linear-gradient(0deg,#3a3837 0 3px,#2b2a2a 3px 8px)}
+.FLESH{background-image:radial-gradient(circle at 40% 50%,#8a3c38 20%,transparent 22%)}
+.SHALLOW_WATER,.DEEP_WATER{background-image:repeating-linear-gradient(160deg,transparent 0 6px,#ffffff10 6px 8px)}
+.c.reach::after{content:"";position:absolute;inset:0;background:#6f9fd855;border:1px solid #6f9fd8aa}
+.c.threat::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,#d86a5f40 0 3px,transparent 3px 7px);pointer-events:none}
+.c.tgt{outline:2px solid var(--red);outline-offset:-2px}
+.c.tgtsel{outline:3px solid #fff;outline-offset:-3px}
+.c.warn{box-shadow:inset 0 0 0 2px var(--warn)}
+.c.warn .wv{position:absolute;right:1px;bottom:0;font-size:10px;color:var(--warn)}
+.c.dest{box-shadow:inset 0 0 0 2px #fff}
+.u{position:relative;z-index:2;width:82%;height:82%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(11px,3.4vw,17px);font-weight:700;border:2px solid #0008;box-shadow:0 1px 3px #000a}
+.u.P{background:radial-gradient(circle at 35% 30%,#a9c6ea,#3e6aa0);color:#0d1a2b}
+.u.E{background:radial-gradient(circle at 35% 30%,#efa49a,#93372e);color:#2a0b07}
+.u.cmd{border-color:var(--gold);box-shadow:0 0 0 2px #d8b56a88}
+.u.acted{filter:grayscale(.75) brightness(.7)}
+.u.ghost{opacity:.45}
+.u .hp{position:absolute;left:8%;right:8%;bottom:-3px;height:4px;background:#000a;border-radius:2px;overflow:hidden}
+.u .hp i{display:block;height:100%;background:var(--ok)}
+.u.E .hp i{background:#f0c070}
+.u .gd{position:absolute;top:-4px;right:-4px;font-size:9px;background:var(--gold);color:#000;border-radius:6px;padding:0 2px}
+.gatec{z-index:2;font-size:clamp(11px,3.4vw,16px);color:var(--gold);font-weight:700}
+.c.flash{animation:fl .35s}
+@keyframes fl{0%{filter:brightness(2.2)}100%{filter:none}}
+#info{margin-top:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:76px;font-size:14px;line-height:1.55}
+#info b{color:var(--gold)}
+.say{color:#e8c9a0}
+.note{color:var(--dim);font-size:12px}
+.bad{color:var(--red)}.good{color:var(--ok)}
+#bar{position:fixed;left:0;right:0;bottom:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#120e0bee;border-top:1px solid var(--line);display:flex;gap:6px;justify-content:center;flex-wrap:wrap;z-index:20}
+button{font:inherit;font-size:14px;color:var(--ink);background:#2a2119;border:1px solid #5a4632;border-radius:8px;padding:8px 11px;min-height:42px;cursor:pointer}
+#bar button{font-size:13.5px}
+button.pri{background:#5a3f22;border-color:var(--gold);color:#fff3da}
+button.dng{background:#4a1f1b;border-color:#a2543e}
+button:disabled{opacity:.4}
+#log{margin-top:8px;background:#0e0b09;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;line-height:1.5;max-height:180px;overflow:auto;color:var(--dim)}
+#log div.s{color:#e8c9a0}#log div.e{color:var(--gold)}
+.modal{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.hide{display:none}
+.box{background:var(--panel);border:1px solid var(--gold);border-radius:12px;max-width:500px;width:100%;max-height:86vh;overflow:auto;padding:14px 16px;font-size:14px;line-height:1.6}
+.box h2{margin:0 0 6px;color:var(--gold);font-size:18px}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{border-bottom:1px solid var(--line);padding:3px 4px;text-align:left}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.legend span{display:inline-flex;align-items:center;gap:4px;font-size:12px}.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+@media (prefers-reduced-motion:reduce){.c.flash{animation:none}}
+</style>
+</head>
+<body>
+<header>
+ <h1>語嫣・永生戰棋　<span class="note">P0 原型・黑鐘城第一次圍攻</span></h1>
+ <span class="chip" id="rd">第 1／8 回合</span>
+ <span class="chip" id="ph">我方回合</span>
+ <span class="note">城門 <b id="gh">300</b></span><div class="gatebar"><i id="gb" style="width:100%"></i></div>
+</header>
+<div id="board" aria-label="棋盤"></div>
+<div id="info"></div>
+<div id="log"></div>
+<div id="bar"></div>
+<div class="modal hide" id="modal"><div class="box" id="box"></div></div>
+<script src="data.js"></script>
+<script src="core.js"></script>
+<script>
+'use strict';
+const D=window.TACTICS_DATA,C=window.TACTICS,MID='MISSION_BC_001',SAVE_KEY='yyt_p0_save';
+let seed,acts,st,sel=null,showThreat=false,busy=false,inspect=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS={get(){try{return JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(e){return null}},set(v){try{localStorage.setItem(SAVE_KEY,JSON.stringify(v))}catch(e){}},del(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}};
+
+function newBattle(s){seed=(s==null?(Date.now()%2147483647):s)>>>0;acts=[];st=C.createBattle(D,MID,seed);sel=null;inspect=null;persist();render();logAll(true);intro();}
+function persist(){LS.set({v:1,mission:MID,ruleset:D.rulesetVersion,seed,acts});}
+function boot(){const sv=LS.get();if(sv&&sv.mission===MID&&sv.ruleset===D.rulesetVersion&&Array.isArray(sv.acts)){try{const s2=C.replay(D,MID,sv.seed,sv.acts);seed=sv.seed;acts=sv.acts;st=s2;render();logAll(true);if(!st.result)toastInfo('<b>已接續上一場</b>（第 '+st.round+' 回合）。<span class="note">存檔只記「亂數種子＋你的指令」，重新算一次，不會重複觸發事件。</span>');else showResult();return;}catch(e){console.warn(e);}}
+ newBattle();}
+
+// ---------- 畫面 ----------
+function cellsHi(){const H={reach:new Set(),tgt:new Set(),threat:new Set(),dest:null,tsel:null};
+ if(sel){const u=st.units.find(v=>v.id===sel.id);if(!sel.to){for(const k of C.reachable(D,st,u).keys())H.reach.add(k);}else{H.dest=C.key(sel.to.x,sel.to.y);for(const k of C.reachable(D,st,u).keys())H.reach.add(k);
+  for(const t of targetsAt(u,sel.to)){const p=t==='GATE'?st.gate:st.units.find(v=>v.id===t);H.tgt.add(C.key(p.x,p.y));}if(sel.target){const p=st.units.find(v=>v.id===sel.target);if(p)H.tsel=C.key(p.x,p.y);}}}
+ if(inspect){const u=st.units.find(v=>v.id===inspect);if(u&&u.hp>0){for(const k of threatOf(u))H.threat.add(k);}}
+ if(showThreat)for(const u of C.alive(st,'E'))for(const k of threatOf(u))H.threat.add(k);
+ return H;}
+function targetsAt(u,to){const sx=u.x,sy=u.y;u.x=to.x;u.y=to.y;const ts=C.targetsFrom(D,st,u,to);u.x=sx;u.y=sy;return ts;}
+function threatOf(u){const out=new Set();const R=C.reachable(D,st,u);for(const k of R.keys()){const [x,y]=k.split(',').map(Number);const [a,b]=C.rangeOf(D,st,u,{x,y});for(let dy=-b;dy<=b;dy++)for(let dx=-b;dx<=b;dx++){const d=Math.abs(dx)+Math.abs(dy);if(d<a||d>b)continue;const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=st.w||ny>=st.h)continue;if(d>1&&!C.los(D,st,{x,y},{x:nx,y:ny}))continue;out.add(C.key(nx,ny));}}return out;}
+function render(){const H=cellsHi();const B=$('board');let h='';const warnSet=new Set((st.warn||[]).map(p=>C.key(p.x,p.y)));
+ for(let y=0;y<st.h;y++)for(let x=0;x<st.w;x++){const k=C.key(x,y);const t=C.tileAt(st,x,y);const T=D.terrain[t];let cls='c '+t;
+  if(H.reach.has(k))cls+=' reach';if(H.threat.has(k))cls+=' threat';if(H.tgt.has(k))cls+=' tgt';if(H.tsel===k)cls+=' tgtsel';if(warnSet.has(k))cls+=' warn';if(H.dest===k)cls+=' dest';
+  let inner=T.glyph?`<span class="tg">${T.glyph}</span>`:'';
+  if(warnSet.has(k))inner+='<span class="wv">⚠1</span>';
+  if(st.gate.x===x&&st.gate.y===y)inner+=`<span class="gatec">門</span>`;
+  let u=C.unitAt(st,x,y);let ghost=false;
+  if(sel&&sel.to){const su=st.units.find(v=>v.id===sel.id);if(u&&u.id===sel.id&&(sel.to.x!==x||sel.to.y!==y)){ghost=true;}if(!u&&sel.to.x===x&&sel.to.y===y)u=su;}
+  if(u)inner+=`<div class="u ${u.faction}${u.commander?' cmd':''}${u.usedAct&&u.faction==='P'?' acted':''}${ghost?' ghost':''}" title="${esc(u.name)}">${esc(u.glyph)}<div class="hp"><i style="width:${Math.round(100*u.hp/u.maxHp)}%"></i></div>${u.guard?'<span class="gd">守</span>':''}</div>`;
+  h+=`<div class="${cls}" data-x="${x}" data-y="${y}" role="button" aria-label="${T.name} ${x},${y}${u?' '+esc(u.name):''}">${inner}</div>`;}
+ B.innerHTML=h;
+ $('rd').textContent='第 '+Math.min(st.round,D.missions[MID].roundLimit)+'／'+D.missions[MID].roundLimit+' 回合';$('ph').textContent=st.result?(st.result.win?'勝利':'失敗'):busy?'敵方行動中…':'我方回合';
+ $('gb').style.width=Math.round(100*st.gate.hp/st.gate.maxHp)+'%';$('gh').textContent=st.gate.hp;
+ renderBar();}
+function renderBar(){const b=$('bar');let h='';
+ if(st.result){h=`<button class="pri" onclick="showResult()">結算</button><button onclick="retry()">同一場重打</button><button onclick="if(confirm('開始新的一場？'))newBattle()">新的一場</button>`;}
+ else if(busy){h='<button disabled>敵方行動中…</button>';}
+ else if(sel&&sel.to){const u=st.units.find(v=>v.id===sel.id);h=(sel.target?`<button class="pri" onclick="commit('ATTACK')">確認攻擊</button>`:'')+`<button onclick="commit('WAIT')">待機</button><button onclick="commit('GUARD')">守備</button><button class="dng" onclick="cancel()">取消</button>`;}
+ else if(sel){h=`<button onclick="sel.to={x:selU().x,y:selU().y};pickedDest()">原地行動</button><button class="dng" onclick="cancel()">取消</button>`;}
+ else{const left=C.alive(st,'P').filter(u=>!u.usedAct).length;h=`<button class="pri" onclick="endTurn()">結束回合${left?'（還有 '+left+' 人沒動）':''}</button><button onclick="toggleThreat()">${showThreat?'隱藏':'顯示'}敵方威脅</button><button onclick="help()">規則</button><button onclick="menu()">選單</button>`;}
+ b.innerHTML=h;}
+const selU=()=>st.units.find(v=>v.id===sel.id);
+function toastInfo(html){$('info').innerHTML=html;}
+function intro(){const M=D.missions[MID];toastInfo(`<b>${esc(M.name)}</b><br>勝利：${esc(M.win)}<br>失敗：${esc(M.lose)}<br><span class="note">點我方單位（藍）→ 點藍色格移動 → 點紅框敵人攻擊，或選待機／守備。點敵人（紅）可看牠打得到哪裡。</span>`);}
+function unitCard(u){const T=D.terrain[C.tileAt(st,u.x,u.y)];return `<b>${esc(u.name)}</b>　${D.troopName[u.troop]}${u.commander?'・指揮官':''}　生命 ${u.hp}/${u.maxHp}<br><span class="note">攻 ${u.dmg==='MAGICAL'?u.mag+'（法術）':u.atk}・防 ${u.def}・魔防 ${u.res}・移動 ${u.move}・射程 ${u.rmin}–${u.rmax}・所在：${T.name}${T.def?'（防禦 '+(T.def>0?'+':'')+Math.round(T.def*100)+'%）':''}${u.guard?'・守備中':''}</span>`;}
+
+// ---------- 操作 ----------
+$('board').addEventListener('click',e=>{const c=e.target.closest('.c');if(!c||busy||st.result)return;tap(+c.dataset.x,+c.dataset.y);});
+function tap(x,y){const u=C.unitAt(st,x,y);const k=C.key(x,y);
+ if(sel&&sel.to){const su=selU();const ts=targetsAt(su,sel.to);
+  if(u&&u.faction==='E'&&ts.includes(u.id)){if(sel.target===u.id){commit('ATTACK');return;}sel.target=u.id;showPreview();render();return;}
+  if(C.reachable(D,st,su).has(k)&&!(u&&u.id!==su.id)){sel.to={x,y};sel.target=null;pickedDest();return;}
+  if(u&&u.faction==='P'&&!u.usedAct){selectUnit(u);return;}cancel();return;}
+ if(sel){const su=selU();if(C.reachable(D,st,su).has(k)&&(!u||u.id===su.id)){sel.to={x,y};pickedDest();return;}}
+ if(u&&u.faction==='P'){if(u.usedAct){inspect=null;sel=null;toastInfo(unitCard(u)+'<br><span class="note">這回合已經行動過。</span>');render();return;}selectUnit(u);return;}
+ if(u&&u.faction==='E'){sel=null;inspect=inspect===u.id?null:u.id;toastInfo(unitCard(u)+'<br><span class="note">斜線區＝牠這回合移動後打得到的範圍。再點一次收起。</span>');render();return;}
+ if(st.gate.x===x&&st.gate.y===y){toastInfo(`<b>城門</b>　生命 ${st.gate.hp}/${st.gate.maxHp}<br><span class="note">只有敵人會攻擊城門。站在門前那一格，可以擋住近戰的敵人。</span>`);return;}
+ const T=D.terrain[C.tileAt(st,x,y)];toastInfo(`<b>${T.name}</b>　(${x},${y})<br><span class="note">${T.pass?'移動消耗 '+T.cost:'不能通行'}${T.def?'・防禦 '+(T.def>0?'+':'')+Math.round(T.def*100)+'%':''}${T.height?'・高地：弓手、術士射程 +1':''}${T.blockLos?'・擋住遠程視線':''}</span>`);sel=null;inspect=null;render();}
+function selectUnit(u){inspect=null;sel={id:u.id,to:null,target:null};toastInfo(unitCard(u)+'<br><span class="note">點藍色格移動（點自己＝原地）。</span>');render();}
+function pickedDest(){const u=selU();const ts=targetsAt(u,sel.to);toastInfo(unitCard(u)+'<br>'+(ts.length?`<span class="good">紅框的目標打得到</span>，點一下看預估，再點一次（或按確認）攻擊。`:'<span class="note">這裡打不到任何人：可以待機或守備（防禦 +30%，到下次行動前）。</span>'));render();}
+function showPreview(){const u=selU();const p=C.preview(D,st,{...u,x:sel.to.x,y:sel.to.y},sel.to,sel.target);const t=st.units.find(v=>v.id===sel.target);
+ let h=`<b>攻擊 ${esc(t.name)}</b>（生命 ${t.hp}）<br>傷害 <b>${p.dmg}</b>　命中 ${Math.round(p.hit*100)}%　暴擊 5%（×1.5）${p.cm>1?'　<span class="good">兵種克制 ×1.2</span>':p.cm<1?'　<span class="bad">被克制 ×0.85</span>':''}`;
+ h+=p.kill?'<br><span class="good">命中就會擊倒，不會被反擊。</span>':p.counter?`<br><span class="bad">對方會反擊：約 ${p.counter.dmg}（命中 ${Math.round(p.counter.hit*100)}%）</span>`:'<br><span class="good">對方打不到你，不會反擊。</span>';
+ toastInfo(h+'<br><span class="note">再點一次目標，或按「確認攻擊」。</span>');}
+function cancel(){sel=null;inspect=null;intro();render();}
+function toggleThreat(){showThreat=!showThreat;render();}
+function commit(act){if(!sel||!sel.to)return;const a={type:'ACT',actorId:sel.id,to:{...sel.to},act};if(act==='ATTACK')a.target=sel.target;const r=C.apply(D,st,a);
+ if(!r.ok){toastInfo('<span class="bad">不能這樣做：'+esc(r.error)+'</span>');return;}acts.push(a);st=r.state;sel=null;persist();addLog(r.events);flashEv(r.events);
+ const left=C.alive(st,'P').filter(u=>!u.usedAct).length;toastInfo(r.events.map(e=>esc(e.txt)).join('<br>')+(st.result?'':left?'':'<br><span class="note">大家都行動完了，按「結束回合」。</span>'));render();if(st.result)setTimeout(showResult,600);}
+function endTurn(){const left=C.alive(st,'P').filter(u=>!u.usedAct).length;if(left&&!confirm('還有 '+left+' 人沒有行動，確定結束回合？'))return;
+ const before=st;const a={type:'END_PHASE'};const r=C.apply(D,st,a);if(!r.ok)return;acts.push(a);persist();sel=null;inspect=null;busy=true;
+ const frames=(r.state.frames||[]);let i=0;const shown=C.clone(before);
+ const step=()=>{if(i>=frames.length){busy=false;st=r.state;render();addLog(r.events.filter(e=>!frames.some(f=>f.events.includes(e))));const says=r.events.filter(e=>e.t==='say'||e.t==='spawn'||e.t==='end');toastInfo(says.length?says.map(e=>'<span class="say">'+esc(e.txt)+'</span>').join('<br>'):'<b>我方回合</b>');if(st.result)setTimeout(showResult,600);return;}
+  const f=frames[i++];for(const [id,x,y,hp] of f.units){const u=shown.units.find(v=>v.id===id);if(u){u.x=x;u.y=y;u.hp=hp;}}shown.gate.hp=f.gate;const keep=st;st=shown;render();st=keep;addLog(f.events);flashEv(f.events,shown);toastInfo(f.events.map(e=>esc(e.txt)).join('<br>'));setTimeout(step,520);};
+ render();setTimeout(step,200);}
+function flashEv(evs,S){S=S||st;for(const e of evs){if(e.t!=='hit')continue;const p=e.d==='GATE'?S.gate:S.units.find(v=>v.id===e.d);if(!p)continue;const c=document.querySelector(`.c[data-x="${p.x}"][data-y="${p.y}"]`);if(c){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}}}
+function addLog(evs){const L=$('log');for(const e of evs){const d=document.createElement('div');d.className=e.t==='say'||e.t==='spawn'?'s':e.t==='end'?'e':'';d.textContent=e.txt;L.appendChild(d);}L.scrollTop=L.scrollHeight;}
+function logAll(reset){const L=$('log');if(reset)L.innerHTML='';addLog(st.eventLog);}
+function retry(){closeModal();newBattle(seed);}
+function closeModal(){$('modal').classList.add('hide');}
+function modal(h){$('box').innerHTML=h;$('modal').classList.remove('hide');}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+function showResult(){if(!st.result)return;const M=D.missions[MID];const g=st.gate.hp;const lost=st.units.filter(u=>u.faction==='P'&&u.hp<=0).map(u=>u.name);
+ let oc;if(!st.result.win)oc=M.outcomes.find(o=>o.id==='DEFEAT');else if(g>=200)oc=M.outcomes.find(o=>o.id==='HOLD_CLEAN');else if(g<150)oc=M.outcomes.find(o=>o.id==='BROKEN_WALL');
+ modal(`<h2>${st.result.win?'勝利':'失敗'}</h2><p>${esc(st.result.reason)}。</p><p>城門剩 ${g}／${st.gate.maxHp}・倒下的英雄：${lost.length?esc(lost.join('、')):'沒有'}・第 ${Math.min(st.round,M.roundLimit)} 回合</p>
+ <p><b>世界後果預覽</b>（P2 才會真的寫入世界，現在只顯示）<br>${oc?esc(oc.when)+' → '+esc(oc.world)+'；'+esc(oc.next):'城門 150～199：沒有額外後果。'}</p>
+ <p class="note">種子 ${seed}・指令 ${acts.length} 筆・狀態碼 ${C.hash(st)}（同一組種子和指令，重算一定得到同一個狀態碼）</p>
+ <button class="pri" onclick="retry()">同一場重打</button> <button onclick="closeModal();newBattle()">新的一場</button> <button onclick="closeModal()">看棋盤</button>`);}
+function menu(){modal(`<h2>選單</h2><p><button onclick="closeModal();if(confirm('重新開始這一場（同一個種子）？'))retry()">同一場重打</button></p><p><button onclick="closeModal();if(confirm('開始新的一場？'))newBattle()">新的一場（新的種子）</button></p>
+ <p class="note">種子 ${seed}・指令 ${acts.length} 筆・狀態碼 ${C.hash(st)}・規則版本 ${D.rulesetVersion}</p><p class="note">這是 P0 原型：只有移動、攻擊、反擊、地形、守備、敵方 AI 與勝敗。兵隊、職業技能、污染、妖化、世界記憶會在後面的階段加入。所有數值都是測試提案。</p><button onclick="closeModal()">關閉</button>`);}
+function help(){const tr=Object.entries(D.terrain).map(([k,t])=>`<tr><td><i class="${k}" style="display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle"></i> ${t.name}</td><td>${t.pass?t.cost:'不能走'}</td><td>${t.def?(t.def>0?'+':'')+Math.round(t.def*100)+'%':'—'}</td></tr>`).join('');
+ modal(`<h2>規則</h2><p><b>回合：</b>我方每人可以「移動一次＋行動一次」（攻擊、待機或守備），全部動完按結束回合，敵人照同樣的規則行動。</p>
+ <p><b>控制區：</b>走進敵人旁邊（上下左右）那一格就要停下。不能穿過任何單位。</p>
+ <p><b>攻擊：</b>傷害＝攻擊×兵種倍率 − 防禦×(1＋地形)×0.5，最少 1。命中基礎 90%，暴擊 5%（×1.5）。被打的一方活著、而且打得到你，就會反擊一次。</p>
+ <p><b>兵種克制（×1.2／被克 ×0.85）：</b>步兵→槍兵→騎兵→弓兵、法術兵；法術兵→步兵。</p>
+ <p><b>遠程：</b>弓手射程 2–3、術士 1–2；站在高地射程 +1；城牆和城門會擋住視線。</p>
+ <p><b>守備：</b>防禦 +30%，到你下次行動前。</p>
+ <table><tr><th>地形</th><th>移動</th><th>防禦</th></tr>${tr}</table>
+ <p class="note">紫框 ⚠＝下一回合會變化的格子。斜線＝敵人打得到的範圍。</p><button onclick="closeModal()">關閉</button>`);}
+window.addEventListener('resize',()=>{});
+boot();
+</script>
+</body>
+</html>
