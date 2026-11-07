@@ -2,10 +2,7 @@
 const app=document.querySelector('#app'), sheet=document.querySelector('#sheet'), panel=document.querySelector('#sheet-body');
 const saveKey='raven-territory-v01';
 const music=document.querySelector('#shared-music');
-const landscape=new Image();
-landscape.onload=()=>document.documentElement.style.setProperty('--shared-village', 'url("'+sharedAssets.village+'")');
-landscape.src=sharedAssets.village;
-let s=null, page='land', showCover=true, modal=null, noticeTimer;
+let s=null, page='land', showCover=true, modal=null, noticeTimer, mapChange=null;
 const freshGame=()=>newGame(Math.floor(Math.random()*4294967296));
 try{const value=JSON.parse(localStorage.getItem(saveKey));if(value?.version===1&&Array.isArray(value.plots))s=value;}catch{}
 function persist(){try{localStorage.setItem(saveKey,JSON.stringify(s));}catch{toast('此瀏覽器目前無法寫入本機存檔。');}}
@@ -19,42 +16,73 @@ const disabled=(yes)=>yes?' disabled':'';
 const button=(text,cmd,a='',b='',style='',off=false)=>`<button class="${style}" data-cmd="${cmd}" data-a="${a}" data-b="${b}"${disabled(off)}>${text}</button>`;
 const action=(text,cmd,a='',b='',style='',off=false)=>button(text,'act',cmd,a+':'+b,style,off);
 const selects=(list,selected)=>list.map(([id,label])=>`<option value="${id}"${id===selected?' selected':''}>${label}</option>`).join('');
-const heading=(small,title,desc='')=>`<div class="section-title"><span>${small}</span><h2>${title}</h2>${desc?`<p>${desc}</p>`:''}</div>`;
+const artwork=(src,cls='')=>src?`<img class="artwork ${cls}" src="${src}" alt="" decoding="async" loading="lazy">`:'';
+const heading=(label,title,scene)=>`<div class="scene-title">${artwork(scene)}<div><span>${label}</span><h2>${title}</h2></div></div>`;
 const status=(h)=>h.job?'委託外出':h.wound?'負傷 '+h.wound:h.resident?'長住':'在領地';
-const heroBadge=(id)=>`<span class="hero-mark hero-${id}"><span class="hero-fallback"><small>${HERO[id][1]}</small>${HERO[id][2]}</span><img src="${sharedAssets.portraits[id]}" width="64" height="78" alt="" hidden></span>`;
+const heroBadge=(id)=>`<span class="hero-mark hero-${id}"><span class="hero-fallback"><small>${HERO[id][1]}</small>${HERO[id][2]}</span>${artwork(sharedAssets.portraits[id],'hero-art')}</span>`;
+const itemIcon=(key)=>`<i class="item-icon">${ITEMS[key][2]}${artwork(sharedAssets.items[key])}</i>`;
 const count=(k)=>s.inv[k]||0;
 const ready=(h)=>freeHero(h)&&h.wound<3;
 function cover(){
  app.innerHTML=`<section class="cover"><div class="cover-inner"><div class="cover-kicker"><span></span> 渡鴉公會外派名冊 <span></span></div>
  <div class="cover-title"><small>RAVEN GUILD</small><h1>渡鴉公會<i></i><b>邊境領地</b></h1><p>霧還沒散。先把前哨的燈點起來。</p></div>
- <div class="cover-actions">${button(s?'返回領地':'接管領地','start','','','primary large')}${s?button('另開新局','new','','','cover-link'):''}${button(music.paused?'開啟背景音樂':'關閉背景音樂','music','','','cover-link')}<small>手機經營試玩版　V0.1</small></div></div></section>`;
+ <div class="cover-actions">${button(s?'返回領地':'接管領地','start','','','primary large')}${s?button('另開新局','new','','','cover-link'):''}${button(music.paused?'開啟背景音樂':'關閉背景音樂','music','','','cover-link')}<small>手機經營試玩版　V0.2</small></div></div></section>`;
 }
 const tabs=[['land','▥','領地'],['market','⚖','交易'],['heroes','♜','英雄'],['board','⚑','委託'],['log','▤','簿冊']];
 function shell(){
  const rating=score(s), tab=tabs.find(t=>t[0]===page);
  app.innerHTML=`<div class="shell"><header class="top"><div class="brand">${button('✦','cover','','','emblem')}<div><span>渡鴉公會 ／ 邊境領地</span><strong>${LEVELS[s.level-1][0]}</strong></div><div class="day"><small>${s.weather}</small><b>第 ${s.day} 日</b></div></div>
  <div class="resources"><div><small>渡鴉幣</small><b>◈ ${s.coin}</b></div><div><small>評鑑</small><b>${rating.total} <em>／ Lv.${s.level}</em></b></div><div><small>領地</small><b>${s.plots.filter(Boolean).length}<em> / ${s.plots.length}</em></b></div></div></header>
- ${s.raid?`<button class="alert" data-cmd="tab" data-a="board"><b>⚑　襲擊預警</b><span>第 ${s.raid.day} 日夜間　›</span></button>`:''}
+ ${s.raid?`<button class="alert" data-cmd="tab" data-a="board"><b><i aria-hidden="true">⚑</i> 襲擊預警</b><span>第 ${s.raid.day} 日夜間　›</span></button>`:''}
  <section id="screen" aria-label="${tab[2]}">${({land,market,heroes,board,log:journal})[page]()}</section>
  <footer><div class="endrow"><span><b>第 ${s.day} 日</b><small>結算製作、交易與外派行動</small></span>${button('結束今日　→','end','','','primary')}</div>
  <nav aria-label="領地選單">${tabs.map(([id,icon,label])=>`<button class="${page===id?'selected':''}" ${page===id?'aria-current="page"':''} data-cmd="tab" data-a="${id}"><i>${icon}</i>${label}</button>`).join('')}</nav></footer></div>`;
 }
+function plotTile(p,i){
+ const number=String(i+1).padStart(2,'0');
+ if(!p)return `<button class="plot empty" data-cmd="plot" data-a="${i}"><small>${number}</small><i>＋</i><b>空地</b></button>`;
+ const [name,icon]=BUILD[p.type];
+ return `<button class="plot type-${p.type} plot-lv-${p.lv} ${mapChange?.plot===i?'just-changed':''} ${p.damage?'broken':''}" data-cmd="plot" data-a="${i}">
+ ${artwork(sharedAssets.buildings[p.type])}<small>${number}</small><i aria-hidden="true">${icon}</i>
+ <span><b>${name}</b><em>${p.damage?'停工 '+p.damage+' 日':'Lv. '+p.lv}</em></span></button>`;
+}
 function land(){
- const sc=score(s), next=LEVELS[s.level];
- return `<div class="land-banner"><small>GUILD ESTATE  /  THE FIRST OUTPOST</small><h2>你的邊境領地</h2><p>${s.lands.length?s.lands.map(k=>LAND[k][0]).join(' · '):'灰松坡下，一座仍亮著燈的小站。'}</p></div>
- <div class="split goal"><div><small>公會首週要求</small><b>${s.bridge?'✓ 商路暢通':'修復霧渡橋或另闢便道'}</b></div>${button(s.report?'查看七日評鑑':'查看領地評鑑','rating','','','quiet')}</div>
- ${s.day===1?`<div class="firststeps"><b>今日建議</b><span>點空地蓋採集場，再到委託板請英雄偵查舊礦坑。冷鐵能用來修橋或打造短刃。</span></div>`:''}
- <div class="ratingline"><span>評分 ${sc.total}${next?' ／ 下級 '+next[1]:''}</span><span>${next?'開拓後 '+next[2]+' 塊地':'已達最高等級'}</span></div>
- <div class="meter"><i style="width:${Math.min(100,sc.total/(next?.[1]||104)*100)}%"></i></div>
- <div class="plots">${s.plots.map((p,i)=>p?`<button class="plot type-${p.type} ${p.damage?'broken':''}" data-cmd="plot" data-a="${i}"><small>${String(i+1).padStart(2,'0')}</small><i>${BUILD[p.type][1]}</i><b>${BUILD[p.type][0]}</b><em>${p.damage?'停工 '+p.damage+' 日':'Lv. '+p.lv}</em></button>`:`<button class="plot empty" data-cmd="plot" data-a="${i}"><small>${String(i+1).padStart(2,'0')}</small><i>＋</i><b>空地</b><em>選擇建築</em></button>`).join('')}</div>
- <div class="card split"><div><b>霧渡橋與商路</b><p>${s.bridge?'商隊已能來訪。':s.day===1?'河水正在上漲。':'修橋需 3 冷鐵、2 舊松木、16 渡鴉幣。'}</p></div>${action('修橋','bridge','','','quiet',s.bridge||s.day<2)}</div>`;
+ const sc=score(s), next=LEVELS[s.level], main=s.plots.slice(0,6);
+ const districts=s.lands.map((key,i)=>{
+  const start=LEVELS[i][2], end=LEVELS[i+1][2];
+  return `<section class="district ${mapChange?.land===key?'just-expanded':''}"><div class="district-title">${artwork(sharedAssets.scenes[key])}<div><small>開拓區 ${i+1}</small><h3>${LAND[key][0]}</h3></div></div>
+  <div class="plots outer-plots">${s.plots.slice(start,end).map((p,j)=>plotTile(p,start+j)).join('')}</div></section>`;
+ }).join('');
+ const yardIndex=s.plots.findIndex(p=>p?.type==='yard');
+ const milestones=[
+  ['採集場',yardIndex>=0,'plot',yardIndex>=0?yardIndex:s.plots.findIndex(p=>p===null)],
+  ['通商',s.bridge,'tab','board'],
+  ['擴張',s.level>1,'rating',''],
+  ['守夜',s.defended>0,'tab','board']
+ ];
+ const lit=main.filter(p=>p&&!p.damage).length;
+ return `<section class="estate-map estate-level-${s.level} ${s.weather==='濃霧'?'estate-fog':s.weather==='豪雨'?'estate-rain':''}" aria-label="前哨聚落地圖">
+ <div class="map-title"><div><small>RAVEN GUILD / FRONTIER ESTATE</small><h2>邊境領地</h2></div>${button('評鑑 '+sc.total,'rating','','','map-rating')}</div>
+ <div class="map-stamp"><b>${LEVELS[s.level-1][0]}</b><span>點亮 ${lit}／6</span><div class="settlement-lamps" aria-hidden="true">${main.map(p=>`<i class="${p&&!p.damage?'lit':''}"></i>`).join('')}</div></div>
+ <div class="map-terrain">
+ <img class="map-painting" src="estate-map.webp" alt="" fetchpriority="high">
+ <div class="plots map-plots">${main.map(plotTile).join('')}</div>
+ </div>
+ <div class="map-caption"><span>點選地塊管理建築</span><span>${next?'擴張門檻 '+next[1]+' 分':'領地已達最高級'}</span></div>
+ </section>
+ <div class="estate-goals"><div class="split"><b>前哨里程碑</b><span>${milestones.filter(x=>x[1]).length}／4</span></div>
+ <div class="milestone-track">${milestones.map(([label,done,cmd,value])=>button((done?'✓':'○')+' '+label,cmd==='plot'&&value===-1?'rating':cmd,value,'',done?'milestone done':'milestone')).join('')}</div></div>
+ <div class="card bridge-card split">${artwork(sharedAssets.scenes.bridge)}<div><small>首週委託</small><b>霧渡橋</b><p>${s.bridge?'商路通行':s.day===1?'河水正在上漲':'冷鐵 ×3　舊松木 ×2　16 幣'}</p></div>
+ ${action(s.bridge?'✓ 通行':'修橋','bridge','','','quiet',s.bridge||s.day<2)}</div>
+ ${s.day===1?'<p class="firststeps">今日建議　蓋一座採集場，派英雄偵查舊礦坑。</p>':''}
+ ${districts}${s.report?button('查看首週評鑑','rating','','','quiet week-result'):''}`;
 }
 function inventory(){
- return `<div class="stock">${Object.entries(ITEMS).map(([k,[label,,icon]])=>`<div class="${count(k)?'':'dim'}"><i>${icon}</i><span>${label}</span><b>${count(k)}</b></div>`).join('')}</div>`;
+ return `<div class="stock">${Object.entries(ITEMS).map(([k,[label,,icon]])=>`<div class="${count(k)?'':'dim'}">${itemIcon(k)}<span>${label}</span><b>${count(k)}</b></div>`).join('')}</div>`;
 }
 function market(){
  const shop=levelOf(s,'shop'), forge=levelOf(s,'forge');
- return `${heading('02 / MERCANTILE','交易與工坊','收下冒險者的戰利品，再讓工坊把它們變成有價值的貨物。')}
+ return `${heading('02 / MERCANTILE','交易與工坊',sharedAssets.scenes.market)}
  <div class="card"><div class="split"><h3>庫存</h3>${button('買英雄素材','tab','heroes','','quiet')}</div>${inventory()}</div>
  <div class="card"><div class="split"><h3>工坊配方</h3><span class="tag">Lv.${forge} · 待辦 ${s.queue.length}/8</span></div>
  ${s.specialty?`<p>專精 ${s.specialty} · 同類配方每單產出兩件</p>`:''}
@@ -68,17 +96,24 @@ function market(){
  ${s.orders.map((o,i)=>`<div class="row"><b>${ITEMS[o.key][0]} · 已保留 ${o.price} 幣</b>${action('撤回','unorder',i,'','mini')}</div>`).join('')}</div>`;
 }
 function heroes(){
- return `${heading('03 / RESIDENTS','英雄與居民','英雄會賣自己的戰利品，也會依照身手、傷勢與報酬決定是否接任務。')}
- <div class="hero-list">${present(s).map(h=>{const [name,job,,,key]=HERO[h.id];return `<div class="card hero-card">${heroBadge(h.id)}<div><div class="split"><h3>${name} <small>${job}</small></h3><span class="tag">${status(h)}</span></div><p>Lv.${h.level} · 戰力 ${heroPower(h)} · 信任 ${h.trust} · 經驗 ${h.xp}/${h.level*4}${h.blade?' · 裝有短刃':''}</p><p>持有 ${h.purse} 幣 · ${ITEMS[key][0]} ×${h.stock}</p>
- <div class="actions">${action('買素材 '+tradePrice(s,h.id,key)+' 幣','buy',h.id,'','quiet',!freeHero(h)||!h.stock)}${button('詳情','hero',h.id,'','mini')}</div></div></div>`;}).join('')}</div>
+ return `${heading('03 / RESIDENTS','英雄與居民',sharedAssets.scenes.heroes)}
+ <div class="hero-list">${present(s).map(h=>{
+  const [name,job,,,key]=HERO[h.id];
+  return `<article class="card hero-card"><button class="portrait-button" data-cmd="hero" data-a="${h.id}" aria-label="查看${name}詳情">
+  ${heroBadge(h.id)}<span class="portrait-caption"><small>${job}</small><strong>${name}</strong></span>
+  <span class="tag portrait-status">${status(h)}</span></button>
+  <div class="hero-body"><div class="hero-metrics"><span>Lv.${h.level}</span><span>戰力 ${heroPower(h)}</span><span>信任 ${h.trust}</span></div>
+  <div class="hero-stock">${itemIcon(key)}<span>${ITEMS[key][0]} ×${h.stock}</span></div>
+  ${action('收購 '+tradePrice(s,h.id,key)+' 幣','buy',h.id,'','quiet',!freeHero(h)||!h.stock)}</div></article>`;
+ }).join('')}</div>
  <div class="card"><h3>領地招募</h3><p>員工加入後，每日結算自動上工。</p>
  ${Object.entries(STAFF).map(([id,[name,job,desc,cost,building]])=>`<div class="row"><div><b>${name} · ${job}</b><p>${desc}</p><small>${s.staff[id]?.sick?'病休 '+s.staff[id].sick+' 日':s.staff[id]?'已入職':'需要'+BUILD[building][0]}</small></div>${s.staff[id]?.sick?action('用藥照護','staffcare',id,'','quiet',!count('salve')):s.staff[id]?'<span class="tag">已招募</span>':action('招募 '+cost+' 幣','staff',id,'','quiet',!levelOf(s,building))}</div>`).join('')}</div>`;
 }
 function board(){
  const r=s.raid,c=s.board,q=QUEST[c.type];
  const pick=nextQuest(s,c).filter(x=>x.power>=x.target-3);
- return `${heading('04 / CONTRACTS','委託與守備','把工作交給合適的人。派出的人手，今晚就無法留在領地。')}
- ${r?`<div class="card raid"><div class="split"><h3>霧中的動靜</h3><span class="tag">第 ${r.day} 日夜間</span></div>
+ return `${heading('04 / CONTRACTS','委託與守備',sharedAssets.scenes.board)}
+ ${r?`<div class="card raid"><div class="raid-illustration">${artwork(sharedAssets.raids[levelOf(s,'watch')>=2?r.type:'unknown'])}<div><small>守夜人回報</small><h3>${levelOf(s,'watch')>=2?RAIDS[r.type][0]:'霧中的動靜'}</h3></div></div><div class="split"><b>守備安排</b><span class="tag">第 ${r.day} 日夜間</span></div>
  <p>${levelOf(s,'watch')>=2?RAIDS[r.type][0]+' · 威脅 '+r.power+'。'+RAIDS[r.type][1]:'巡夜人懷疑牠們會從'+ZONES[r.target]+'附近接近。二級瞭望塔可辨識怪物。'}</p>
  <div class="inline"><label>守備位置<select data-raid="protect">${selects(Object.entries(ZONES),r.protect)}</select></label><label>守備補給<select data-raid="gear">${selects([['none','不攜帶'],['kit','守門套件 ×'+count('kit')],['seal','黑鹽護符 ×'+count('seal')]],r.gear)}</select></label></div>
  <p class="quiet-text">挑選守備英雄　${r.heroes.length}/${s.level>=4?4:2}</p><div class="chips">${present(s).map(h=>action((r.heroes.includes(h.id)?'✓ ':'')+HERO[h.id][0]+' · '+heroPower(h),'guard',h.id,'',r.heroes.includes(h.id)?'chosen':'quiet',!ready(h)&&!r.heroes.includes(h.id))).join('')}</div>
@@ -94,7 +129,7 @@ function board(){
  <div class="card"><h3>外派紀錄</h3>${s.contracts.length?s.contracts.map(c=>`<div class="row"><div><b>${HERO[c.hero][0]} · ${QUEST[c.type].name}</b><p>預計還要 ${c.remaining} 日</p></div>${action('召回','recall',c.hero,'','quiet')}</div>`).join(''):'<p>目前沒有英雄在外執行任務。</p>'}</div>`;
 }
 function journal(){
- return `${heading('05 / LEDGER','公會簿冊','每天的收支、來客與事件都會寫進這本簿冊。')}
+ return `${heading('05 / LEDGER','公會簿冊',sharedAssets.scenes.log)}
  <div class="card split"><div><h3>七日評鑑</h3><p>${s.report?'第一週的評鑑已結算。':'第八日清晨送達，可繼續遊玩。'}</p></div>${button('查看評鑑','rating','','','quiet')}</div>
  <div class="card split"><div><h3>背景音樂</h3><p>渡鴉公會 · 大廳配樂</p></div>${button(music.paused?'播放':'暫停','music','','','quiet')}</div>
  <div class="card diary">${s.log.map(x=>`<div><time>第 ${x.day} 日</time><p>${x.text}</p></div>`).join('')}</div>`;
@@ -117,9 +152,9 @@ function sheetContent(){
  if(kind==='plot'){
   const p=s.plots[key];
   if(!p)return `<h2 id="sheet-title">地塊 ${Number(key)+1} · 建設</h2><p>為這塊土地選一個用途。</p>
- ${Object.entries(BUILD).filter(([k])=>k!=='hall'&&(['yard','inn','wall','depot'].includes(k)||!s.plots.some(p=>p?.type===k))).map(([k,b])=>`<div class="row"><div><b>${b[1]}　${b[0]}</b><p>${b[2]}</p><small>${names(b[3])}${s.level<b[4]?' · 領地 Lv.'+b[4]:''}</small></div>${action('建造','build',key,k,'quiet',s.level<b[4])}</div>`).join('')}`;
+ ${Object.entries(BUILD).filter(([k])=>k!=='hall'&&(['yard','inn','wall','depot'].includes(k)||!s.plots.some(p=>p?.type===k))).map(([k,b])=>`<div class="row"><div class="build-option">${artwork(sharedAssets.buildings[k])}<div><b>${b[0]}</b><p>${b[2]}</p><small>${names(b[3])}${s.level<b[4]?' · 領地 Lv.'+b[4]:''}</small></div></div>${action('建造','build',key,k,'quiet',s.level<b[4])}</div>`).join('')}`;
   const b=BUILD[p.type];
-  return `<h2 id="sheet-title">${b[1]}　${b[0]} · Lv.${p.lv}</h2><p>${b[2]}</p>${p.damage?`<p class="warn">停工還有 ${p.damage} 日。可支付 8 幣和 1 木料立即修好。</p>${action('修繕','repair',key,'','primary')}`:''}
+  return `<div class="building-scene">${artwork(sharedAssets.buildings[p.type])}<h2 id="sheet-title">${b[0]} · Lv.${p.lv}</h2></div><p>${b[2]}</p>${p.damage?`<p class="warn">停工還有 ${p.damage} 日。可支付 8 幣和 1 木料立即修好。</p>${action('修繕','repair',key,'','primary')}`:''}
  ${p.type==='hall'?button('查看公會評鑑','rating','','','primary'):p.lv<maxBuilding(s)&&!p.damage?`<p>升級費用　${names(buildCost(p.type,p.lv+1))}</p>${action('升級到 Lv.'+(p.lv+1),'upgrade',key,'','primary')}`:p.lv<3&&!p.damage?'<p>擴張領地可提高建築等級上限。</p>':''}
  ${p.type==='yard'&&!p.damage?`<h3>每日採集</h3><div class="chips">${validGather(s).map(k=>action(ITEMS[k][0],'gather',k,'',s.gather===k?'chosen':'quiet')).join('')}</div>`:''}
  ${p.type==='forge'&&!p.damage?`<div class="chips">${button('前往工坊','go','market','','quiet')}${p.lv>=3?['鍛造','藥劑'].map(k=>action(k+'專精','specialty',k,'',s.specialty===k?'chosen':'quiet')).join(''):''}</div>`:''}
@@ -129,7 +164,7 @@ function sheetContent(){
  }
  if(kind==='hero'){
   const h=s.heroes[key], hero=HERO[key];
-  return `<h2 id="sheet-title">${hero[0]} · ${hero[1]}</h2>${heroBadge(key)}<p>Lv.${h.level} · 戰力 ${heroPower(h)} · 信任 ${h.trust} · ${status(h)}</p><p>回報委託與參與守備可獲得經驗，升級提高戰力。交易與照護可增加信任。</p>
+  return `<div class="hero-detail-art">${heroBadge(key)}<h2 id="sheet-title">${hero[0]} · ${hero[1]}</h2></div><p>Lv.${h.level} · 戰力 ${heroPower(h)} · 信任 ${h.trust} · ${status(h)}</p><p>回報委託與參與守備可獲得經驗，升級提高戰力。交易與照護可增加信任。</p>
  <div class="row"><div><b>長住合約</b><p>三級旅舍、空床、信任至少 4，費用 22 幣。</p></div>${h.resident?'<span class="tag">已長住</span>':action('邀請','reside',key,'','quiet',levelOf(s,'inn')<3||!freeHero(h)||h.trust<4)}</div>
  <div class="row"><b>止血膏 ×${count('salve')}</b>${action('照護','heal',key,'','quiet',!h.wound||!freeHero(h)||!count('salve'))}</div>
  <div class="row"><b>冷鐵短刃 ×${count('blade')}</b>${action('裝備','equip',key,'','quiet',h.blade||!freeHero(h)||!count('blade'))}</div>`;
@@ -146,7 +181,7 @@ function render(){
   if(!sheet.open)sheet.showModal();
  }else if(sheet.open)sheet.close();
 }
-function navigate(next){page=next;modal=null;render();window.scrollTo(0,0);}
+function navigate(next){mapChange=null;page=next;modal=null;render();window.scrollTo(0,0);}
 function dispatch(cmd,a,b){
  try{
   const box=panel.querySelector('.sheet-alert');if(box)box.hidden=true;
@@ -161,7 +196,7 @@ function dispatch(cmd,a,b){
    case 'tab':case 'go':navigate(a);return;
    case 'close':modal=null;render();return;
    case 'rating':case 'plot':case 'hero':case 'end':case 'new':modal=[cmd,a];render();return;
-   case 'advance':advance(s);persist();modal=['recap'];render();panel.scrollTop=0;return;
+   case 'advance':mapChange=null;advance(s);persist();modal=['recap'];render();panel.scrollTop=0;return;
    case 'list':{
     const item=document.querySelector('#sale-item').value, price=document.querySelector('#sale-price').value;
     toast(act(s,'list',item,price));break;
@@ -169,6 +204,8 @@ function dispatch(cmd,a,b){
    case 'order':toast(act(s,'order',document.querySelector('#order-item').value));break;
    case 'act':{
     const [key,value]=b.split(':');const msg=act(s,a,key,value);
+    if(['build','upgrade','repair'].includes(a))mapChange={plot:Number(key)};
+    else if(a==='expand')mapChange={land:key};
     if(['build','expand','bridge','staff'].includes(a))log(s,msg);
     toast(msg);break;
    }
@@ -194,7 +231,10 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('load',e=>{
  const img=e.target;
- if(img instanceof HTMLImageElement&&img.matches('.hero-mark img'))img.hidden=false;
+ if(img instanceof HTMLImageElement&&img.matches('.artwork'))img.classList.add('loaded');
+},true);
+document.addEventListener('error',e=>{
+ if(e.target instanceof HTMLImageElement)e.target.hidden=true;
 },true);
 sheet.addEventListener('cancel',e=>{e.preventDefault();dispatch('close','','');});
 render();

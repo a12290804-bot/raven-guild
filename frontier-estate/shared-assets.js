@@ -20,12 +20,19 @@ const sharedAssets = (() => {
   }
   return 'https://raw.githubusercontent.com/a12290804-bot/' + repo + '/' + branch + '/' + encodedPath;
  }
+ const art = key => url('guild', 'art/game-assets/' + key + '.webp');
+ const mapArt = entries => Object.freeze(Object.fromEntries(
+  Object.entries(entries).map(([key, filename]) => [key, art(filename)])
+ ));
  return Object.freeze({
   url,
-  portraits: Object.freeze(Object.fromEntries(
-   Object.entries({frost:'shieldF',jin:'spear',yuan:'archerH',yun:'herb',he:'knightW',qu:'horn'})
-    .map(([hero, asset]) => [hero, url('guild', 'art/game-assets/h_' + asset + '.webp')])
-  )),
+  portraits: mapArt({frost:'h_shieldF',jin:'h_spear',yuan:'h_archerH',yun:'h_herb',he:'h_knightW',qu:'h_horn'}),
+  buildings: mapArt({hall:'bg_guild',shop:'bg_appraise',forge:'bg_sort',inn:'bg_inn',yard:'bg_village',
+   watch:'bg_stele',depot:'bg_houses',route:'bg_station',wall:'bg_ch2_door'}),
+  scenes: mapArt({market:'bg_appraise',heroes:'bg_inn',board:'bg_post',log:'bg_library',
+   forest:'bg_fog',river:'bg_village',mine:'bg_mine',bridge:'bg_village'}),
+  raids: mapArt({beast:'m_hyena',mist:'m_nameshade',taint:'m_whiteminer',unknown:'bg_fog'}),
+  items: mapArt({herb:'i_moss',wax:'i_wax',salve:'i_potion',seal:'i_seal'}),
   village: url('guild', 'art/game-assets/bg_village.webp'),
   hallMusic: url('guild', 'audio/hall.mp3')
  });
