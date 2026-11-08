@@ -130,3 +130,44 @@ dialog{width:min(calc(100% - 20px),530px);max-height:min(80svh,780px);margin:aut
 .map-plots .plot.broken{border-color:#e18b7b;background:#54241eea}
 .map-caption{margin:0;padding:8px 12px}
 @media(min-width:620px){.map-plots .plot{min-width:100px;min-height:56px}.map-plots .plot b{font-size:14px}.map-plots .plot i{font-size:16px}.map-plots .plot em{font-size:11px}}
+
+/* The fog frontier */
+.hex-campaign{border:1px solid #7e6543;border-radius:9px;overflow:hidden;background:#211b14;box-shadow:0 10px 27px #09070596}
+.hex-title{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:13px 13px 8px}
+.hex-title small{color:#d8b581;font-size:9px;letter-spacing:.16em}
+.hex-title h2{font-size:clamp(26px,7vw,37px);line-height:1.15;color:#fff0d1;margin-top:2px}
+.hex-count{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:3px 12px 10px;background:#52412c;border:1px solid #52412c;border-radius:4px;overflow:hidden}
+.hex-count span{display:block;text-align:center;background:#2d2418;color:#dcc29b;font-size:11px;padding:5px 1px;white-space:nowrap}
+.hex-count b{font-size:13px;color:#fff0d1}
+.hex-viewport{position:relative;overflow:hidden;background:radial-gradient(ellipse at center,#25282a,#141718 73%);border-block:1px solid #5c4830}
+.hex-world{display:block;width:100%;height:clamp(315px,52svh,535px);touch-action:none;user-select:none;cursor:grab}
+.hex-world:active{cursor:grabbing}
+.hex-cell polygon{stroke:#303438;stroke-width:.85;stroke-linejoin:round}
+.hex-cell[role=button]{cursor:pointer;outline:none}
+.hex-cell.edge polygon{fill:#2c2e2c;stroke:#94815c;stroke-dasharray:3 2}
+.hex-cell.revealed polygon{stroke:#c0aa79;stroke-width:1.15}
+.hex-cell.owned polygon{stroke:#f0c57d;stroke-width:1.65}
+.hex-cell.moving polygon{stroke:#f1b976;stroke-width:1.35;stroke-dasharray:4 2;fill:#4a3623}
+.hex-cell.damaged polygon{stroke:#f08a73}
+.hex-cell[role=button]:focus-visible polygon,.hex-cell[role=button]:hover polygon{stroke:#fff3c9;stroke-width:2.25}
+.hex-glyph,.hex-label{text-anchor:middle;pointer-events:none;paint-order:stroke fill;stroke:#1e1812;stroke-width:2}
+.hex-glyph{fill:#ffe2a4;font-size:19px;font-weight:700}
+.hex-label{fill:#fff1d2;font-size:8.1px;font-weight:680}
+.hex-cell.edge .hex-glyph{fill:#c0af8c;font-size:16px}
+.hex-beacon{fill:#ffda90;stroke:#8e642b;stroke-width:1;filter:drop-shadow(0 0 3px #f7b651)}
+.hex-new polygon{animation:hex-reveal .95s ease-out}
+@keyframes hex-reveal{0%,20%{filter:brightness(1.85);stroke:#ffdb9b;stroke-width:2.6}100%{filter:none}}
+.hex-tools{position:absolute;right:7px;bottom:7px;display:grid;grid-template-columns:repeat(2,42px);gap:4px}
+.map-control{min-height:42px;padding:3px 4px;background:#221a13ed;border-color:#8c704c;color:#f4d6a1}
+.hex-tools button:last-child{grid-column:1/-1;min-height:37px;font-size:12px}
+.hex-legend{display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;padding:8px 10px;font-size:10px;color:#d1bfa2}
+.hex-legend span{display:flex;align-items:center;gap:4px}
+.hex-legend i{width:9px;height:9px;border:1px solid #c5a16e;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.owned-dot{background:#c39151}.seen-dot{background:#7b8862}.edge-dot{background:#464541}
+.hex-reports{display:grid;gap:5px;margin:8px 0}
+.hex-report{display:block;width:100%;text-align:left;background:#2d261a;border-color:#715935;color:#f4d7a5;font-size:12px}
+.hex-hint{margin:9px 0}
+.hex-sheet-title{min-height:91px}
+.hex-buildings{grid-template-columns:repeat(2,minmax(0,1fr));padding:0}
+@media(prefers-reduced-motion:reduce){.hex-new polygon{animation:none}}
+.hex-cell .hex-grain{stroke:none;pointer-events:none}

@@ -4,7 +4,7 @@ const saveKey='raven-territory-v01';
 const music=document.querySelector('#shared-music');
 let s=null, page='land', showCover=true, modal=null, noticeTimer, mapChange=null;
 const freshGame=()=>newGame(Math.floor(Math.random()*4294967296));
-try{const value=JSON.parse(localStorage.getItem(saveKey));if(value?.version===1&&Array.isArray(value.plots))s=value;}catch{}
+try{const value=JSON.parse(localStorage.getItem(saveKey));if(value?.version===1&&Array.isArray(value.plots))s=ensureWorld(value);}catch{}
 function persist(){try{localStorage.setItem(saveKey,JSON.stringify(s));}catch{toast('此瀏覽器目前無法寫入本機存檔。');}}
 function toast(message){
  if(!message)return;
@@ -18,7 +18,7 @@ const action=(text,cmd,a='',b='',style='',off=false)=>button(text,'act',cmd,a+':
 const selects=(list,selected)=>list.map(([id,label])=>`<option value="${id}"${id===selected?' selected':''}>${label}</option>`).join('');
 const artwork=(src,cls='')=>src?`<img class="artwork ${cls}" src="${src}" alt="" decoding="async" loading="lazy">`:'';
 const heading=(label,title,scene)=>`<div class="scene-title">${artwork(scene)}<div><span>${label}</span><h2>${title}</h2></div></div>`;
-const status=(h)=>h.job?'委託外出':h.wound?'負傷 '+h.wound:h.resident?'長住':'在領地';
+const status=(h)=>h.job==='hex'?'遠征中':h.job?'委託外出':h.wound?'負傷 '+h.wound:h.resident?'長住':'在領地';
 const heroBadge=(id)=>`<span class="hero-mark hero-${id}"><span class="hero-fallback"><small>${HERO[id][1]}</small>${HERO[id][2]}</span>${artwork(sharedAssets.portraits[id],'hero-art')}</span>`;
 const itemIcon=(key)=>`<i class="item-icon">${ITEMS[key][2]}${artwork(sharedAssets.items[key])}</i>`;
 const count=(k)=>s.inv[k]||0;
@@ -26,13 +26,13 @@ const ready=(h)=>freeHero(h)&&h.wound<3;
 function cover(){
  app.innerHTML=`<section class="cover"><div class="cover-inner"><div class="cover-kicker"><span></span> 渡鴉公會外派名冊 <span></span></div>
  <div class="cover-title"><small>RAVEN GUILD</small><h1>渡鴉公會<i></i><b>邊境領地</b></h1><p>霧還沒散。先把前哨的燈點起來。</p></div>
- <div class="cover-actions">${button(s?'返回領地':'接管領地','start','','','primary large')}${s?button('另開新局','new','','','cover-link'):''}${button(music.paused?'開啟背景音樂':'關閉背景音樂','music','','','cover-link')}<small>手機經營試玩版　V0.2</small></div></div></section>`;
+ <div class="cover-actions">${button(s?'返回領地':'接管領地','start','','','primary large')}${s?button('另開新局','new','','','cover-link'):''}${button(music.paused?'開啟背景音樂':'關閉背景音樂','music','','','cover-link')}<small>手機經營試玩版　V0.3</small></div></div></section>`;
 }
 const tabs=[['land','▥','領地'],['market','⚖','交易'],['heroes','♜','英雄'],['board','⚑','委託'],['log','▤','簿冊']];
 function shell(){
  const rating=score(s), tab=tabs.find(t=>t[0]===page);
  app.innerHTML=`<div class="shell"><header class="top"><div class="brand">${button('✦','cover','','','emblem')}<div><span>渡鴉公會 ／ 邊境領地</span><strong>${LEVELS[s.level-1][0]}</strong></div><div class="day"><small>${s.weather}</small><b>第 ${s.day} 日</b></div></div>
- <div class="resources"><div><small>渡鴉幣</small><b>◈ ${s.coin}</b></div><div><small>評鑑</small><b>${rating.total} <em>／ Lv.${s.level}</em></b></div><div><small>領地</small><b>${s.plots.filter(Boolean).length}<em> / ${s.plots.length}</em></b></div></div></header>
+ <div class="resources"><div><small>渡鴉幣</small><b>◈ ${s.coin}</b></div><div><small>評鑑</small><b>${rating.total} <em>／ Lv.${s.level}</em></b></div><div><small>領地</small><b>${hexOwned(s)}<em> 格</em></b></div></div></header>
  ${s.raid?`<button class="alert" data-cmd="tab" data-a="board"><b><i aria-hidden="true">⚑</i> 襲擊預警</b><span>第 ${s.raid.day} 日夜間　›</span></button>`:''}
  <section id="screen" aria-label="${tab[2]}">${({land,market,heroes,board,log:journal})[page]()}</section>
  <footer><div class="endrow"><span><b>第 ${s.day} 日</b><small>結算製作、交易與外派行動</small></span>${button('結束今日　→','end','','','primary')}</div>
@@ -46,36 +46,73 @@ function plotTile(p,i){
  ${artwork(sharedAssets.buildings[p.type])}<small>${number}</small><i aria-hidden="true">${icon}</i>
  <span><b>${name}</b><em>${p.damage?'停工 '+p.damage+' 日':'Lv. '+p.lv}</em></span></button>`;
 }
-function land(){
- const sc=score(s), next=LEVELS[s.level], main=s.plots.slice(0,6);
- const districts=s.lands.map((key,i)=>{
-  const start=LEVELS[i][2], end=LEVELS[i+1][2];
-  return `<section class="district ${mapChange?.land===key?'just-expanded':''}"><div class="district-title">${artwork(sharedAssets.scenes[key])}<div><small>開拓區 ${i+1}</small><h3>${LAND[key][0]}</h3></div></div>
-  <div class="plots outer-plots">${s.plots.slice(start,end).map((p,j)=>plotTile(p,start+j)).join('')}</div></section>`;
+const HEX_POINTS='0,-36 31.18,-18 31.18,18 0,36 -31.18,18 -31.18,-18';
+const mapCamera={x:0,y:0,zoom:1};
+const hexViewBox=()=>[mapCamera.x-194/mapCamera.zoom,mapCamera.y-158/mapCamera.zoom,388/mapCamera.zoom,316/mapCamera.zoom].join(' ');
+const HEX_FILLS={home:'#7a5431',plain:'#69563b',forest:'#384f39',river:'#345763',mine:'#5b5550',ruins:'#5c444f',wild:'#653d37'};
+function hexMap(){
+ const orders=new Set(s.world.orders.map(o=>o.key));
+ const recent=new Set(s.world.last.map(o=>o.key));
+ const border=new Set(Object.entries(s.world.tiles).filter(([,tile])=>tile.owned).flatMap(([key])=>hexAdjacent(key)));
+ const cells=HEX_COORDS.map(key=>{
+  const [q,r]=hexParts(key), x=62.35*(q+r/2), y=54*r, tile=s.world.tiles[key];
+  const near=border.has(key), moving=orders.has(key), interactive=tile||near||moving;
+  const status=tile?.owned?'owned':tile?'revealed':near?'edge':'fog';
+  const name=tile?HEX_TYPES[tile.type][0]:'未知地格';
+  const marker=tile?.plot!=null&&s.plots[tile.plot];
+  const label=moving?'遠征中':marker?BUILD[marker.type][0]:name;
+  const icon=moving?'…':tile?HEX_TYPES[tile.type][1]:near?'?':'';
+  const attrs=interactive?`role="button" tabindex="0" aria-label="${label} (${q}, ${r})" data-cmd="hex" data-a="${key}"`:'aria-hidden="true"';
+  return `<g class="hex-cell ${status} ${moving?'moving':''} ${recent.has(key)?'hex-new':''} ${marker?.damage?'damaged':''}" ${attrs} transform="translate(${x.toFixed(2)} ${y})">
+   <polygon points="${HEX_POINTS}" fill="${tile?HEX_FILLS[tile.type]:'#171a1c'}"></polygon>
+   ${tile?'<polygon class="hex-grain" points="'+HEX_POINTS+'" fill="url(#hex-texture)"></polygon>':''}
+   ${icon?`<text class="hex-glyph" x="0" y="${near&&!tile&&!moving?7:-2}">${icon}</text>`:''}
+   ${tile||moving?`<text class="hex-label" x="0" y="16">${label}</text>`:''}
+   ${tile?.owned?`<circle class="hex-beacon" cx="20" cy="-13" r="2.6"></circle>`:''}
+  </g>`;
  }).join('');
- const yardIndex=s.plots.findIndex(p=>p?.type==='yard');
- const milestones=[
-  ['採集場',yardIndex>=0,'plot',yardIndex>=0?yardIndex:s.plots.findIndex(p=>p===null)],
-  ['通商',s.bridge,'tab','board'],
-  ['擴張',s.level>1,'rating',''],
-  ['守夜',s.defended>0,'tab','board']
- ];
- const lit=main.filter(p=>p&&!p.damage).length;
- return `<section class="estate-map estate-level-${s.level} ${s.weather==='濃霧'?'estate-fog':s.weather==='豪雨'?'estate-rain':''}" aria-label="前哨聚落地圖">
- <div class="map-title"><div><small>RAVEN GUILD / FRONTIER ESTATE</small><h2>邊境領地</h2></div>${button('評鑑 '+sc.total,'rating','','','map-rating')}</div>
- <div class="map-stamp"><b>${LEVELS[s.level-1][0]}</b><span>點亮 ${lit}／6</span><div class="settlement-lamps" aria-hidden="true">${main.map(p=>`<i class="${p&&!p.damage?'lit':''}"></i>`).join('')}</div></div>
- <div class="map-terrain">
- <img class="map-painting" src="estate-map.webp" alt="" fetchpriority="high">
- <div class="plots map-plots">${main.map(plotTile).join('')}</div>
- </div>
- <div class="map-caption"><span>點選地塊管理建築</span><span>${next?'擴張門檻 '+next[1]+' 分':'領地已達最高級'}</span></div>
+ return `<svg class="hex-world" viewBox="${hexViewBox()}" aria-label="可拖曳的六邊形世界地圖">
+ <defs><pattern id="hex-texture" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#e6ba77" stroke-opacity=".13" stroke-width=".5"/></pattern></defs>${cells}</svg>`;
+}
+function land(){
+ const owned=hexOwned(s), seen=Object.keys(s.world.tiles).length;
+ const first=HEX_STEPS.map(([q,r])=>hexKey(q,r)).find(k=>!s.world.tiles[k]&&!s.world.orders.some(o=>o.key===k));
+ return `<section class="hex-campaign">
+  <header class="hex-title"><div><small>RAVEN GUILD / FRONTIER MAP</small><h2>邊境疆圖</h2></div>${button('公會評鑑','rating','','','map-rating')}</header>
+  <div class="hex-count"><span><b>${owned}</b> 領地</span><span><b>${seen}/${HEX_COORDS.length}</b> 已揭開</span><span><b>${s.world.orders.length}/2</b> 遠征小隊</span></div>
+  <div class="hex-viewport">
+   ${hexMap()}
+   <div class="hex-tools" aria-label="地圖控制">${button('＋','zoom','in','','map-control')}${button('－','zoom','out','','map-control')}${button('前哨','zoom','home','','map-control')}</div>
+  </div>
+  <div class="hex-legend"><span><i class="owned-dot"></i> 已佔領</span><span><i class="seen-dot"></i> 已偵察</span><span><i class="edge-dot"></i> 接壤未知</span><span>拖曳移動</span></div>
  </section>
- <div class="estate-goals"><div class="split"><b>前哨里程碑</b><span>${milestones.filter(x=>x[1]).length}／4</span></div>
- <div class="milestone-track">${milestones.map(([label,done,cmd,value])=>button((done?'✓':'○')+' '+label,cmd==='plot'&&value===-1?'rating':cmd,value,'',done?'milestone done':'milestone')).join('')}</div></div>
+ ${s.world.last.length?`<div class="hex-reports">${s.world.last.map(x=>button(x.message,'hex',x.key,'','hex-report')).join('')}</div>`:''}
+ ${s.world.orders.length?`<div class="hex-reports">${s.world.orders.map(o=>button('◈ '+HERO[o.heroId][0]+'　'+HEX_COMMANDS[o.mode][0]+' · 今日結算','hex',o.key,'','hex-report')).join('')}</div>`:''}
+ ${owned===1&&!s.world.orders.length&&first?`<div class="card split hex-hint"><div><b>你的領地只有一格</b><p>點接壤的「？」地格，選擇偵察或強行開拓。</p></div>${button('查看未知格','hex',first,'','quiet')}</div>`:''}
  <div class="card bridge-card split">${artwork(sharedAssets.scenes.bridge)}<div><small>首週委託</small><b>霧渡橋</b><p>${s.bridge?'商路通行':s.day===1?'河水正在上漲':'冷鐵 ×3　舊松木 ×2　16 幣'}</p></div>
- ${action(s.bridge?'✓ 通行':'修橋','bridge','','','quiet',s.bridge||s.day<2)}</div>
- ${s.day===1?'<p class="firststeps">今日建議　蓋一座採集場，派英雄偵查舊礦坑。</p>':''}
- ${districts}${s.report?button('查看首週評鑑','rating','','','quiet week-result'):''}`;
+ ${action(s.bridge?'✓ 通行':'修橋','bridge','','','quiet',s.bridge||s.day<2)}</div>`;
+}
+function hexSheet(key){
+ const info=hexOrderInfo(s,key), tile=info.tile, order=info.order;
+ const [name,icon,description,loot]=tile?HEX_TYPES[tile.type]:['未知地格','?','霧遮住了地形與威脅。'];
+ const art=tile&&(sharedAssets.scenes[tile.type]||sharedAssets.raids[tile.type]||sharedAssets.scenes.bridge);
+ let details='';
+ if(tile?.owned){
+  const indices=tile.type==='home'?[0,1,2,3]:[tile.plot];
+  details=`<p>公會已佔領這塊領地。點選建築或空地管理。</p><div class="plots outer-plots hex-buildings">${indices.map(i=>plotTile(s.plots[i],i)).join('')}</div>`;
+ }else if(order){
+  details=`<p>${HERO[order.heroId][0]}正在${HEX_COMMANDS[order.mode][0]}。結束今日後回報。</p>`;
+ }else if(info.border){
+  const available=present(s).filter(h=>freeHero(h)&&h.wound<2&&!s.raid?.heroes.includes(h.id));
+  const modes=tile?['secure']:['scout','expedition'];
+  details=`<label>派遣英雄<select id="hex-hero">${available.length?selects(available.map(h=>[h.id,HERO[h.id][0]+' · 戰力 '+heroPower(h)]),''):'<option value="">沒有可出發的英雄</option>'}</select></label>
+   ${tile?`<p>守地門檻：戰力 ${info.threshold} · 佔領收益：${names(loot)}。</p>`:''}
+   ${modes.map(mode=>{
+    const [title,price,desc]=HEX_COMMANDS[mode], cost=price||info.secureCost;
+    return `<div class="row"><div><b>${title}</b><p>${desc}</p><small>${names(cost)} · 1 日</small></div>${button('下令','hex-order',key,mode,'quiet',!available.length||!have(s,cost)||s.world.orders.length>=2)}</div>`;
+   }).join('')}${s.world.orders.length>=2?'<p>兩支小隊都已出發。</p>':''}`;
+ }else details='<p>這格尚未接壤。請先佔領通往此處的土地。</p>';
+ return `<div class="building-scene hex-sheet-title">${artwork(art)}<h2 id="sheet-title">${icon}　${name}</h2></div><p>座標 ${key} · ${tile?.owned?'領地':info.border?'接壤':'外圍'} · ${description}</p>${details}`;
 }
 function inventory(){
  return `<div class="stock">${Object.entries(ITEMS).map(([k,[label,,icon]])=>`<div class="${count(k)?'':'dim'}">${itemIcon(k)}<span>${label}</span><b>${count(k)}</b></div>`).join('')}</div>`;
@@ -136,18 +173,19 @@ function journal(){
 }
 function sheetContent(){
  const [kind,key]=modal;
+ if(kind==='hex')return hexSheet(key);
  if(kind==='new')return `<h2 id="sheet-title">另開新局</h2><p>確認後，這個瀏覽器的領地進度會從第一天重新開始。</p>${button('確認重新開始','restart','','','danger')}`;
  if(kind==='end'){
   const r=s.raid, due=r&&r.day<=s.day;
-  return `<h2 id="sheet-title">第 ${s.day} 日 · 入夜</h2><p>${due?'今晚會遭遇怪物襲擊。':'會依序結算採集、製作、委託與交易。'}</p>${due?`<p class="warn">守備英雄 ${r.heroes.map(id=>s.heroes[id]).filter(ready).map(h=>HERO[h.id][0]).join('、')||'尚未安排'}。${r.gear!=='none'?'預備補給 '+ITEMS[r.gear][0]+'。':''}</p>${button('返回安排守備','go','board','','quiet')}`:''}${button('確認結算　→','advance','','','primary')}`;
+  return `<h2 id="sheet-title">第 ${s.day} 日 · 入夜</h2><p>${due?'今晚會遭遇怪物襲擊。':'會依序結算採集、製作、委託、交易與遠征。'}</p>${due?`<p class="warn">守備英雄 ${r.heroes.map(id=>s.heroes[id]).filter(ready).map(h=>HERO[h.id][0]).join('、')||'尚未安排'}。${r.gear!=='none'?'預備補給 '+ITEMS[r.gear][0]+'。':''}</p>${button('返回安排守備','go','board','','quiet')}`:''}${button('確認結算　→','advance','','','primary')}`;
  }
  if(kind==='rating'){
   const v=score(s), n=LEVELS[s.level], report=s.report;
-  return `<h2 id="sheet-title">公會領地評鑑</h2><p>目前 ${v.total} 分 · Lv.${s.level} ${LEVELS[s.level-1][0]} · ${s.plots.length} 塊地</p>
+  return `<h2 id="sheet-title">公會領地評鑑</h2><p>目前 ${v.total} 分 · Lv.${s.level} ${LEVELS[s.level-1][0]} · ${hexOwned(s)} 格領地</p>
  <div class="rating-parts">${[['建設',v.build,28],['繁榮',v.commerce,26],['聲望',v.renown,26],['防備',v.defense,24]].map(([t,x,m])=>`<div><b>${t}</b><strong>${x} <small>/ ${m}</small></strong></div>`).join('')}</div>
- ${n?`<h3>下一級 · ${n[0]}</h3><p>需要 ${n[1]} 分與 ${12+s.level*4} 幣。核准後共有 ${n[2]} 塊地。${s.level===1?'開放瞭望塔、儲備倉與木柵。':s.level===2?'開放三級建築與商隊站。':'開放四人守備。'}</p>
- ${Object.entries(LAND).filter(([k])=>!s.lands.includes(k)).map(([k,l])=>`<div class="row"><div><b>${l[0]}</b><p>${l[1]}</p></div>${action('開拓','expand',k,'','quiet',v.total<n[1])}</div>`).join('')}`:'<p>已完成公會核准的全部開拓。</p>'}
- ${report?`<div class="report"><h3>首週結案</h3><p>${report.bridge?'✓ 已恢復商路':'○ 商路待恢復'}　${report.level>=2?'✓ 已擴張':'○ 領地待擴張'}　${report.defended?'✓ 已擊退襲擊':'○ 待成功守備'}</p><p>這是首週快照，領地可持續經營。</p></div>`:''}`;
+ ${n?`<h3>下一級 · ${n[0]}</h3><p>需要 ${n[1]} 分、${12+s.level*4} 幣，以及至少一格新領地。${s.level===1?'開放瞭望塔、儲備倉與木柵。':s.level===2?'開放三級建築與商隊站。':'開放四人守備。'}</p>
+ ${action('申請升級','promote','','','quiet',v.total<n[1]||hexOwned(s)<2)}`:'<p>已達最高公會領級。</p>'}
+ ${report?`<div class="report"><h3>首週結案</h3><p>${report.bridge?'✓ 已恢復商路':'○ 商路待恢復'}　${(report.land??report.level)>1?'✓ 已擴張':'○ 領地待擴張'}　${report.defended?'✓ 已擊退襲擊':'○ 待成功守備'}</p><p>這是首週快照，領地可持續經營。</p></div>`:''}`;
  }
  if(kind==='plot'){
   const p=s.plots[key];
@@ -191,11 +229,17 @@ function dispatch(cmd,a,b){
     if(!music.getAttribute('src')){music.src=sharedAssets.hallMusic;music.volume=.35;}
     music.play().then(render).catch(()=>toast('暫時無法播放公會配樂。'));return;
    case 'start':if(!s){s=freshGame();persist();}showCover=false;navigate('land');return;
-   case 'restart':s=freshGame();showCover=false;persist();navigate('land');return;
+   case 'restart':Object.assign(mapCamera,{x:0,y:0,zoom:1});s=freshGame();showCover=false;persist();navigate('land');return;
    case 'cover':showCover=true;render();window.scrollTo(0,0);return;
    case 'tab':case 'go':navigate(a);return;
    case 'close':modal=null;render();return;
-   case 'rating':case 'plot':case 'hero':case 'end':case 'new':modal=[cmd,a];render();return;
+   case 'rating':case 'plot':case 'hero':case 'hex':case 'end':case 'new':modal=[cmd,a];render();return;
+   case 'zoom':
+    if(a==='home')Object.assign(mapCamera,{x:0,y:0,zoom:1});
+    else mapCamera.zoom=Math.max(.52,Math.min(2,mapCamera.zoom*(a==='in'?1.25:.8)));
+    document.querySelector('.hex-world')?.setAttribute('viewBox',hexViewBox());return;
+   case 'hex-order':
+    toast(queueHex(s,a,b,document.querySelector('#hex-hero')?.value));break;
    case 'advance':mapChange=null;advance(s);persist();modal=['recap'];render();panel.scrollTop=0;return;
    case 'list':{
     const item=document.querySelector('#sale-item').value, price=document.querySelector('#sale-price').value;
@@ -205,8 +249,7 @@ function dispatch(cmd,a,b){
    case 'act':{
     const [key,value]=b.split(':');const msg=act(s,a,key,value);
     if(['build','upgrade','repair'].includes(a))mapChange={plot:Number(key)};
-    else if(a==='expand')mapChange={land:key};
-    if(['build','expand','bridge','staff'].includes(a))log(s,msg);
+    if(['build','promote','bridge','staff'].includes(a))log(s,msg);
     toast(msg);break;
    }
   }
@@ -214,9 +257,37 @@ function dispatch(cmd,a,b){
  }catch(e){toast(e.message);}
 }
 document.addEventListener('click',e=>{
- const target=e.target.closest('button[data-cmd]');
+ const target=e.target.closest('[data-cmd]');
+ if(target?.classList.contains('hex-cell')&&performance.now()<mapClickBlocked)return;
  if(target&&!target.disabled)dispatch(target.dataset.cmd,target.dataset.a||'',target.dataset.b||'');
  if(e.target===sheet){const rect=sheet.getBoundingClientRect();if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)dispatch('close','','');}
+});
+let mapDrag=null,mapClickBlocked=0;
+document.addEventListener('pointerdown',e=>{
+ const svg=e.target.closest('.hex-world');
+ if(!svg||!e.isPrimary||e.button!==0)return;
+ const rect=svg.getBoundingClientRect();
+ const scale=Math.min(rect.width/388,rect.height/316)*mapCamera.zoom;
+ if(scale>0)mapDrag={svg,id:e.pointerId,x:e.clientX,y:e.clientY,originX:mapCamera.x,originY:mapCamera.y,scale,moved:false};
+});
+document.addEventListener('pointermove',e=>{
+ const d=mapDrag;if(!d||d.id!==e.pointerId)return;
+ const dx=e.clientX-d.x,dy=e.clientY-d.y;
+ if(!d.moved&&Math.hypot(dx,dy)<7)return;
+ if(!d.moved){d.moved=true;d.svg.setPointerCapture(e.pointerId);}
+ mapCamera.x=Math.max(-510,Math.min(510,d.originX-dx/d.scale));
+ mapCamera.y=Math.max(-435,Math.min(435,d.originY-dy/d.scale));
+ d.svg.setAttribute('viewBox',hexViewBox());
+});
+for(const event of ['pointerup','pointercancel'])document.addEventListener(event,e=>{
+ if(mapDrag?.id!==e.pointerId)return;
+ if(mapDrag.moved)mapClickBlocked=performance.now()+230;
+ mapDrag=null;
+});
+document.addEventListener('keydown',e=>{
+ const cell=e.target.closest('.hex-cell[data-cmd]');
+ if(!cell||!['Enter',' '].includes(e.key))return;
+ e.preventDefault();dispatch('hex',cell.dataset.a,'');
 });
 document.addEventListener('input',e=>{
  if(e.target.id==='sale-item'){const k=e.target.value;if(k)document.querySelector('#sale-price').value=ITEMS[k][1];}

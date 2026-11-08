@@ -45,13 +45,108 @@ const RAIDS={
 const cap=(n,max=100)=>Math.max(0,Math.min(max,n));
 const names=(cost)=>Object.entries(cost).map(([k,v])=> (k==='coin'?'渡鴉幣':ITEMS[k][0])+' '+v).join(' · ');
 function newGame(seed=77351){
- return {version:1,day:1,seed,coin:108,level:1,lands:[],plots:[
-  {type:'hall',lv:1},{type:'shop',lv:1},{type:'forge',lv:1},{type:'inn',lv:1},null,null
+ return ensureWorld({version:1,day:1,seed,coin:108,level:1,lands:[],plots:[
+  {type:'hall',lv:1},{type:'shop',lv:1},{type:'forge',lv:1},{type:'inn',lv:1}
  ],inv:{wood:7,stone:5,herb:4,ore:1,hide:1,salt:0,wax:3,taint:0,salve:1,kit:1,blade:0,seal:0},
  heroes:Object.fromEntries(Object.keys(HERO).map((id,i)=>[id,{id,available:i<3,trust:i===0?3:1,wound:0,level:1,xp:0,stock:2,purse:24,job:null,resident:false,blade:false}])),
  staff:{},queue:[],trade:[],orders:[],contracts:[],posted:null,board:{type:'scout',mode:'scout',reward:12,support:false,hero:'auto'},
  gather:'wood',specialty:'',renown:0,sales:[0],log:[{day:1,text:'你接管了渡鴉公會的邊境前哨。旅舍外已有人在等。'}],
- raid:null,raidSeen:false,defended:0,bridge:false,report:null,raidReport:null,weather:'陰',visitors:0,daysPassed:0,caravan:false,opened:false};
+ raid:null,raidSeen:false,defended:0,bridge:false,report:null,raidReport:null,weather:'陰',visitors:0,daysPassed:0,caravan:false,opened:false});
+}
+const HEX_RADIUS=8;
+const HEX_STEPS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+const HEX_TYPES={
+ home:['公會前哨','◆','你唯一的起始領地。',{},0],
+ plain:['荒草平原','╱','地勢平坦，適合設下新的建築。',{herb:2},3],
+ forest:['灰松林','♠','可帶回舊松木，採集場的木料產量也會增加。',{wood:3},5],
+ river:['霧渡河岸','≈','可取得霧草。佔領後，採集場可選擇霧草。',{herb:3},6],
+ mine:['舊礦坡','⛰','可取得冷鐵。佔領後，採集場可選擇冷鐵。',{ore:2,stone:1},8],
+ ruins:['荒廢遺跡','⌂','封門後仍有東西在走動。開拓可帶回舊日遺物。',{wax:2,salt:1,coin:6},11],
+ wild:['獸群巢穴','✦','腳印交疊在舊路上。需要強力英雄清出道路。',{hide:3,taint:1},12]
+};
+const HEX_COMMANDS={
+ scout:['派遣偵察',{coin:6,herb:1},'一日後揭開地形。偵察不會佔領土地。'],
+ expedition:['強行開拓',{coin:15,wood:2,herb:1},'派英雄踏入未知地格。達到地形門檻即可佔領；失敗會負傷，仍可揭開地形。'],
+ secure:['立碑佔領',null,'派英雄清理已偵察地格。達到門檻後新增一個建築位置。']
+};
+const hexKey=(q,r)=>q+','+r;
+const hexParts=key=>key.split(',').map(Number);
+const hexRange=(q,r)=>Math.max(Math.abs(q),Math.abs(r),Math.abs(q+r));
+const hexAdjacent=key=>{const [q,r]=hexParts(key);return HEX_STEPS.map(([a,b])=>hexKey(q+a,r+b));};
+const HEX_COORDS=[];
+for(let q=-HEX_RADIUS;q<=HEX_RADIUS;q++)for(let r=-HEX_RADIUS;r<=HEX_RADIUS;r++)if(hexRange(q,r)<=HEX_RADIUS)HEX_COORDS.push(hexKey(q,r));
+const HEX_KEYS=new Set(HEX_COORDS);
+function hexType(s,key){
+ const i=HEX_STEPS.findIndex(([q,r])=>hexKey(q,r)===key);
+ if(i>=0)return ['forest','plain','river','mine','plain','ruins'][(i+s.world.seed%6)%6];
+ const [q,r]=hexParts(key);
+ const hash=Math.imul((s.world.seed^Math.imul(q,73856093)^Math.imul(r,19349663))>>>0,2654435761)>>>0;
+ return ['plain','forest','forest','river','mine','ruins','wild'][hash%7];
+}
+function ensureWorld(s){
+ if(s.world)return s;
+ s.world={seed:s.seed>>>0,tiles:{'0,0':{type:'home',owned:true}},orders:[],last:[]};
+ const legacyPlots=s.plots.length-4;
+ if(legacyPlots>0){
+  const ordered=[...HEX_COORDS].filter(k=>k!=='0,0').sort((a,b)=>hexRange(...hexParts(a))-hexRange(...hexParts(b)));
+  for(let i=0;i<legacyPlots&&i<ordered.length;i++){
+   const key=ordered[i];
+   s.world.tiles[key]={type:s.lands[i]||hexType(s,key),owned:true,plot:i+4};
+  }
+ }
+ return s;
+}
+const hexOwned=s=>Object.values(s.world.tiles).filter(t=>t.owned).length;
+function hexOrderInfo(s,key){
+ if(!HEX_KEYS.has(key))throw Error('地格超出疆界。');
+ const tile=s.world.tiles[key], order=s.world.orders.find(o=>o.key===key);
+ const border=hexAdjacent(key).some(k=>s.world.tiles[k]?.owned);
+ const distance=hexRange(...hexParts(key));
+ return {tile,order,border,distance,
+  secureCost:{coin:8+distance*2,wood:1+Math.floor(distance/3)},
+  threshold:tile?HEX_TYPES[tile.type][4]+Math.max(0,distance-1):null};
+}
+function queueHex(s,key,mode,heroId){
+ const info=hexOrderInfo(s,key), h=s.heroes[heroId];
+ if(!info.border||info.tile?.owned||info.order)throw Error('只能對接壤且未受令的地格下達指令。');
+ if(s.world.orders.length>=2)throw Error('最多同時出動兩支小隊。');
+ if(!Object.hasOwn(HEX_COMMANDS,mode)||(info.tile?mode!=='secure':mode==='secure'))throw Error('請選擇適合該地格的指令。');
+ if(!h||!freeHero(h)||h.wound>=2||s.raid?.heroes.includes(heroId))throw Error('請選擇能出發且未安排守備的英雄。');
+ const cost=mode==='secure'?info.secureCost:HEX_COMMANDS[mode][1];
+ if(!have(s,cost))throw Error('需要 '+names(cost)+'。');
+ pay(s,cost);
+ h.job='hex';
+ s.world.orders.push({key,mode,heroId,day:s.day,power:heroPower(h)+(heroId==='yuan'&&mode==='expedition'?1:0)});
+ const message=HERO[heroId][0]+'已出發：'+HEX_COMMANDS[mode][0]+'。';
+ log(s,message);
+ return message;
+}
+function resolveHex(s){
+ if(!s.world.orders.length){s.world.last=[];return;}
+ s.world.last=[];
+ for(const order of s.world.orders){
+  const {key,mode,heroId,power}=order,h=s.heroes[heroId];
+  const tile=s.world.tiles[key]??{type:hexType(s,key),owned:false};
+  const [name,,,loot,threat]=HEX_TYPES[tile.type];
+  const captured=mode!=='scout'&&power>=threat+Math.max(0,hexRange(...hexParts(key))-1);
+  let message;
+  s.world.tiles[key]=tile;
+  h.job=null;
+  if(captured){
+   tile.owned=true;tile.plot=s.plots.length;s.plots.push(null);
+   if(Object.hasOwn(LAND,tile.type)&&!s.lands.includes(tile.type))s.lands.push(tile.type);
+   receive(s,loot);s.renown+=3;gainHero(h,2);
+   message='佔領'+name+'，開放一處建築地。取得 '+names(loot)+'。';
+  }else if(mode==='scout'){
+   s.renown++;gainHero(h,1);message='偵察揭開'+name+'。你現在可以評估佔領代價。';
+  }else{
+   h.wound=cap(h.wound+1,3);
+   message=HERO[heroId][0]+'負傷撤回。已揭開'+name+'，可改派更強的英雄。';
+  }
+  s.world.last.push({key,message});
+  log(s,message);
+ }
+ s.world.orders=[];
 }
 function random(s){s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0;return s.seed/4294967296;}
 function log(s,t){s.log.unshift({day:s.day,text:t});s.log=s.log.slice(0,80);}
@@ -117,6 +212,7 @@ function gainHero(h,xp){h.xp+=xp;while(h.xp>=h.level*4){h.xp-=h.level*4;h.level+
 function tradePrice(s,id,k){return ITEMS[k][1]+(s.weather==='豪雨'?2:0)-Math.floor(s.heroes[id].trust/3);}
 function sales(s,n){s.sales[s.sales.length-1]+=n;}
 function advance(s){
+ ensureWorld(s);
  const from=s.day;
  const reserved=s.raid?.day===s.day?[...s.raid.heroes]:[];
  const oldDamage=s.plots.filter(p=>p?.damage);
@@ -181,6 +277,7 @@ function advance(s){
    }
   }
  }
+ resolveHex(s);
  s.day++;s.daysPassed++;s.sales.push(0);
  for(const h of present(s))if(!h.job){h.purse=Math.min(75,h.purse+5);if((s.day+HERO[h.id][3])%3===0)h.stock=Math.min(6,h.stock+1);}
  const absent=Object.values(s.heroes).filter(h=>!h.available);
@@ -198,7 +295,7 @@ function advance(s){
  }
  if(!s.raid&&(s.day===4||s.day>6&&random(s)<(.22+s.level*.045+(s.inv.taint>1?.16:0))))
   makeRaid(s,s.inv.taint>=2?'taint':s.lands.includes('forest')?'beast':s.weather==='濃霧'?'mist':'beast');
- if(s.day===8){s.report={bridge:s.bridge,level:s.level,defended:s.defended};log(s,'七日評鑑已送達，領地可以繼續經營。');}
+ if(s.day===8){s.report={bridge:s.bridge,level:s.level,defended:s.defended,land:hexOwned(s)};log(s,'七日評鑑已送達，領地可以繼續經營。');}
  return {day:from};
 }
 function act(s,cmd,a,b){
@@ -219,13 +316,12 @@ function act(s,cmd,a,b){
  }
  case 'repair':
   need(p?.damage,'這裡目前不需要修理。');spend({coin:8,wood:1});p.damage=0;return '修好了'+BUILD[p.type][0]+'。';
- case 'expand': {
+ case 'promote': {
   const rating=LEVELS[s.level];
-  need(rating&&LAND[a]&&!s.lands.includes(a)&&score(s).total>=rating[1],'評分未達門檻，或該地已開拓。');
+  need(rating&&score(s).total>=rating[1]&&hexOwned(s)>1,'需要達到評鑑門檻，並已開拓至少一格。');
   spend({coin:12+s.level*4});
-  s.level++;s.lands.push(a);
-  while(s.plots.length<rating[2])s.plots.push(null);
-  return '公會核准'+LAND[a][0]+'。領地升到 '+s.level+' 級。';
+  s.level++;
+  return '公會核准升級。領地升到 '+s.level+' 級。';
  }
  case 'gather':
   need(validGather(s).includes(a)&&levelOf(s,'yard'),'需要可運作的採集場與可用地點。');s.gather=a;return '採集場改採'+ITEMS[a][0]+'。';
@@ -297,4 +393,4 @@ function act(s,cmd,a,b){
  default:throw Error('無法執行這個操作。');
  }
 }
-if(typeof module!=='undefined')module.exports={newGame,act,advance,score,heroPower,levelOf,ITEMS,BUILD,LEVELS};
+if(typeof module!=='undefined')module.exports={newGame,act,advance,score,heroPower,levelOf,ITEMS,BUILD,LEVELS,ensureWorld,queueHex,hexOrderInfo,hexOwned,HEX_COORDS};
