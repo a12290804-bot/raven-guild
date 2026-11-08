@@ -236,7 +236,7 @@ function battleFloor(s,b){
   const [name,art,hp,atk]=ENEMIES[id], extra=Math.max(0,distance-1);
   return {id,name,art,hp:hp+extra*4,max:hp+extra*4,atk:atk+Math.floor(extra/2),stagger:0};
  });
- b.round=1;b.cursor=0;b.waiting=false;
+ b.round=1;b.cursor=b.team.findIndex(unit=>unit.hp>0);b.waiting=false;
 }
 function startFieldBattle(s,key){
  const ev=s.world.tiles[key]?.event;
