@@ -25,7 +25,7 @@ const sharedAssets = (() => {
   Object.entries(entries).map(([key, filename]) => [key, art(filename)])
  ));
  return Object.freeze({
-  url,
+  url, encounter:art,
   portraits: mapArt({frost:'h_shieldF',jin:'h_spear',yuan:'h_archerH',yun:'h_herb',he:'h_knightW',qu:'h_horn'}),
   buildings: mapArt({hall:'bg_guild',shop:'bg_appraise',forge:'bg_sort',inn:'bg_inn',yard:'bg_village',
    watch:'bg_stele',depot:'bg_houses',route:'bg_station',wall:'bg_ch2_door'}),

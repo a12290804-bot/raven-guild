@@ -16,7 +16,7 @@ const BUILD={
 };
 const HERO={
  frost:['霜綾','盾衛','盾',8,'ore'],jin:['槿','長槍手','槍',7,'hide'],yuan:['鳶','斥候','羽',6,'salt'],
- yun:['芸','治療師','燈',5,'herb'],he:['伊恪','術士','火',7,'wax'],qu:['瞿山','織者','絲',6,'taint']
+ yun:['芸','治療師','燈',5,'herb'],he:['伊恪','術士','火',7,'wax'],qu:['瞿山','織者','絲',6,'taint'],player:['領主','開拓者','鴉',9,null]
 };
 const RECIPES={
  salve:{cost:{herb:2,wax:1},lv:1,tag:'藥劑',desc:'作為委託補給、治療英雄，或照顧生病工匠。'},
@@ -44,13 +44,15 @@ const RAIDS={
 };
 const cap=(n,max=100)=>Math.max(0,Math.min(max,n));
 const names=(cost)=>Object.entries(cost).map(([k,v])=> (k==='coin'?'渡鴉幣':ITEMS[k][0])+' '+v).join(' · ');
-function newGame(seed=77351){
- return ensureWorld({version:1,day:1,seed,coin:108,level:1,lands:[],plots:[
-  {type:'hall',lv:1},{type:'shop',lv:1},{type:'forge',lv:1},{type:'inn',lv:1}
+const AVATARS=['frost','jin','yuan','yun','he','qu'];
+const heroName=(s,id)=>id==='player'?s.player.name:HERO[id][0];
+function newGame(seed=77351,profile={name:'領主',avatar:'yuan'}){
+ return ensureWorld({version:1,day:1,seed,player:{name:profile.name,avatar:profile.avatar},coin:108,level:1,lands:[],plots:[
+  {type:'hall',lv:1}
  ],inv:{wood:7,stone:5,herb:4,ore:1,hide:1,salt:0,wax:3,taint:0,salve:1,kit:1,blade:0,seal:0},
- heroes:Object.fromEntries(Object.keys(HERO).map((id,i)=>[id,{id,available:i<3,trust:i===0?3:1,wound:0,level:1,xp:0,stock:2,purse:24,job:null,resident:false,blade:false}])),
+ heroes:Object.fromEntries(Object.keys(HERO).map(id=>[id,{id,available:id==='player',trust:id==='player'?0:1,wound:0,level:1,xp:0,stock:2,purse:24,job:null,resident:false,blade:false}])),
  staff:{},queue:[],trade:[],orders:[],contracts:[],posted:null,board:{type:'scout',mode:'scout',reward:12,support:false,hero:'auto'},
- gather:'wood',specialty:'',renown:0,sales:[0],log:[{day:1,text:'你接管了渡鴉公會的邊境前哨。旅舍外已有人在等。'}],
+ gather:'wood',specialty:'',renown:0,sales:[0],log:[{day:1,text:'你獨自接管了渡鴉公會的邊境前哨。四周全是霧。'}],
  raid:null,raidSeen:false,defended:0,bridge:false,report:null,raidReport:null,weather:'陰',visitors:0,daysPassed:0,caravan:false,opened:false});
 }
 const HEX_RADIUS=8;
@@ -66,7 +68,7 @@ const HEX_TYPES={
 };
 const HEX_COMMANDS={
  scout:['派遣偵察',{coin:6,herb:1},'一日後揭開地形。偵察不會佔領土地。'],
- expedition:['強行開拓',{coin:15,wood:2,herb:1},'派英雄踏入未知地格。達到地形門檻即可佔領；失敗會負傷，仍可揭開地形。'],
+ expedition:['強行開拓',{coin:15,wood:2,herb:1},'派英雄踏入未知地格。若撞上敵人，打贏才能佔領。'],
  secure:['立碑佔領',null,'派英雄清理已偵察地格。達到門檻後新增一個建築位置。']
 };
 const hexKey=(q,r)=>q+','+r;
@@ -84,7 +86,9 @@ function hexType(s,key){
  return ['plain','forest','forest','river','mine','ruins','wild'][hash%7];
 }
 function ensureWorld(s){
- if(s.world)return s;
+ if(!s.player)s.player={name:'領主',avatar:'yuan'};
+ if(!s.heroes.player)s.heroes.player={id:'player',available:true,trust:0,wound:0,level:1,xp:0,stock:0,purse:0,job:null,resident:false,blade:false};
+ if(!s.world){
  s.world={seed:s.seed>>>0,tiles:{'0,0':{type:'home',owned:true}},orders:[],last:[]};
  const legacyPlots=s.plots.length-4;
  if(legacyPlots>0){
@@ -94,6 +98,8 @@ function ensureWorld(s){
    s.world.tiles[key]={type:s.lands[i]||hexType(s,key),owned:true,plot:i+4};
   }
  }
+ }
+ for(const [key,tile] of Object.entries(s.world.tiles))ensureFieldEvent(s,key,tile);
  return s;
 }
 const hexOwned=s=>Object.values(s.world.tiles).filter(t=>t.owned).length;
@@ -108,7 +114,7 @@ function hexOrderInfo(s,key){
 }
 function queueHex(s,key,mode,heroId){
  const info=hexOrderInfo(s,key), h=s.heroes[heroId];
- if(!info.border||info.tile?.owned||info.order)throw Error('只能對接壤且未受令的地格下達指令。');
+ if(!info.border||info.tile?.owned||info.tile?.event?.claim||info.order)throw Error('只能對接壤且未受令的地格下達指令。');
  if(s.world.orders.length>=2)throw Error('最多同時出動兩支小隊。');
  if(!Object.hasOwn(HEX_COMMANDS,mode)||(info.tile?mode!=='secure':mode==='secure'))throw Error('請選擇適合該地格的指令。');
  if(!h||!freeHero(h)||h.wound>=2||s.raid?.heroes.includes(heroId))throw Error('請選擇能出發且未安排守備的英雄。');
@@ -117,36 +123,207 @@ function queueHex(s,key,mode,heroId){
  pay(s,cost);
  h.job='hex';
  s.world.orders.push({key,mode,heroId,day:s.day,power:heroPower(h)+(heroId==='yuan'&&mode==='expedition'?1:0)});
- const message=HERO[heroId][0]+'已出發：'+HEX_COMMANDS[mode][0]+'。';
+ const message=heroName(s,heroId)+'已出發：'+HEX_COMMANDS[mode][0]+'。';
  log(s,message);
  return message;
 }
+function claimHex(s,tile,h){
+ const [name,,,loot]=HEX_TYPES[tile.type];
+ tile.owned=true;tile.plot=s.plots.length;s.plots.push(null);
+ if(Object.hasOwn(LAND,tile.type)&&!s.lands.includes(tile.type))s.lands.push(tile.type);
+ receive(s,loot);s.renown+=3;gainHero(h,2);
+ return '佔領'+name+'，開放一處建築地。取得 '+names(loot)+'。';
+}
 function resolveHex(s){
- if(!s.world.orders.length){s.world.last=[];return;}
  s.world.last=[];
- for(const order of s.world.orders){
-  const {key,mode,heroId,power}=order,h=s.heroes[heroId];
+ for(const {key,mode,heroId,power} of s.world.orders){
+  const h=s.heroes[heroId];
   const tile=s.world.tiles[key]??{type:hexType(s,key),owned:false};
-  const [name,,,loot,threat]=HEX_TYPES[tile.type];
-  const captured=mode!=='scout'&&power>=threat+Math.max(0,hexRange(...hexParts(key))-1);
+  const ev=ensureFieldEvent(s,key,tile);
+  const [name,,,,threat]=HEX_TYPES[tile.type];
+  s.world.tiles[key]=tile;h.job=null;
   let message;
-  s.world.tiles[key]=tile;
-  h.job=null;
-  if(captured){
-   tile.owned=true;tile.plot=s.plots.length;s.plots.push(null);
-   if(Object.hasOwn(LAND,tile.type)&&!s.lands.includes(tile.type))s.lands.push(tile.type);
-   receive(s,loot);s.renown+=3;gainHero(h,2);
-   message='佔領'+name+'，開放一處建築地。取得 '+names(loot)+'。';
-  }else if(mode==='scout'){
-   s.renown++;gainHero(h,1);message='偵察揭開'+name+'。你現在可以評估佔領代價。';
+  if(mode==='scout'){
+   s.renown++;gainHero(h,1);
+   message='偵察揭開'+name+'，發現'+EVENT_TYPES[ev.kind][0]+'。';
+  }else if(eventBattle(ev)&&!ev.done){
+   ev.claim=heroId;
+   message='在'+name+'發現'+EVENT_TYPES[ev.kind][0]+'。清除後即可佔領。';
+  }else if(power>=threat+Math.max(0,hexRange(...hexParts(key))-1)){
+   message=claimHex(s,tile,h);
   }else{
    h.wound=cap(h.wound+1,3);
-   message=HERO[heroId][0]+'負傷撤回。已揭開'+name+'，可改派更強的英雄。';
+   message=heroName(s,heroId)+'負傷撤回，已揭開'+name+'。';
   }
-  s.world.last.push({key,message});
-  log(s,message);
+  s.world.last.push({key,message});log(s,message);
  }
  s.world.orders=[];
+}
+const EVENT_TYPES={
+ cache:['荒路物資','車輪斷在路邊。油布下還有幾份可用的補給。'],
+ traveler:['迷路的旅人','有人從霧裡舉起空手，詢問前哨是否還有落腳的地方。'],
+ shrine:['無名石龕','石龕前的燭火在風裡往下燒。石縫藏著一枚黑鹽印。'],
+ fight:['伏擊','霧中響起急促的踩踏聲。有人堵住了回前哨的路。'],
+ cellar:['無字地窖','石階通往兩層地窖，越往下，燈火越冷。'],
+ instance:['霧門副本','斷裂的石門後有三層迴廊。每層都有守門者。']
+};
+const ENEMIES={
+ beast:['灰松獵獸','m_hyena',25,5],
+ shade:['無名影','m_nameshade',29,6],
+ miner:['白鐵坑工','m_whiteminer',34,7],
+ giant:['燭苔巨人','m_giant',39,7],
+ post:['空郵匣守衛','m_emptypost',44,8],
+ bell:['空鐘獾','m_badger',48,8],
+ keeper:['迴廊守門人','m_timekeeper',57,9]
+};
+const ENCOUNTERS={
+ fight:{floors:[['beast']],reward:{coin:14,hide:2}},
+ cellar:{floors:[['miner'],['giant']],reward:{coin:24,ore:2,wax:1}},
+ instance:{floors:[['shade'],['post'],['keeper']],reward:{coin:36,salt:2,taint:1,kit:1}}
+};
+const FIELD_SKILLS={
+ attack:['普攻',0],skill:['職業技',2],guard:['防禦',0],salve:['止血膏',0]
+};
+const eventBattle=event=>Object.hasOwn(ENCOUNTERS,event?.kind||'');
+function hashHex(s,key,revision=0){
+ const [q,r]=hexParts(key);
+ let n=(s.world.seed^Math.imul(q+37,374761393)^Math.imul(r-61,668265263)^Math.imul(revision+1,1274126177))>>>0;
+ n=Math.imul(n^(n>>>13),1274126177);
+ return (n^(n>>>16))>>>0;
+}
+function createFieldEvent(s,key,revision=0){
+ const adjacent=HEX_STEPS.findIndex(([q,r])=>hexKey(q,r)===key);
+ const types=Object.keys(EVENT_TYPES);
+ if(key==='0,0'&&revision===0)return {kind:types[hashHex(s,key)%3],revision,done:false};
+ const index=revision===0&&adjacent>=0?(adjacent+s.world.seed%6)%6:hashHex(s,key,revision)%types.length;
+ return {kind:types[index],revision,done:false};
+}
+function ensureFieldEvent(s,key,tile){
+ if(!tile.event)tile.event=createFieldEvent(s,key);
+ return tile.event;
+}
+function fieldChoice(s,key,choice){
+ const tile=s.world.tiles[key], ev=tile?.event;
+ if(!ev)throw Error('請先揭開這個地格。');
+ if(choice==='renew'){
+  if(!ev.done||s.day<ev.day+4)throw Error('這裡還沒有新的動靜。');
+  if(!have(s,{coin:3}))throw Error('重新踏查需要渡鴉幣 3。');
+  pay(s,{coin:3});tile.event=createFieldEvent(s,key,ev.revision+1);
+  return '再次踏查時，這裡出現了新的動靜。';
+ }
+ if(ev.done||eventBattle(ev))throw Error('這個事件無法使用該指令。');
+ let message;
+ if(ev.kind==='cache'&&choice==='take'){
+  const loot={wood:2,herb:2,coin:5};receive(s,loot);message='取回 '+names(loot)+'。';
+ }else if(ev.kind==='traveler'&&choice==='recruit'){
+  const candidate=Object.values(s.heroes).find(h=>h.id!=='player'&&!h.available);
+  if(candidate){
+   if(!have(s,{coin:8,herb:1}))throw Error('需要渡鴉幣 8、霧草 1。');
+   pay(s,{coin:8,herb:1});candidate.available=true;s.visitors++;
+   message=heroName(s,candidate.id)+'願意加入你的前哨。';
+  }else{receive(s,{herb:2});message='旅人留下霧草 2，繼續往北。';}
+ }else if(ev.kind==='shrine'&&choice==='offer'){
+  if(!have(s,{wax:1}))throw Error('石龕需要燭蠟 1。');
+  pay(s,{wax:1});receive(s,{salt:2});s.renown+=2;message='你點起新燭，取回黑鹽 2，公會聲望 +2。';
+ }else if(choice==='leave'){message='你記下位置，選擇略過這次事件。';}
+ else throw Error('這不是此事件的選項。');
+ ev.done=true;ev.day=s.day;log(s,message);return message;
+}
+function battleFloor(s,b){
+ const specs=ENCOUNTERS[b.kind].floors[b.floor], distance=hexRange(...hexParts(b.key));
+ const ids=b.kind==='fight'&&hashHex(s,b.key)%2?[ 'shade' ]:specs;
+ b.enemies=ids.map(id=>{
+  const [name,art,hp,atk]=ENEMIES[id], extra=Math.max(0,distance-1);
+  return {id,name,art,hp:hp+extra*4,max:hp+extra*4,atk:atk+Math.floor(extra/2),stagger:0};
+ });
+ b.round=1;b.cursor=0;b.waiting=false;
+}
+function startFieldBattle(s,key){
+ const ev=s.world.tiles[key]?.event;
+ if(s.battle||!eventBattle(ev)||ev.done)throw Error('目前無法進入這場戰鬥。');
+ const heroes=present(s).filter(h=>freeHero(h)&&h.wound<3&&!s.raid?.heroes.includes(h.id)).slice(0,4);
+ if(!heroes.length)throw Error('沒有可出戰的英雄。');
+ const b={key,kind:ev.kind,floor:0,team:heroes.map(h=>{
+  const max=Math.max(20,34+h.level*5-h.wound*6);
+  return {id:h.id,hp:max,max,atk:heroPower(h)+1,cd:0,guard:false};
+ }),log:['戰鬥開始。']};
+ battleFloor(s,b);s.battle=b;
+}
+function fieldLog(b,message){b.log.unshift(message);if(b.log.length>30)b.log.pop();}
+function endFieldBattle(s,outcome){
+ const b=s.battle, tile=s.world.tiles[b.key], ev=tile.event;
+ const won=outcome==='win';let message;
+ if(won){
+  const loot=ENCOUNTERS[b.kind].reward;receive(s,loot);s.renown+=b.floor+2;
+  b.team.forEach(unit=>gainHero(s.heroes[unit.id],b.floor+2));
+  ev.done=true;ev.day=s.day;
+  message='清除'+EVENT_TYPES[b.kind][0]+'。取得 '+names(loot)+'。';
+  if(ev.claim&&!tile.owned)message+=' '+claimHex(s,tile,s.heroes[ev.claim]);
+  delete ev.claim;
+ }else{
+  if(outcome==='loss')b.team.forEach(unit=>{if(unit.hp<=0)s.heroes[unit.id].wound=cap(s.heroes[unit.id].wound+1,3);});
+  message=outcome==='loss'?'小隊戰敗撤回，事件仍留在原地。':'小隊撤回前哨，事件仍留在原地。';
+ }
+ s.battle=null;s.battleResult={key:b.key,outcome,message};log(s,message);
+}
+function stepFieldBattle(s,move,target=0){
+ const b=s.battle;
+ if(!b)throw Error('目前沒有進行中的戰鬥。');
+ if(move==='retreat'){endFieldBattle(s,'retreat');return;}
+ if(b.waiting){
+  if(move!=='descend')throw Error('請選擇進入下一層或撤退。');
+  b.floor++;battleFloor(s,b);fieldLog(b,'進入第 '+(b.floor+1)+' 層。');return;
+ }
+ const unit=b.team[b.cursor], foe=b.enemies[target];
+ if(!Object.hasOwn(FIELD_SKILLS,move)||!unit||unit.hp<=0)throw Error('請選擇可使用的戰鬥指令。');
+ if(move==='salve'){
+  if(!s.inv.salve||unit.hp===unit.max)throw Error('缺少止血膏，或目前無須治療。');
+  pay(s,{salve:1});unit.hp=Math.min(unit.max,unit.hp+17);fieldLog(b,heroName(s,unit.id)+'使用止血膏。');
+ }else if(move==='guard'){
+  unit.guard=true;fieldLog(b,heroName(s,unit.id)+'架起防禦。');
+ }else{
+  if(!foe||foe.hp<=0||move==='skill'&&unit.cd)throw Error('目標已倒下，或技能正在冷卻。');
+  const dmg=Math.max(2,Math.round(unit.atk*(move==='skill'?1.7:1)));
+  foe.hp=Math.max(0,foe.hp-dmg);
+  if(move==='skill'){
+   unit.cd=FIELD_SKILLS.skill[1]+1;
+   if(unit.id==='yun'){
+    for(const ally of b.team)if(ally.hp>0)ally.hp=Math.min(ally.max,ally.hp+5);
+   }
+   else if(unit.id==='frost')unit.guard=true;
+   else foe.stagger=1;
+  }
+  fieldLog(b,heroName(s,unit.id)+'對'+foe.name+'造成 '+dmg+' 傷害。');
+ }
+ if(b.enemies.every(x=>!x.hp)){
+  if(b.floor+1===ENCOUNTERS[b.kind].floors.length){endFieldBattle(s,'win');return;}
+  b.waiting=true;b.team.forEach(x=>{x.cd=0;x.guard=false;});fieldLog(b,'這層已清除。可繼續深入或撤回。');return;
+ }
+ const next=b.team.findIndex((u,i)=>i>b.cursor&&u.hp>0);
+ if(next>=0){b.cursor=next;return;}
+ for(const enemy of b.enemies.filter(x=>x.hp)){
+  const alive=b.team.filter(x=>x.hp);
+  if(!alive.length)break;
+  const victim=alive.find(x=>x.guard)||alive[0];
+  const power=b.round%3===0?1.6:1;
+  const damage=Math.max(1,Math.round(enemy.atk*power*(victim.guard?.48:1)*(enemy.stagger?.68:1)));
+  victim.hp=Math.max(0,victim.hp-damage);
+  fieldLog(b,enemy.name+'造成 '+damage+' 傷害'+(power>1?'（重擊）':'')+'。');
+  enemy.stagger=0;
+ }
+ if(b.team.every(x=>!x.hp)){endFieldBattle(s,'loss');return;}
+ b.team.forEach(x=>{x.guard=false;x.cd=Math.max(0,x.cd-1);});
+ b.cursor=b.team.findIndex(x=>x.hp>0);b.round++;
+}
+function autoFieldRound(s){
+ const b=s.battle;
+ if(!b||b.waiting)return;
+ const round=b.round;
+ while(s.battle===b&&b.round===round&&!b.waiting){
+  const unit=b.team[b.cursor], target=b.enemies.findIndex(x=>x.hp>0);
+  const move=unit.hp<=unit.max*.35&&s.inv.salve?'salve':unit.cd?'attack':'skill';
+  stepFieldBattle(s,move,target);
+ }
 }
 function random(s){s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0;return s.seed/4294967296;}
 function log(s,t){s.log.unshift({day:s.day,text:t});s.log=s.log.slice(0,80);}
@@ -159,7 +336,7 @@ function onDuty(s,id){const w=s.staff[id];return !!w&&!w.sick&&!!levelOf(s,STAFF
 function heroPower(h){return HERO[h.id][3]+(h.level-1)*2+(h.blade?3:0)-h.wound*2;}
 function freeHero(h){return h.available&&!h.job;}
 function beds(s){return active(s,'inn').reduce((n,p)=>n+p.lv+1,0);}
-function present(s){return Object.values(s.heroes).filter(h=>h.available);}
+function present(s){return Object.values(s.heroes).filter(h=>h.available).sort((a,b)=>Number(b.id==='player')-Number(a.id==='player'));}
 function maxBuilding(s){return Math.min(3,s.level);}
 function score(s){
  const build=cap(s.plots.reduce((n,p)=>n+(p&&!p.damage?(p.type==='hall'?2:3+3*(p.lv-1)):0),0),28);
@@ -172,7 +349,7 @@ function buildCost(key,lv){return lv===1?BUILD[key][3]:{coin:lv*11,wood:lv+1,sto
 function validGather(s){return ['wood','stone',...new Set(s.lands.map(k=>LAND[k][2]).filter(k=>k!=='wood'))];}
 function nextQuest(s,c,reserved=s.raid?.day===s.day?s.raid.heroes:[]){
  const q=QUEST[c.type];if(!q)return [];
- return Object.values(s.heroes).filter(h=>freeHero(h)&&h.wound<2&&!reserved.includes(h.id)&&(c.hero==='auto'||c.hero===h.id)).map(h=>{
+ return Object.values(s.heroes).filter(h=>h.id!=='player'&&freeHero(h)&&h.wound<2&&!reserved.includes(h.id)&&(c.hero==='auto'||c.hero===h.id)).map(h=>{
   const role=q.roles.includes(h.id)?3:0, power=heroPower(h)+role+(c.support?3:0);
   const target=q.power+(c.mode==='scout'?0:3);
   const need=q.reward+h.wound*5+(c.mode==='hunt'?4:0)-Math.min(5,h.trust)-role+(h.resident?-2:0);
@@ -212,6 +389,7 @@ function gainHero(h,xp){h.xp+=xp;while(h.xp>=h.level*4){h.xp-=h.level*4;h.level+
 function tradePrice(s,id,k){return ITEMS[k][1]+(s.weather==='豪雨'?2:0)-Math.floor(s.heroes[id].trust/3);}
 function sales(s,n){s.sales[s.sales.length-1]+=n;}
 function advance(s){
+ if(s.battle)throw Error('請先完成或撤離戰鬥。');
  ensureWorld(s);
  const from=s.day;
  const reserved=s.raid?.day===s.day?[...s.raid.heroes]:[];
@@ -219,8 +397,8 @@ function advance(s){
  const oldWounds=present(s).filter(h=>h.wound&&freeHero(h));
  if(s.raid?.day<=s.day)resolveRaid(s);
  for(const p of oldDamage)p.damage--;
- const resting=oldWounds.slice(0,beds(s));resting.forEach(h=>h.wound=Math.max(0,h.wound-1));
- if(resting.length)log(s,'旅舍照護了 '+resting.length+' 名英雄。');
+ const resting=oldWounds.slice(0,Math.max(1,beds(s)));resting.forEach(h=>h.wound=Math.max(0,h.wound-1));
+ if(resting.length)log(s,(beds(s)?'旅舍':'前哨')+'照護了 '+resting.length+' 名英雄。');
  for(const w of Object.values(s.staff))if(w.sick)w.sick--;
  const income=6+2*s.level+(s.bridge?3:0)+levelOf(s,'route')*(s.bridge?5:0);s.coin+=income;
  log(s,'收到渡鴉幣 ×'+income+'（公會津貼與商路）。');
@@ -258,7 +436,7 @@ function advance(s){
   let quota=shop*(1+Number(onDuty(s,'clerk')));
   for(const entry of [...s.trade]){
    if(!quota)break;
-   const buyer=present(s).filter(h=>freeHero(h)&&h.purse>=entry.price).sort((a,b)=>{
+   const buyer=present(s).filter(h=>h.id!=='player'&&freeHero(h)&&h.purse>=entry.price).sort((a,b)=>{
     const fit=h=>(entry.key==='salve'?h.wound*4:entry.key==='blade'?Number(!h.blade)*3:0)+h.trust;
     return fit(b)-fit(a);
    })[0];
@@ -279,9 +457,9 @@ function advance(s){
  }
  resolveHex(s);
  s.day++;s.daysPassed++;s.sales.push(0);
- for(const h of present(s))if(!h.job){h.purse=Math.min(75,h.purse+5);if((s.day+HERO[h.id][3])%3===0)h.stock=Math.min(6,h.stock+1);}
+ for(const h of present(s))if(h.id!=='player'&&!h.job){h.purse=Math.min(75,h.purse+5);if((s.day+HERO[h.id][3])%3===0)h.stock=Math.min(6,h.stock+1);}
  const absent=Object.values(s.heroes).filter(h=>!h.available);
- if(absent.length&&[2,3,5].includes(s.day)){
+ if(absent.length&&[2,3,5,6,7,9].includes(s.day)){
   const h=absent[0];h.available=true;s.visitors++;log(s,HERO[h.id][0]+'抵達前哨。');
  }
  if(s.day===2){s.weather='豪雨';log(s,'暴雨沖斷了霧渡橋。修橋需要 3 冷鐵、2 木料與 16 渡鴉幣。');}
@@ -341,7 +519,7 @@ function act(s,cmd,a,b){
  case 'staffcare':
   need(s.staff[a]?.sick,'這位居民目前不需照護。');spend({salve:1});s.staff[a].sick=0;return STAFF[a][0]+'恢復工作了。';
  case 'buy':{
-  need(h&&freeHero(h)&&h.stock,'此英雄目前沒有可交易的貨。');const k=HERO[a][4], price=tradePrice(s,a,k);
+  need(h&&h.id!=='player'&&freeHero(h)&&h.stock,'此英雄目前沒有可交易的貨。');const k=HERO[a][4], price=tradePrice(s,a,k);
   spend({coin:price});h.stock--;h.purse+=price;h.trust=cap(h.trust+1,10);receive(s,{[k]:1});return '從'+HERO[a][0]+'買到'+ITEMS[k][0]+'。';
  }
  case 'list':{
@@ -360,7 +538,7 @@ function act(s,cmd,a,b){
   const [x]=s.orders.splice(Number(a),1);need(x,'找不到收購單。');receive(s,{coin:x.price});return '已撤掉收購單並退回預算。';
  }
  case 'reside':
-  need(h&&freeHero(h)&&!h.resident&&h.trust>=4&&levelOf(s,'inn')>=3&&present(s).filter(x=>x.resident).length<beds(s),'需要三級旅舍、空床及信任 4。');
+  need(h&&h.id!=='player'&&freeHero(h)&&!h.resident&&h.trust>=4&&levelOf(s,'inn')>=3&&present(s).filter(x=>x.resident).length<beds(s),'需要三級旅舍、空床及信任 4。');
   spend({coin:22});h.resident=true;return HERO[a][0]+'簽下長住合約。';
  case 'equip':
   need(h&&freeHero(h)&&!h.blade,'英雄需在領地且未配戴短刃。');spend({blade:1});h.blade=true;h.trust=cap(h.trust+1,10);return HERO[a][0]+'裝備了冷鐵短刃。';
@@ -393,4 +571,4 @@ function act(s,cmd,a,b){
  default:throw Error('無法執行這個操作。');
  }
 }
-if(typeof module!=='undefined')module.exports={newGame,act,advance,score,heroPower,levelOf,ITEMS,BUILD,LEVELS,ensureWorld,queueHex,hexOrderInfo,hexOwned,HEX_COORDS};
+if(typeof module!=='undefined')module.exports={newGame,act,advance,score,heroPower,levelOf,ITEMS,BUILD,LEVELS,ensureWorld,queueHex,hexOrderInfo,hexOwned,HEX_COORDS,fieldChoice,startFieldBattle,stepFieldBattle,autoFieldRound,ENCOUNTERS,heroName};
